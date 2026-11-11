@@ -71,3 +71,18 @@ AccessNow covers **destination (venue) accessibility**, not the public right-of-
 
 ---
 
+## 5. Municipal practice (how cities prioritize today)
+
+- **Seattle** ranks repairs by mobility impact, risk, cost, and usage, with geographic and social-justice distribution, to get the best value from a limited budget. **[S]** (search summary of [SDOT](https://www.seattle.gov/transportation/projects-and-programs/programs/pedestrian-program/sidewalk-accessibility-guide); our direct fetch did not reach the relevant text)
+- **Los Angeles**: the City Controller's audit found that the Sidewalk Repair Program's prioritization lacked citywide condition data. **[S]** ([LA Controller audit](https://controller.lacity.gov/audits/sidewalks))
+- **Denver** scores projects on condition, safety, accessibility, and connectivity. **[S]** (neighborhood newsletter, low authority)
+- **Fremont, CA**:
+  - Adopted a Pedestrian Master Plan on 2016-12-13 and replaced it with an **Active Transportation Plan in May 2025**. **[S]** ([Pedestrian Master Plan](https://fremont.gov/government/departments/transportation-engineering/walking-bicycling/pedestrian-master-plan), [ATP](https://www.fremont.gov/government/departments/transportation-engineering/walking-bicycling/active-transportation-plan))
+  - Runs an annual Concrete & Intersection Ramp Program. One cycle lists 211 ramps at 104 locations, another 291 ramps at 142 locations. **[S]** ([completed projects](https://fremont.gov/government/departments/public-works/public-works-projects/completed-public-works-projects))
+  - Has an open data portal and eGIS map. **We did not find a public sidewalk-condition or curb-ramp inventory layer.** **[U]**
+  - We did not locate Fremont's ADA self-evaluation or public right-of-way transition plan. **[U]**
+
+**Pattern:** the municipal methods we saw score **each defect or project on its own merits**, using attributes such as proximity, usage, and risk. Whether they model **network effects** (a repair that is only useful once a second barrier on the same path is also fixed) is not stated in what we read. **[U]**
+
+---
+
