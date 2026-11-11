@@ -49,3 +49,16 @@ PPNA already establishes **profile-specific weighted graphs and reach metrics**.
 
 ---
 
+## 3. AccessNow
+
+### What it is
+- A consumer map and app for **places** such as restaurants, hotels, shops, transit, and parks. Places carry color-coded pins (accessible, partially accessible, not accessible), crowdsourced reviews, and feature tags. **[V]** ([accessnow.com](https://accessnow.com/)) **[S]** ([review how-to](https://accessnow.com/blog/how-to-add-a-review-on-accessnow/))
+- It runs community "MapMission" events plus programs named AccessNow Verified, AccessStudio, AccessOutdoors, and AccessFest. The homepage gives few details about them. **[V]** (names only)
+- A syndicated CNET article claims coverage of 2M+ locations in 35+ countries, AI used to "interpret and predict" accessibility features, and a paid tier of $12–17/month. **[U]**: the article URL returned 404 when fetched. Do not repeat these figures.
+- We found no evidence of sidewalk-network data, routing, or municipal capital-planning features. **[U]**: absence in what we read is not proof of absence.
+
+### Takeaway
+AccessNow covers **destination (venue) accessibility**, not the public right-of-way. It complements our work more than it competes with it. Venue entrance accessibility could later inform the weights on our destination nodes.
+
+---
+
