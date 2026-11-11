@@ -35,3 +35,17 @@ Project Sidewalk is the strongest open source of barrier data and has a validate
 
 ---
 
+## 2. AccessMap / OpenSidewalks (UW Taskar Center for Accessible Technology)
+
+### What it is
+- AccessMap is a web routing app, launched in Seattle in 2017. It plans pedestrian routes from a user's mobility profile, taking into account slope, curb ramps, and construction closures. **[S]** ([UW News 2017](https://www.washington.edu/news/2017/02/01/new-route-finding-map-lets-seattle-pedestrians-avoid-hills-construction-accessibility-barriers/))
+- OpenSidewalks is a data schema built on OpenStreetMap conventions. It models sidewalks, crossings, and curb ramps as a routable network. **[S]** ([Urban@UW 2020](https://urbanalytics.uw.edu/news/2020/11/10/open-sidewalks), [OSM wiki](https://wiki.openstreetmap.org/wiki/Taskar_Center_for_Accessible_Technology))
+- AccessMap has expanded to Seattle, Bellingham, and Mount Vernon, WA. Washington State commissioned a statewide dataset (OS-CONNECT) built on the OpenSidewalks model. **[S]** ([Urban@UW](https://urban.uw.edu/news/accessible-pedestrian-routing-tools-expand-to-three-washington-cities))
+- Research basis: Bolten & Caspi (2021), "Towards routine, city-scale accessibility metrics: Graph theoretic interpretations of pedestrian access using personalized pedestrian network analysis," *PLOS ONE*, DOI 10.1371/journal.pone.0248399. It introduces **Personalized Pedestrian Network Analysis (PPNA)**, which uses weighted graphs per pedestrian profile. It shows that betweenness-centrality rankings disagree across profiles and proposes **normalized sidewalk reach** as a metric. The paper says its data and software are public on GitHub. **[S]** ([PMC7978374](https://pmc.ncbi.nlm.nih.gov/articles/PMC7978374/); the page served a CAPTCHA when fetched, so this is from the search abstract)
+- The Taskar Center appears in USDOT ITS4US materials. **[S]** ([ITS4US webinar PDF](https://its.dot.gov/its4us/pdf/USDOT_ITS4US_UW_Webinar.pdf))
+
+### Takeaway
+PPNA already establishes **profile-specific weighted graphs and reach metrics**. Those are the foundation of our engine, and **they are not our contribution.** We should adopt the OpenSidewalks schema where practical and cite PPNA as the basis for our accessibility metric.
+
+---
+
