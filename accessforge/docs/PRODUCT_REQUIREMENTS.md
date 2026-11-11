@@ -92,3 +92,9 @@ unverified ──► confirmed ──► repair_planned ──► repair_complet
 - A published data retention policy. Reporter contact info, if given, is deleted after report closure plus 90 days.
 - Data export never includes reporter identity or contact information.
 
+## 9. Disclaimers (shown in the UI and exports)
+
+- "Barrier data comes from community reports and other sources and may be incomplete or wrong. It is not an official inspection."
+- "Recommendations are model estimates to support planning. They are not engineering, legal, or ADA compliance determinations."
+- "AccessForge does not provide routes and cannot tell you whether a path is safe."
+
