@@ -86,3 +86,16 @@ AccessNow covers **destination (venue) accessibility**, not the public right-of-
 
 ---
 
+## 6. Academic work on optimization
+
+| Work | Relevance | Tag |
+|---|---|---|
+| Bolten & Caspi 2021, PLOS ONE (PPNA) | Profile-specific weighted pedestrian graphs and reach metrics | [S] |
+| *Building non-motorized accessible communities for heterogeneous demand: A facility location and network design problem*, PLOS ONE 2024, DOI 10.1371/journal.pone.0312230 | **Closest prior work.** Chooses facility locations and road segments to make accessible, for users with different walking abilities, under optimization. Uses a randomized greedy heuristic (per search summary). Authors and exact formulation not yet confirmed because PMC served a CAPTCHA. | [S] |
+| Dilkina, Lai & Gomes, "Upgrading Shortest Paths in Networks," CPAIOR 2011 ([PDF](https://www.cs.cornell.edu/~bistra/papers/DilkinaCPAIOR2011_upgradingshortestpaths.pdf)) | Budgeted edge upgrades to shorten paths. The search summary says the objective is **not submodular** and naive greedy can fail, while an iterative greedy variant performs well. This is exactly the complementarity issue we expect. | [S] (authors inferred from repository path and venue; confirm) |
+| Khuller, Moss & Naor 1999 (budgeted maximum coverage); Krause & Guestrin 2005 (budgeted submodular maximization) | Cost-benefit greedy plus best-single-item gives constant-factor guarantees **only if** the objective is submodular | Standard references, not fetched this session |
+| Li et al., "Accessibility for Whom?", CHI 2025 ([arXiv 2502.19888](https://arxiv.org/abs/2502.19888)) | Online survey (N=190) of five mobility-aid groups rating 52 barrier images. Perceptions **differ by group**, with some shared concerns. Supports profile-specific barrier costs. | [V] (abstract) |
+| Hosseini et al. 2023, Tile2Net, *CEUS* 101, DOI 10.1016/j.compenvurbsys.2023.101950 | Open-source extraction of sidewalk polygons and network centerlines from aerial imagery. A possible source for Fremont's sidewalk network geometry. | [S] |
+
+---
+
