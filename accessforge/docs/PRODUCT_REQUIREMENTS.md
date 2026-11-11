@@ -98,3 +98,17 @@ unverified ──► confirmed ──► repair_planned ──► repair_complet
 - "Recommendations are model estimates to support planning. They are not engineering, legal, or ADA compliance determinations."
 - "AccessForge does not provide routes and cannot tell you whether a path is safe."
 
+## 10. Success metrics (targets are proposals, not results)
+
+| Area | Metric | MVP target |
+|---|---|---|
+| Research | H1 result determined on the pre-registered benchmark (either way) | Done, with all results published |
+| Data quality | Share of pilot-area barriers with verification state ≠ unverified | ≥ 50% |
+| Data quality | Verifier agreement on a double-checked sample | Measured and reported (no target until a baseline exists) |
+| Planner usefulness | Planners can complete UC4 unaided in a usability test | ≥ 4 of 5 participants |
+| Accessibility | WCAG 2.2 AA audit issues of severity critical or serious | 0 at release |
+| Reporting | Median time to submit a report on mobile, measured in usability testing | ≤ 2 minutes |
+| Outcome loop | Repairs marked completed that receive a verifier visit within 30 days | ≥ 80% (pilot) |
+
+No targets for "lives improved" or measured trip changes. We cannot measure them in the MVP.
+
