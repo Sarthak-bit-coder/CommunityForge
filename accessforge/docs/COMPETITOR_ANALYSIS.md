@@ -126,3 +126,12 @@ AccessNow covers **destination (venue) accessibility**, not the public right-of-
 6. **Imagery licensing**: Google Street View terms may restrict derived datasets. Mapillary (CC BY-SA) is an alternative, but Fremont coverage is unknown.
 7. **Repair unit costs** for Fremont (curb ramp, panel replacement, gap closure). Without them, budget optimization runs on assumed costs (see RESEARCH_HYPOTHESIS.md).
 
+## 9. Differentiation opportunities (hypotheses, not claims)
+
+1. **Decision layer, not data layer.** Existing tools answer "where are the barriers?" and "how do I route around them?" No source we read answers **"given $X, which set of repairs gives the largest verified gain in access to essential destinations, for which people?"**
+2. **Complementarity-aware portfolios.** One repair can be worthless until a second barrier on the same path is fixed. Per-defect ranking misses this by construction.
+3. **Uncertainty as a first-class input.** Crowd and AI labels have measurable error, which Askari et al. 2025 quantify. Planning should use expected gain and value of information ("verify these 10 barriers before committing the budget").
+4. **Closed-loop verification.** Record repair status and re-measure connectivity after repairs. No competitor we reviewed reports measured outcomes.
+5. **Explainability for public budgets.** Each recommendation states which people, which destinations, and what is lost if it is skipped.
+
+We **do not** claim AccessForge is unique overall. We claim that, in the sources reviewed on 2026-11-12, we found no tool combining items 1–4, pending resolution of gaps 1 and 2.
