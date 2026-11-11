@@ -44,3 +44,15 @@ It is **not** an official accessibility inspection, an ADA compliance determinat
 | F8 | Outcome tracking | Repair status: planned → completed → verified. Modeled before/after ΔA. |
 | F9 | Export | GeoJSON and CSV with a provenance and disclaimer header. |
 
+## 5. Explicitly excluded from MVP
+
+- Turn-by-turn or "accessible route" navigation for end users. This is a liability risk, and AccessMap already serves the need.
+- The computer-vision barrier detection service. It is designed later (ARCHITECTURE.md §8), and no CV output appears in MVP data.
+- Labeling tools for street-view imagery. Use Project Sidewalk instead.
+- Areas beyond the Fremont pilot, and multi-tenant city onboarding.
+- Native mobile apps. The site is responsive.
+- Indoor or building-entrance accessibility, and transit-vehicle accessibility.
+- LLM-generated text presented as findings. If an LLM is used later for summaries, its output is labeled and grounded in engine output.
+- Payments, procurement, and work-order integration with city asset systems.
+- Public user profiles, social features, and gamification.
+
