@@ -116,3 +116,13 @@ AccessNow covers **destination (venue) accessibility**, not the public right-of-
 
 ---
 
+## 8. Evidence gaps (must be resolved before external claims)
+
+1. **Vendor prioritization logic** (DeepWalk, Daxbot, Cyvl and others, plus Esri ArcGIS Marketplace sidewalk products): do any of them optimize repair *portfolios* over a network? Unknown. Our differentiation claim depends on the answer.
+2. **The 2024 PLOS ONE network-design paper**: confirm authors, objective, budget handling, uncertainty treatment, and case study. If it already handles budgets and heterogeneous users, our contribution narrows to complementarity bundles, uncertainty, explanation, and verification.
+3. **Fremont data**: does the open data portal include sidewalks, curb ramps, or a defect inventory? Is there a published ADA transition plan for the right of way? Does Fremont have an OpenSidewalks/OSM sidewalk mapping effort?
+4. **AccessNow's** AI and coverage claims (the source 404'd).
+5. **Project Sidewalk's** current AccessScore formula and its Seattle sidewalk-equity pilot (Li et al., Urban Access 2022), which may already include equity weighting.
+6. **Imagery licensing**: Google Street View terms may restrict derived datasets. Mapillary (CC BY-SA) is an alternative, but Fremont coverage is unknown.
+7. **Repair unit costs** for Fremont (curb ramp, panel replacement, gap closure). Without them, budget optimization runs on assumed costs (see RESEARCH_HYPOTHESIS.md).
+
