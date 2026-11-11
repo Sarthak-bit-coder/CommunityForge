@@ -62,3 +62,12 @@ AccessNow covers **destination (venue) accessibility**, not the public right-of-
 
 ---
 
+## 4. Commercial sidewalk assessment vendors (not in the original brief, but direct overlap)
+
+- **DeepWalk**: iPhone-LiDAR sidewalk and curb-ramp inspection with GIS output. Case studies say its results feed improvement programs such as hazard removal. **[S]** ([Danville, IL case study](https://www.casestudies.com/company/deepwalk/case-study/danville-prioritizes-sidewalk-access))
+- **Daxbot**: robot-collected sidewalk and curb-ramp inventories checked against PROWAG. **[S]** ([daxbot.com](https://daxbot.com/sidewalk-assessments/solutions))
+- **Georgia DOT** funded an automated sidewalk quality and safety assessment system that supports repair prioritization. **[S]** ([ROSA P record](https://rosap.ntl.bts.gov/view/dot/29715/dot_29715_DS1.pdf))
+- How these vendors actually prioritize repairs (per-defect scoring or network-aware) is **[U]**. This is the most important open question about competitors (see §8).
+
+---
+
