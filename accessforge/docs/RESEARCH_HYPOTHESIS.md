@@ -101,3 +101,14 @@ Here g is a decreasing function: by default the cumulative-opportunity indicator
 - All methods share the same instances, scenarios, and random seeds.
 - Report all instances, including those where baselines win.
 
+## 6. Limitations and threats to validity
+
+- **Profile parameters are assumptions.** Barrier passability differs by person, not just by profile. Results are sensitive to thresholds, so we report sensitivity analyses rather than a single answer.
+- **Cost data is assumed** until Fremont unit costs are obtained. Relative rankings may shift with real costs.
+- **Label noise.** Crowd and CV labels have type-dependent error (Askari et al. 2025). q_b calibration is itself uncertain.
+- **Demand model.** Census centroids and destination weights approximate real trips. There is no travel survey of disabled residents.
+- **Synthetic-to-real gap.** Gains on synthetic graphs may not transfer to Fremont's suburban, arterial-heavy network.
+- **ΔA is a model output, not a measured outcome.** Real-world impact needs before/after verification and, ideally, usage evidence, which the MVP cannot provide at scale.
+- **Scope of "accessibility."** We model physical right-of-way barriers only. Building entrances, transit vehicles, lighting, safety, and wayfinding are out of scope.
+- **Not a compliance tool.** Outputs are not ADA/PROWAG compliance determinations.
+
