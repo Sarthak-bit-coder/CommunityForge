@@ -83,3 +83,12 @@ unverified ──► confirmed ──► repair_planned ──► repair_complet
 - Future CV outputs enter as a separate source with their own prior. They **never** auto-confirm.
 - Every UI surface showing barriers or results shows its verification state and source.
 
+## 8. Privacy requirements
+
+- Reports can be anonymous. If an account exists, the reporter's identity is never shown publicly.
+- Strip EXIF and GPS metadata from uploaded photos. Location is set explicitly by the reporter. Before public display, either blur faces and plates or keep photos verifier-only until a moderation step. For MVP: **photos are visible only to verifiers.**
+- Store no home addresses and no disability status of individual users. Disability-related demand uses only aggregate ACS data.
+- Collect the minimum. No third-party analytics or advertising trackers. Server logs drop full IPs after the rate-limiting window.
+- A published data retention policy. Reporter contact info, if given, is deleted after report closure plus 90 days.
+- Data export never includes reporter identity or contact information.
+
