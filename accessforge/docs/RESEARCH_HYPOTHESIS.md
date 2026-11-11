@@ -78,3 +78,26 @@ Here g is a decreasing function: by default the cumulative-opportunity indicator
 - Its **marginal contribution** within the portfolio: ΔA lost if it is removed, so complementary partners are shown explicitly.
 - The bundle it belongs to, its input uncertainty (q_b, source), and its sensitivity: whether it stays selected under ±30% cost and under profile-weight perturbation.
 
+## 5. Evaluation
+
+### Datasets
+1. **Synthetic grids and street-like graphs** (Codex, Phase 1) with planted barriers. Barrier clustering is controlled so H2 can be tested. Seeded and reproducible.
+2. **Public non-Fremont data** for external validity: a Project Sidewalk city with dense labels, such as Seattle or Washington, DC, using OSM geometry. Subject to licensing review.
+3. **Fremont pilot area** (Phase 2+). Network geometry comes from OSM, Tile2Net output, or city GIS, whichever is available and licensed. Barriers come from team field audits and community reports. Instance results are reported as **illustrative**, not as validation, until they are field-verified.
+
+### Metrics
+| Metric | Definition |
+|---|---|
+| ΔA per budget | Expected accessibility gain divided by dollars spent, at 5/10/20% budget levels |
+| Newly connected population | Weighted residents per profile who gain ≥1 reachable destination per essential category within τ_p |
+| Equity | Minimum group gain, Gini of per-tract ΔA, gain in the lowest-access quintile |
+| Optimality gap | (MILP − method) / MILP on small instances |
+| Robustness | ΔA on held-out scenarios; portfolio Jaccard stability under cost ±30% and weight perturbation |
+| Runtime | Wall-clock on a fixed reference machine, reported with hardware specification |
+| Explanation fidelity | Removing each repair's reported dependents reproduces its reported marginal loss (an automated check) |
+
+### Protocol
+- Pre-register parameters (τ_p, penalties, B2 weights, budget levels, instance counts) in `experiments/configs/` before running.
+- All methods share the same instances, scenarios, and random seeds.
+- Report all instances, including those where baselines win.
+
