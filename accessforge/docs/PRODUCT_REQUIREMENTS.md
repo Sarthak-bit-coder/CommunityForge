@@ -67,3 +67,19 @@ It is **not** an official accessibility inspection, an ADA compliance determinat
 - The report form works with a screen reader and with voice dictation. Its errors are announced.
 - An accessibility statement, plus a way to report accessibility problems with AccessForge itself.
 
+## 7. Human verification requirements
+
+Barrier verification states:
+
+```
+unverified ──► confirmed ──► repair_planned ──► repair_completed ──► resolved
+     │              │                                   │
+     └──► rejected  └──► rejected (re-check)             └──► confirmed (repair failed)
+```
+
+- Only `verifier` or `admin` roles may move a barrier out of `unverified`. Confirming requires a site photo or a documented reason it was not possible.
+- `repair_completed` is set by a planner. **`resolved` requires a verifier visit after completion.**
+- Engine inputs map states to presence probabilities, for example unverified community report → q from a calibrated prior, confirmed → high q, resolved → removed. The mapping is documented in the assumptions panel.
+- Future CV outputs enter as a separate source with their own prior. They **never** auto-confirm.
+- Every UI surface showing barriers or results shows its verification state and source.
+
