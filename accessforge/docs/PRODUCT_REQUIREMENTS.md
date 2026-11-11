@@ -9,3 +9,13 @@ AccessForge helps a community decide **which pedestrian repairs to fund first** 
 
 It is **not** an official accessibility inspection, an ADA compliance determination, or a navigation app. It never tells anyone a route is safe.
 
+## 2. Target users
+
+| User | Need (assumed) | Primary MVP surface |
+|---|---|---|
+| **City staff**: public works, transportation engineering, ADA coordinator | Defensible, explainable repair priorities within a fixed budget, and evidence for grant applications | Planner workspace |
+| **Disability advocates and community organizations** | See where barriers cut people off, contribute knowledge, hold plans accountable | Public map/list and report form |
+| **Residents with mobility, vision, or other disabilities** | Report barriers easily and see whether reports led to action | Report form, report status page |
+| **Volunteer verifiers** (trained) | A clear task list of barriers to confirm or reject, with photo capture | Verification queue |
+| **Researchers** (including us) | Reproducible benchmarks and open, documented data | Data export, experiments |
+
