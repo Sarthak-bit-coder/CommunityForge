@@ -112,3 +112,16 @@ unverified ──► confirmed ──► repair_planned ──► repair_complet
 
 No targets for "lives improved" or measured trip changes. We cannot measure them in the MVP.
 
+## 11. Major risks and assumptions
+
+| Risk / assumption | Impact | Mitigation |
+|---|---|---|
+| **A1:** Fremont staff want budget-optimized portfolios | No adoption | Phase 2 discovery interviews before building F6–F8 UI polish |
+| **A2:** Network data for Fremont sidewalks is available and licensable | Engine has no graph | OSM audit early. Tile2Net fallback. Ask the city for GIS layers. |
+| **A3:** Enough barrier data can be gathered for one pilot area | Results meaningless | Small pilot area. Structured team audit. Request a Project Sidewalk deployment. |
+| R1: Users treat recommendations as official or safe | Harm, liability | Disclaimers, no routing, verification states everywhere |
+| R2: Network-aware optimization shows no advantage (H1 false) | Core thesis weakened | Pre-registered. Report honestly. Product still offers verification and explanation. |
+| R3: Profile parameters misrepresent disabled people's needs | Biased recommendations | Participatory parameter review. Sensitivity analysis shown in UI. |
+| R4: Abuse of the open report form (spam, doxxing via photos) | Data quality, privacy | Rate limits, verifier-only photos, moderation queue |
+| R5: Imagery or data licensing conflicts (Street View ToS, ODbL share-alike) | Legal | License review per source, recorded in the data catalog |
+| R6: Small team, two agents, ownership drift | Inconsistency | AGENT_OWNERSHIP.md, contract-first engine interface |
