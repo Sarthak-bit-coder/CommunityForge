@@ -56,3 +56,14 @@ It is **not** an official accessibility inspection, an ADA compliance determinat
 - Payments, procurement, and work-order integration with city asset systems.
 - Public user profiles, social features, and gamification.
 
+## 6. Accessibility requirements (non-negotiable)
+
+- **WCAG 2.2 Level AA** conformance for every page. Automated checks (axe) run in CI, plus manual screen-reader testing (VoiceOver and NVDA) before each release.
+- **The map is never the only channel.** Every map view has an equivalent list or table with the same filters and actions.
+- Full keyboard operation, visible focus, and no keyboard traps in map widgets.
+- Color is never the only encoding. Severity and status also use text and icons. Contrast is ≥ 4.5:1 for text.
+- Respect `prefers-reduced-motion`. Text reflows at 320 px width and 400% zoom.
+- Plain-language explanations. Technical terms (ΔA, scenario) are given a plain-language label.
+- The report form works with a screen reader and with voice dictation. Its errors are announced.
+- An accessibility statement, plus a way to report accessibility problems with AccessForge itself.
+
