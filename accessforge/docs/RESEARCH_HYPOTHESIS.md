@@ -112,3 +112,11 @@ Here g is a decreasing function: by default the cumulative-opportunity indicator
 - **Scope of "accessibility."** We model physical right-of-way barriers only. Building entrances, transit vehicles, lighting, safety, and wayfinding are out of scope.
 - **Not a compliance tool.** Outputs are not ADA/PROWAG compliance determinations.
 
+## 7. Unresolved research questions
+
+1. How should profile thresholds and penalties be elicited and validated? This needs participatory input from disabled residents and an IRB-appropriate process, if any is required.
+2. Bundle generation: is k-shortest repairable paths sufficient, or is a Steiner-style formulation needed? How large can k be before bundle counts explode?
+3. Is a submodularity-ratio-style bound obtainable for P2 on realistic instances?
+4. How should value-of-verification be calibrated against real verification costs (a volunteer visit versus a staff inspection)?
+5. Which equity definition will Fremont stakeholders accept (by tract, by profile, by need)?
+6. How much does P2 overlap with the 2024 PLOS ONE facility-location and network-design model? This must be read in full before any novelty claim.
