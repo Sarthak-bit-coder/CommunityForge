@@ -54,3 +54,27 @@ Here g is a decreasing function: by default the cumulative-opportunity indicator
 
 **Why this is hard.** With threshold g and impassable edges, the objective is **neither submodular nor supermodular** in general, because complementary repairs create supermodular jumps. Greedy constant-factor guarantees therefore do **not** apply (cf. Dilkina et al. 2011 on upgrading shortest paths). Exact MILP formulations scale poorly because there is a path constraint for every (profile, OD pair).
 
+## 4. Algorithms
+
+### Baselines
+| ID | Method | Network-aware? |
+|---|---|---|
+| B0 | Random selection until budget is spent (sanity floor) | No |
+| B1 | Severity-first: rank by severity, break ties by cost | No |
+| B2 | Municipal-style weighted per-defect score: severity × proximity to destinations × population density, ranked by score/cost. Weights are fixed before the experiment. | No |
+| B3 | Cost-benefit greedy on marginal ΔA (single repairs only, lazy evaluation) | Yes, but myopic |
+
+### Proposed
+| ID | Method |
+|---|---|
+| P1 | **B3 + best single item.** Return the better of the greedy solution and the best affordable single repair (the standard budgeted-greedy safeguard). |
+| P2 | **Bundle-augmented greedy.** Generate candidate **bundles**: for each (profile, origin cluster, destination) pair that is currently disconnected or very costly, compute the minimal repair set that makes the k-shortest *repairable* paths feasible. Run the cost-benefit greedy over single repairs and bundles together, recomputing marginal gains after each pick. Bundles make complementary gains visible to greedy. |
+| P3 | **Sample-average approximation (SAA).** Run P2 on the average of A over N sampled barrier scenarios (common random numbers across methods). Also compute a **value-of-verification** score per uncertain barrier: the expected change in the chosen portfolio's value if that barrier's presence were known. |
+| P4 | **Equity variant.** Maximize the sum of ΔA subject to every group g (profile × census tract) receiving ΔA_g ≥ β · (its share of need). Alternatively, maximize a weighted α-fair aggregate. Solved by Lagrangian reweighting inside P2. |
+| X | **Exact MILP** on small instances (≤ ~200 repairs, aggregated ODs), used **only to measure P2's optimality gap**. Solver: HiGHS via `scipy.optimize.milp`, which avoids a new dependency. OR-Tools CP-SAT is considered only if HiGHS cannot solve the benchmark sizes within limits. |
+
+### Explanation output (required for every recommended repair)
+- Which profiles, how many weighted residents, and which destination categories gain access.
+- Its **marginal contribution** within the portfolio: ΔA lost if it is removed, so complementary partners are shown explicitly.
+- The bundle it belongs to, its input uncertainty (q_b, source), and its sensitivity: whether it stays selected under ±30% cost and under profile-weight perturbation.
+
