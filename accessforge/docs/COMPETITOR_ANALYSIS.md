@@ -99,3 +99,20 @@ AccessNow covers **destination (venue) accessibility**, not the public right-of-
 
 ---
 
+## 7. Overlap matrix
+
+| Capability | Project Sidewalk | AccessMap/OpenSidewalks | AccessNow | Vendors | **AccessForge (planned)** |
+|---|---|---|---|---|---|
+| Barrier data collection | ✅ crowd + AI | partial (schema/OSM) | venues only | ✅ field/robot/LiDAR | ❌ consume others' data; report form only |
+| Open data / API | ✅ | ✅ | ❓ | ❌ (proprietary, presumably) [U] | ✅ planned |
+| Profile-specific network model | AccessScore params | ✅ PPNA | ❌ | ❓ | ✅ (adopted from PPNA) |
+| Routing for end users | ❌ | ✅ | ❌ | ❌ | ❌ (excluded from MVP) |
+| Neighborhood score | ✅ AccessScore | ✅ reach | ❌ | ❓ | ✅ (as a means, not the product) |
+| **Budget-constrained repair portfolio optimization** | ❌ none found | ❌ none found | ❌ | ❓ [U] | ✅ **core** |
+| **Repair complementarity (bundles)** | ❌ | ❌ | ❌ | ❓ | ✅ **core** |
+| **Barrier-existence uncertainty in planning** | partial (validation votes) | ❌ | ❌ | ❓ | ✅ |
+| Equity across groups/areas | ✅ (Seattle equity pilot) [S] | partial | ❌ | ❓ | ✅ |
+| **Before/after outcome verification** | ❌ none found | ❌ | ❌ | ❓ | ✅ |
+
+---
+
