@@ -26,3 +26,31 @@ Ranking defects one at a time cannot see either effect. Our question is whether 
 **H4 (fairness cost).** Adding an equity constraint (§4, P4) lowers total ΔA by ≤ 10% relative to unconstrained P2, while raising the minimum per-group gain.
 - *This is descriptive, not a claim of superiority.* We report the full trade-off curve whatever the result.
 
+## 3. Formal model
+
+**Graph.** G = (V, E) is a pedestrian network: sidewalk segments, crossings, curb-ramp transitions, and footpaths, following OpenSidewalks/OSM conventions. Each edge has a length and attributes (incline, width, surface).
+
+**Profiles.** P is a set of mobility profiles: manual wheelchair, powered wheelchair, walker/cane, low vision, and general pedestrian. Each profile p ∈ P has:
+- an edge cost c_p(e) = length(e) · (1 + Σ_b penalty_p(b)) over the barriers b on e;
+- hard thresholds (for example, maximum incline, a missing curb ramp, or a level change beyond a set height) that make an edge **impassable** for p.
+
+Profile parameters come from literature and stakeholder input, which is pending. They are **assumptions** until validated (see Li et al. CHI 2025 on group differences).
+
+**Barriers.** Each barrier b has: a type, a severity in 1–5, a location (edge or node), a **probability of presence q_b** derived from its source and validation state, and a source (Project Sidewalk, city record, community report, CV model, or field verification).
+
+**Candidate repairs.** Each repair r ∈ R removes or mitigates a set of barriers B(r). It has a cost k_r, given as a point estimate plus a range, and a type (ramp install, panel replace, gap closure, obstruction removal). Costs are **assumed unit costs** until Fremont figures are obtained.
+
+**Origins and destinations.** Origins O are census block centroids snapped to the network and weighted by population w_o, optionally disability-weighted using ACS disability estimates. Destinations D are essential services (transit stops, grocery stores, clinics/pharmacies, schools, parks, civic buildings), each with a weight w_d.
+
+**Accessibility.** For a repaired set S ⊆ R and a scenario ξ (one draw of barrier presence):
+
+```
+A(S, ξ) = Σ_p α_p Σ_o w_o Σ_d w_d · g( dist_p(o, d | S, ξ) )
+```
+
+Here g is a decreasing function: by default the cumulative-opportunity indicator 1[dist ≤ τ_p], with an exponential decay variant as a sensitivity check. dist is ∞ when no passable path exists. α_p weights the profiles.
+
+**Objective.** Maximize E_ξ[A(S, ξ)] − A(∅) subject to Σ_{r∈S} k_r ≤ budget. Optional extras: an equity constraint or objective (§4, P4) and mandatory or forbidden repairs.
+
+**Why this is hard.** With threshold g and impassable edges, the objective is **neither submodular nor supermodular** in general, because complementary repairs create supermodular jumps. Greedy constant-factor guarantees therefore do **not** apply (cf. Dilkina et al. 2011 on upgrading shortest paths). Exact MILP formulations scale poorly because there is a path constraint for every (profile, OD pair).
+
