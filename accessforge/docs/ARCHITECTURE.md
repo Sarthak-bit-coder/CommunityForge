@@ -80,3 +80,34 @@ Core tables (an outline; the final schema arrives in Phase 2 migrations):
 - Batch scripts, run by hand at first, that load sources into PostGIS with source, version, and license metadata. Candidate sources: OSM extracts (ODbL), City of Fremont open data (license to be verified), Project Sidewalk API (if a Fremont deployment exists), US Census ACS 5-year (disability table S1810) and block-level population, and destination POIs (OSM and city facility lists).
 - A data catalog (`docs/DATA_CATALOG.md`, Phase 2) records each source's license, version, and refresh date.
 
+## 3. Engine contract (shared interface)
+
+This contract is the **only** coupling between the API (Claude Code) and the engine (Codex). Changing it requires updating this section and following the process in AGENT_OWNERSHIP.md.
+
+```python
+# accessforge_engine.contract  (frozen dataclasses; all ids are str)
+
+Edge(id, u, v, length_m, attrs: Mapping[str, float | str])
+Barrier(id, edge_id | None, node_id | None, type, severity: int, presence_prob: float)
+Repair(id, barrier_ids: tuple[str, ...], cost: float, cost_low: float, cost_high: float)
+Profile(id, weight: float, max_incline: float | None, impassable_types: frozenset[str],
+        penalties: Mapping[str, float], threshold_m: float)
+Origin(id, node_id, weight: float, group: str)       # group = e.g. census tract
+Destination(id, node_id, category: str, weight: float)
+
+ProblemInstance(edges, barriers, repairs, profiles, origins, destinations, nodes)
+SolveParams(budget: float, method: str, n_scenarios: int, seed: int,
+            equity: EquitySpec | None, time_limit_s: float)
+
+solve(instance: ProblemInstance, params: SolveParams) -> SolveResult
+SolveResult(method, selected_repair_ids, total_cost, delta_a_expected,
+            delta_a_by_profile, delta_a_by_group, explanations: tuple[Explanation, ...],
+            diagnostics: Mapping[str, float], engine_version: str)
+Explanation(repair_id, marginal_delta_a, profiles_benefiting, destination_categories,
+            bundle_id | None, complementary_repair_ids, stable_under_cost_perturbation: bool)
+
+evaluate(instance, selected_repair_ids, params) -> metrics   # used for before/after and baselines
+```
+
+Errors: `InvalidInstanceError` for dangling ids, negative costs, or probabilities outside [0, 1]. The engine never returns partial results silently.
+
