@@ -16,3 +16,22 @@ Nothing here comes from interviews, partnerships, or our own measurements. We ha
 
 ---
 
+## 1. Project Sidewalk (University of Washington Makeability Lab)
+
+### What it is
+- An open-source web tool where remote volunteers and paid crowdworkers label sidewalk accessibility features and barriers by walking through Google Street View imagery. Label types include curb ramps, missing curb ramps, obstacles, surface problems, and missing sidewalks, each with a severity rating. **[V]** ([CHI 2019 paper](https://makeabilitylab.cs.washington.edu/media/publications/Saha_ProjectSidewalkAWebBasedCrowdsourcingToolForCollectingSidewalkAccessibilityDataAtScale_CHI2019.pdf), DOI 10.1145/3290605.3300292)
+- The CHI 2019 paper reports an 18-month Washington, DC deployment: 797 online users, 205,385 labels, and 2,941 miles of streets audited. **[S]** (search summary of the paper; the figures match the abstract)
+- Contributors validate each other's labels. The project says validation is now AI-assisted, and its Overall Stats API separates human votes from AI votes. **[S]** ([Project Sidewalk about page](https://sidewalk-cdmx.cs.washington.edu/about), [API docs](https://sidewalk-chicago.cs.washington.edu/v3/api-docs/overall-stats))
+- Data is open. It can be downloaded as CSV, GeoJSON, or shapefile, or pulled through a public API with label, validation, street, and "AccessScore" endpoints. **[S]** ([API docs](https://sidewalk-cdmx.cs.washington.edu/api))
+- **AccessScore**: a neighborhood score in (0, 1). The project's own docs call it experimental and say the weights may change. It grew out of Li et al., ASSETS 2018, which scored grid cells by routing to nearby points of interest and penalizing labeled barriers. **[S]** ([ASSETS 2018 poster](https://makeabilitylab.cs.washington.edu/media/publications/Li_InteractivelyModelingAndVisualizingNeighborhoodAccessibilityAtScaleAnInitialStudyOfWashingtonDc_ASSETS2018.pdf), [AccessScore API doc](https://sidewalk-spgg.cs.washington.edu/v3/api-docs/accessScoreRegions))
+- Data quality: Askari et al. (2025, *Urban Science* 9(4):130) compared Project Sidewalk audits with government field data in Seattle and DuPage County, IL. Agreement ranged from 75% for pedestrian signals to 100% for missing sidewalks. Severity ratings were harder to compare. **[V]** ([NSF PAR record](https://par.nsf.gov/biblio/10644331-validating-pedestrian-infrastructure-data-how-well-do-street-view-imagery-audits-compare-government-field-data))
+- Computer vision: a 2024 ASSETS paper benchmarks deep learning on 33 sidewalk-condition classes and releases an open dataset. **[S]** ([Liu et al. ASSETS 2024](https://makeabilitylab.cs.washington.edu/media/publications/Liu_TowardsFineGrainedSidewalkAccessibilityAssessmentWithDeepLearningInitialBenchmarksAndAnOpenDataset_ASSETS2024.pdf))
+
+### Deployment footprint (relevant to Fremont)
+- The Cities API returned 60 entries on 2026-11-12, some of them study or legacy instances. **The only California deployment was Los Angeles. There was no Fremont, Oakland, or San Jose deployment.** **[V]** ([Cities API](https://sidewalk-chicago.cs.washington.edu/v3/api/cities))
+
+### Takeaway
+Project Sidewalk is the strongest open source of barrier data and has a validated pipeline for collecting it. **We should not compete with it on data collection.** We should consume its data model and API format, and consider asking for a Fremont deployment rather than rebuilding a labeling tool.
+
+---
+
