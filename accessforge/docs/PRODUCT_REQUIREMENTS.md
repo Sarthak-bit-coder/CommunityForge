@@ -30,3 +30,17 @@ It is **not** an official accessibility inspection, an ADA compliance determinat
 7. **UC7 – Track outcomes.** A planner marks repairs as completed. After a verifier confirms a repair, the system recomputes connectivity and shows the **modeled** before/after change, clearly labeled as modeled.
 8. **UC8 – Export.** Barriers, scenarios, and results export as GeoJSON or CSV with provenance and a methodology note.
 
+## 4. MVP features (in scope)
+
+| ID | Feature | Acceptance criteria |
+|---|---|---|
+| F1 | Pilot-area pedestrian network | Network ingested from a licensed source. Coverage and known gaps documented. Graph connectivity checks pass. |
+| F2 | Barrier store with provenance | Every barrier records its source, timestamps, verification state, presence probability, and history. Nothing is ever silently overwritten. |
+| F3 | Public barrier map + list | Map (MapLibre) and list views show the same data. The list is fully usable without the map. |
+| F4 | Community report form | Works without an account (rate-limited). Photo optional. EXIF stripped. Accessible form validation. |
+| F5 | Verification workflow | Role-gated. State machine as in §7. Each transition is audit-logged. |
+| F6 | Scenario planner | Budget, profile weights, destination weights, and equity toggle. Runs the engine asynchronously and shows progress. |
+| F7 | Results and explanations | Portfolio on map and table. Per-repair explanation per RESEARCH_HYPOTHESIS.md §4. Baseline comparison table. Assumptions panel. |
+| F8 | Outcome tracking | Repair status: planned → completed → verified. Modeled before/after ΔA. |
+| F9 | Export | GeoJSON and CSV with a provenance and disclaimer header. |
+
