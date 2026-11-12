@@ -143,3 +143,15 @@ The response envelope is `{ "data": …, "error": null | {code, message}, "meta"
 - **CI:** lint, type-check (mypy/pyright, tsc), unit and integration tests, axe checks, and Alembic migration up/down tests on PostGIS.
 - **Environments:** local, staging, production. Production data never copies to local without anonymization.
 
+## 7. Security
+
+- **AuthN:** email magic link or OIDC for staff accounts. Anonymous reporting has no account. Sessions use HTTP-only, Secure, SameSite=Lax cookies.
+- **AuthZ:** role checks enforced in the API on every mutating route, with tests per role. Verification transitions are append-only and audited.
+- **Input validation:** Pydantic schemas, geometry bounds checks, scenario parameter bounds (budget, n_scenarios, time limit) to prevent resource exhaustion, and upload MIME sniffing with size limits.
+- **Rate limiting** on public POST routes and expensive GETs. Scenario jobs have a per-user concurrency cap.
+- **Secrets** come from environment or a secret manager only. Startup fails if required secrets are missing.
+- **CSRF** protection on cookie-authenticated mutations. Strict CORS allow-list. Security headers and CSP on the web app.
+- **XSS:** no raw HTML from user content. Descriptions render as text.
+- **Dependencies:** a lockfile per package and automated vulnerability scanning in CI.
+- **Logging:** structured logs with no reporter contact data or photos, and IPs truncated after the rate-limit window.
+
