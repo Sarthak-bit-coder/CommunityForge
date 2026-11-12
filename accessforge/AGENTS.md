@@ -35,3 +35,11 @@ Every path has one owner (Claude Code or Codex). See `docs/AGENT_OWNERSHIP.md`. 
 - No secrets in code. Use environment variables, validated at startup.
 - Do not add dependencies without a one-line justification. Prefer the standard library and already-chosen libraries.
 
+## Testing requirements
+- Write tests first where practical (red → green → refactor).
+- Coverage of at least 80% per package.
+- The engine needs unit tests with hand-computed expected values, property-based tests (Hypothesis) for invariants, and determinism tests.
+- The API needs unit tests plus integration tests against a real PostGIS container (no DB mocks for repositories), and authorization tests per role.
+- The web app needs component tests (Vitest + Testing Library), E2E tests (Playwright), and automated accessibility checks (axe) on every page. Manual screen-reader checks happen before each release.
+- Use the Arrange-Act-Assert pattern and descriptive test names.
+
