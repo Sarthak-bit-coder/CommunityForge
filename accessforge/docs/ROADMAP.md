@@ -53,3 +53,8 @@ Phases are gated by acceptance criteria, not dates. No phase is "done" until all
 
 **Acceptance:** PRODUCT_REQUIREMENTS.md §10 data-quality and outcome-loop metrics are measured and reported.
 
+## Phase 6: Computer vision candidates (post-MVP)
+- `services/vision` using licensed imagery, evaluating existing open models first.
+
+**Acceptance:** per-type precision, recall, and calibration on held-out, verified Fremont samples, published before any CV candidate enters planning.
+
