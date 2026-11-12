@@ -46,3 +46,6 @@ Every path has one owner (Claude Code or Codex). See `docs/AGENT_OWNERSHIP.md`. 
 ## Accessibility (non-negotiable)
 WCAG 2.2 AA. Every map has an equivalent list or table. Full keyboard support. Never use color as the only encoding. See `docs/PRODUCT_REQUIREMENTS.md` §6.
 
+## Privacy
+Photos are visible only to verifiers in the MVP, with EXIF stripped. Store no individual disability data. Reporter identity is never public or exported. See `docs/PRODUCT_REQUIREMENTS.md` §8.
+
