@@ -57,3 +57,5 @@ Photos are visible only to verifiers in the MVP, with EXIF stripped. Store no in
 - **Claude Code:** product, architecture, docs, frontend, API, database, ingestion, infra, and the engine adapter.
 - **Codex:** `accessforge_engine` (graphs, metrics, baselines, optimizers, explanations), experiments, statistical analysis, and engine tests.
 
+## graphify
+If `graphify-out/graph.json` exists, use `graphify query` / `path` / `explain` for codebase questions before raw searching, and run `graphify update .` after modifying code.
