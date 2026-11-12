@@ -36,3 +36,9 @@ Phases are gated by acceptance criteria, not dates. No phase is "done" until all
 
 **Acceptance:** PostGIS schema migrated with up/down tests; the pilot network is a single connected component or has documented, justified components; ≥ 1 source of barriers loaded with provenance; the data catalog lists the license of every source; discovery notes exist; P2 is benchmarked against the MILP.
 
+## Phase 3: MVP web application
+**Owner:** Claude Code. Codex: P3 (SAA, value of verification) and P4 (equity).
+- Features F1–F9 from PRODUCT_REQUIREMENTS.md, plus the worker, scenario jobs, and the engine adapter.
+
+**Acceptance:** WCAG 2.2 AA with zero critical or serious axe issues plus manual screen-reader passes; E2E tests for UC1–UC8; role-based authorization tests; a security review passed; disclaimers present on all result and export surfaces.
+
