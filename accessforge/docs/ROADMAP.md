@@ -42,3 +42,9 @@ Phases are gated by acceptance criteria, not dates. No phase is "done" until all
 
 **Acceptance:** WCAG 2.2 AA with zero critical or serious axe issues plus manual screen-reader passes; E2E tests for UC1–UC8; role-based authorization tests; a security review passed; disclaimers present on all result and export surfaces.
 
+## Phase 4: Evaluation
+**Owner:** Codex (experiments). Claude Code: reporting UI and write-up.
+- Pre-registered experiment configs, then run H1–H4 on synthetic, external (Project Sidewalk city), and Fremont pilot instances.
+
+**Acceptance:** all pre-registered results are reported, including negative ones, in `docs/engine/RESULTS.md`, with reproducible configs and seeds.
+
