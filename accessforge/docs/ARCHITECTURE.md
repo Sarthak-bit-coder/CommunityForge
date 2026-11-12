@@ -111,3 +111,11 @@ evaluate(instance, selected_repair_ids, params) -> metrics   # used for before/a
 
 Errors: `InvalidInstanceError` for dangling ids, negative costs, or probabilities outside [0, 1]. The engine never returns partial results silently.
 
+## 4. Data flow
+
+1. **Ingest** → PostGIS (network, origins, destinations, initial barriers), with provenance.
+2. **Reports and verification** → `report`, `barrier`, `barrier_event` through the API.
+3. **Scenario run:** a planner POSTs `/scenarios`. The API validates and inserts a `scenario` and a `job`. The worker loads an instance (bounded by the pilot area), maps states to `presence_prob`, calls `solve` for the requested method plus baselines B1–B3, and writes `scenario_result`. The web app polls the job status.
+4. **Outcome loop:** a repair is marked `repair_completed`, then a verifier marks it `resolved`. `evaluate` is re-run on the current network and the modeled before/after is stored.
+5. **Export:** the API streams GeoJSON or CSV with a provenance header.
+
