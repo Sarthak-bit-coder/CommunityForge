@@ -161,3 +161,14 @@ The response envelope is `{ "data": …, "error": null | {code, message}, "meta"
 - It writes **barrier candidates** through the public API with `source=cv:<model>@<version>` and a calibrated `presence_prob`. It never writes directly to the database and never sets a verified state.
 - Calibration and per-type precision/recall must be measured on held-out, human-verified Fremont samples before CV candidates may enter planning scenarios.
 
+## 9. Repository layout (target)
+
+```
+apps/web/                 Next.js app                    (Claude Code)
+services/api/             FastAPI app + worker           (Claude Code)
+services/engine/          accessforge_engine + tests     (Codex)
+experiments/              configs, runners, results      (Codex)
+pipelines/ingest/         data ingestion scripts         (Claude Code)
+docs/                     product & architecture docs    (Claude Code; Codex owns docs/engine/)
+infra/                    compose, CI                    (Claude Code)
+```
