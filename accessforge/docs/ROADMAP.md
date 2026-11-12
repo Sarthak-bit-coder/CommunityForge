@@ -58,3 +58,7 @@ Phases are gated by acceptance criteria, not dates. No phase is "done" until all
 
 **Acceptance:** per-type precision, recall, and calibration on held-out, verified Fremont samples, published before any CV candidate enters planning.
 
+## Phase 7: Multi-community scaling
+- Multi-tenant areas, an onboarding playbook, and evaluation of graph-library performance at city scale.
+
+**Acceptance:** a second community onboarded using the documented playbook without code changes to the engine.
