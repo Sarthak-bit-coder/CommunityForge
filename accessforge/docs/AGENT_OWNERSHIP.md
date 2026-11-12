@@ -39,3 +39,10 @@ Two coding agents work in this repository: **Claude Code** and **Codex**. Each p
 3. Codex updates `accessforge_engine.contract` and the engine tests. Claude Code then updates the API adapter and integration tests. Both changes land together, or with the engine change first in a backward-compatible form.
 4. `engine_version` is bumped on every contract change and stored with each scenario result.
 
+## Rules that prevent overlap
+
+- Never edit another owner's files, even to fix a typo. Leave a note instead.
+- The API must not reimplement engine logic (metrics, scoring, selection). The engine must not import web, DB, or HTTP libraries.
+- Shared fixtures: Codex owns `services/engine/tests/fixtures/`. The API may copy small fixtures into `services/api/tests/fixtures/` for integration tests but must not modify the originals.
+- Dependencies: each owner manages the dependency manifest inside its own paths. Adding a dependency requires a one-line justification in the PR or commit body.
+- Neither agent commits or pushes unless the human maintainer explicitly asks.
