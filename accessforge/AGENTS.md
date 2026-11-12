@@ -49,3 +49,7 @@ WCAG 2.2 AA. Every map has an equivalent list or table. Full keyboard support. N
 ## Privacy
 Photos are visible only to verifiers in the MVP, with EXIF stripped. Store no individual disability data. Reporter identity is never public or exported. See `docs/PRODUCT_REQUIREMENTS.md` §8.
 
+## Git
+- Commit or push only when the human maintainer explicitly asks.
+- Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`, `perf:`, `ci:`.
+
