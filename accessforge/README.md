@@ -19,3 +19,15 @@ Tools such as Project Sidewalk (barrier data) and AccessMap (personalized routin
 
 The proposed **Accessibility Impact Optimization Engine** models the pedestrian network as a profile-specific weighted graph. It accounts for **complementary repairs** (two fixes that are only useful together), for **uncertainty** about whether reported barriers really exist, and for **equity** across groups. It explains each recommendation and is benchmarked against simpler per-defect ranking. The primary hypothesis is falsifiable and pre-registered. See [docs/RESEARCH_HYPOTHESIS.md](docs/RESEARCH_HYPOTHESIS.md).
 
+## Documents
+
+| Doc | Contents |
+|---|---|
+| [docs/COMPETITOR_ANALYSIS.md](docs/COMPETITOR_ANALYSIS.md) | Project Sidewalk, AccessMap/OpenSidewalks, AccessNow, vendors, academic work, evidence gaps |
+| [docs/RESEARCH_HYPOTHESIS.md](docs/RESEARCH_HYPOTHESIS.md) | Model, hypotheses H1–H4, algorithms, baselines, metrics, limitations |
+| [docs/PRODUCT_REQUIREMENTS.md](docs/PRODUCT_REQUIREMENTS.md) | Users, use cases, MVP scope and exclusions, accessibility, privacy, verification |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Components, engine contract, data flow, API, deployment, security |
+| [docs/ROADMAP.md](docs/ROADMAP.md) | Phases with acceptance criteria |
+| [docs/AGENT_OWNERSHIP.md](docs/AGENT_OWNERSHIP.md) | Claude Code vs. Codex file ownership |
+| [AGENTS.md](AGENTS.md) | Repository conventions and testing requirements |
+
