@@ -48,3 +48,8 @@ Phases are gated by acceptance criteria, not dates. No phase is "done" until all
 
 **Acceptance:** all pre-registered results are reported, including negative ones, in `docs/engine/RESULTS.md`, with reproducible configs and seeds.
 
+## Phase 5: Verification loop pilot
+- Train volunteer verifiers on the documented protocol. Run the report → verify → plan → repair-tracking loop in the pilot area.
+
+**Acceptance:** PRODUCT_REQUIREMENTS.md §10 data-quality and outcome-loop metrics are measured and reported.
+
