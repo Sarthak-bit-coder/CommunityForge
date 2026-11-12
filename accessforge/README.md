@@ -6,3 +6,8 @@ AccessForge AI is an accessibility infrastructure intelligence platform. It help
 
 > AccessForge outputs are planning estimates. They are **not** official accessibility inspections, ADA compliance determinations, or safe-route guarantees.
 
+## Current status: Phase 0 complete (research and documentation only)
+
+- No application code exists yet.
+- No user interviews, partnerships, or measured results exist yet. Every claim about users and outcomes in the docs is labeled as an assumption or a proposal.
+
