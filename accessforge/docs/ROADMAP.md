@@ -25,3 +25,14 @@ Phases are gated by acceptance criteria, not dates. No phase is "done" until all
 - A complementarity test: a constructed instance where B3 picks zero-value repairs and an exhaustive search finds the two-repair bundle.
 - Determinism: same seed gives identical output.
 
+## Phase 2: Fremont data foundation and discovery
+**Owner:** Claude Code (ingest, DB, API skeleton). Codex: P2 bundles + MILP benchmark.
+- Choose a pilot area of a few km² using documented criteria: mixed land use, presence of essential destinations, data availability, and equity considerations.
+- Ingest the OSM network for the pilot area, assess its coverage against imagery, and record gaps. Evaluate Tile2Net or city GIS as a fallback.
+- Ingest ACS disability and population data and destination POIs.
+- A structured team barrier audit of the pilot area, with photos and a documented protocol. Contact Project Sidewalk about a possible Fremont deployment.
+- Discovery: request conversations with Fremont staff and local disability organizations. Record findings in `docs/DISCOVERY.md`, including what we **could not** confirm.
+- Codex: P2 bundle generation, the exact MILP on small instances, and optimality-gap measurement.
+
+**Acceptance:** PostGIS schema migrated with up/down tests; the pilot network is a single connected component or has documented, justified components; ≥ 1 source of barriers loaded with provenance; the data catalog lists the license of every source; discovery notes exist; P2 is benchmarked against the MILP.
+
