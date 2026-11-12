@@ -119,3 +119,20 @@ Errors: `InvalidInstanceError` for dangling ids, negative costs, or probabilitie
 4. **Outcome loop:** a repair is marked `repair_completed`, then a verifier marks it `resolved`. `evaluate` is re-run on the current network and the modeled before/after is stored.
 5. **Export:** the API streams GeoJSON or CSV with a provenance header.
 
+## 5. API boundaries (MVP outline, `/api/v1`)
+
+| Method & path | Role | Purpose |
+|---|---|---|
+| GET `/barriers?bbox&type&state&source` | public | List barriers (paginated, bbox required, max area enforced) |
+| GET `/barriers/{id}` | public | Detail + public history (no reporter identity) |
+| POST `/reports` | public (rate-limited) | Submit a report |
+| POST `/barriers/{id}/transitions` | verifier, admin | State change with photo or note |
+| POST `/photos` | contributor+ | Upload (size/type limits, EXIF stripped, private bucket) |
+| GET/POST `/scenarios` | planner | Create or list scenarios |
+| GET `/scenarios/{id}` | planner (public if published) | Params, job status, results |
+| GET `/verification-queue` | verifier | Ranked by value of verification |
+| PATCH `/repairs/{id}` | planner | Update repair status |
+| GET `/exports/{kind}` | public / planner | GeoJSON or CSV export |
+
+The response envelope is `{ "data": …, "error": null | {code, message}, "meta": {page, limit, total} }`.
+
