@@ -43,3 +43,6 @@ Every path has one owner (Claude Code or Codex). See `docs/AGENT_OWNERSHIP.md`. 
 - The web app needs component tests (Vitest + Testing Library), E2E tests (Playwright), and automated accessibility checks (axe) on every page. Manual screen-reader checks happen before each release.
 - Use the Arrange-Act-Assert pattern and descriptive test names.
 
+## Accessibility (non-negotiable)
+WCAG 2.2 AA. Every map has an equivalent list or table. Full keyboard support. Never use color as the only encoding. See `docs/PRODUCT_REQUIREMENTS.md` §6.
+
