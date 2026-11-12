@@ -155,3 +155,9 @@ The response envelope is `{ "data": …, "error": null | {code, message}, "meta"
 - **Dependencies:** a lockfile per package and automated vulnerability scanning in CI.
 - **Logging:** structured logs with no reporter contact data or photos, and IPs truncated after the rate-limit window.
 
+## 8. Future computer vision service (not in MVP)
+
+- `services/vision`: a separate service that runs barrier detection on imagery the project is licensed to process (for example Mapillary CC BY-SA, or city-owned imagery). It would evaluate open models from the Project Sidewalk team (ASSETS 2024 dataset/models) before training anything new.
+- It writes **barrier candidates** through the public API with `source=cv:<model>@<version>` and a calibrated `presence_prob`. It never writes directly to the database and never sets a verified state.
+- Calibration and per-type precision/recall must be measured on held-out, human-verified Fremont samples before CV candidates may enter planning scenarios.
+
