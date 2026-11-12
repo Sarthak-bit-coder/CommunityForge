@@ -32,3 +32,10 @@ Two coding agents work in this repository: **Claude Code** and **Codex**. Each p
 - synthetic instance generators, experiment configs, statistical tests, and result reports;
 - engine unit tests, property-based tests, and coverage (≥ 80%).
 
+## Engine contract change process
+
+1. The proposing agent writes the proposed change, with a reason, in `docs/engine/HANDOFF.md` (Codex) or as a dated note at the end of ARCHITECTURE.md §3 (Claude Code).
+2. The human maintainer approves.
+3. Codex updates `accessforge_engine.contract` and the engine tests. Claude Code then updates the API adapter and integration tests. Both changes land together, or with the engine change first in a backward-compatible form.
+4. `engine_version` is bumped on every contract change and stored with each scenario result.
+
