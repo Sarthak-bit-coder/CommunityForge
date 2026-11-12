@@ -136,3 +136,10 @@ Errors: `InvalidInstanceError` for dangling ids, negative costs, or probabilitie
 
 The response envelope is `{ "data": …, "error": null | {code, message}, "meta": {page, limit, total} }`.
 
+## 6. Deployment
+
+- **Local:** Docker Compose with `db` (PostGIS image), `api`, `worker`, and `web`. Seed scripts load a small synthetic plus pilot-area fixture.
+- **Hosted (Phase 3+), proposed:** managed Postgres with PostGIS; the API and worker as containers on one platform (for example a container PaaS); the web app on a Next.js-capable host; photos in private object storage with signed URLs. The final provider choice depends on cost and on the city's data-hosting requirements, which are unknown.
+- **CI:** lint, type-check (mypy/pyright, tsc), unit and integration tests, axe checks, and Alembic migration up/down tests on PostGIS.
+- **Environments:** local, staging, production. Production data never copies to local without anonymization.
+
