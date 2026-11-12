@@ -31,3 +31,7 @@ The proposed **Accessibility Impact Optimization Engine** models the pedestrian 
 | [docs/AGENT_OWNERSHIP.md](docs/AGENT_OWNERSHIP.md) | Claude Code vs. Codex file ownership |
 | [AGENTS.md](AGENTS.md) | Repository conventions and testing requirements |
 
+## Planned stack
+
+Next.js + TypeScript (web, MapLibre), Python + FastAPI (API + worker), PostgreSQL + PostGIS, and NetworkX + NumPy + SciPy/HiGHS in a pure-Python engine package. A computer vision service is planned for after the MVP.
+
