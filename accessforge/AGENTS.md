@@ -24,3 +24,14 @@ Every path has one owner (Claude Code or Codex). See `docs/AGENT_OWNERSHIP.md`. 
 | Ingestion | Python | `pipelines/ingest/` |
 | Database | PostgreSQL + PostGIS | migrations in `services/api/` |
 
+## Coding conventions
+- Immutable data: frozen dataclasses or Pydantic models. Return new objects rather than mutating inputs.
+- Small, focused files (≈200–400 lines, 800 max) and functions (< 50 lines). Organize by feature or domain.
+- Validate at boundaries (API requests, ingested files, engine `ProblemInstance`). Fail fast with clear errors and never swallow exceptions.
+- No magic numbers. Thresholds and defaults are named constants or validated config.
+- Python: type hints everywhere, `ruff` for lint and format, `mypy --strict` for the engine. TypeScript: `strict: true`, ESLint, Prettier.
+- Geometry: store EPSG:4326 and compute lengths in EPSG:32610 (Fremont).
+- Every stochastic function takes an explicit `seed`.
+- No secrets in code. Use environment variables, validated at startup.
+- Do not add dependencies without a one-line justification. Prefer the standard library and already-chosen libraries.
+
