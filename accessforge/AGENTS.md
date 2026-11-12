@@ -53,3 +53,7 @@ Photos are visible only to verifiers in the MVP, with EXIF stripped. Store no in
 - Commit or push only when the human maintainer explicitly asks.
 - Conventional commits: `feat:`, `fix:`, `refactor:`, `docs:`, `test:`, `chore:`, `perf:`, `ci:`.
 
+## Agent responsibilities (summary)
+- **Claude Code:** product, architecture, docs, frontend, API, database, ingestion, infra, and the engine adapter.
+- **Codex:** `accessforge_engine` (graphs, metrics, baselines, optimizers, explanations), experiments, statistical analysis, and engine tests.
+
