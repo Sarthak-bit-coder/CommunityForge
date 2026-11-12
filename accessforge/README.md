@@ -35,3 +35,6 @@ The proposed **Accessibility Impact Optimization Engine** models the pedestrian 
 
 Next.js + TypeScript (web, MapLibre), Python + FastAPI (API + worker), PostgreSQL + PostGIS, and NetworkX + NumPy + SciPy/HiGHS in a pure-Python engine package. A computer vision service is planned for after the MVP.
 
+## Next step
+
+Phase 1: Codex builds the engine prototype on synthetic data (see the "Phase 1" section of [docs/ROADMAP.md](docs/ROADMAP.md)).
