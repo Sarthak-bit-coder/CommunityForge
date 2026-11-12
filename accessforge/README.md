@@ -11,3 +11,11 @@ AccessForge AI is an accessibility infrastructure intelligence platform. It help
 - No application code exists yet.
 - No user interviews, partnerships, or measured results exist yet. Every claim about users and outcomes in the docs is labeled as an assumption or a proposal.
 
+## The core idea
+
+Tools such as Project Sidewalk (barrier data) and AccessMap (personalized routing) already answer *where the barriers are* and *how to route around them*. AccessForge aims at a different question:
+
+> **Given a budget, which *set* of repairs most improves access to essential destinations, for which people, and how sure are we?**
+
+The proposed **Accessibility Impact Optimization Engine** models the pedestrian network as a profile-specific weighted graph. It accounts for **complementary repairs** (two fixes that are only useful together), for **uncertainty** about whether reported barriers really exist, and for **equity** across groups. It explains each recommendation and is benchmarked against simpler per-defect ranking. The primary hypothesis is falsifiable and pre-registered. See [docs/RESEARCH_HYPOTHESIS.md](docs/RESEARCH_HYPOTHESIS.md).
+
