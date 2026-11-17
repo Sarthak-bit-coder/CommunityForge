@@ -14,6 +14,7 @@ from .report_schemas import (
     MAX_PAGE,
     MAX_PAGE_SIZE,
     ReportCreate,
+    ReportSummary,
     ReportView,
 )
 from .responses import Envelope
@@ -49,6 +50,12 @@ def get_reports(
         session, page=page, limit=limit, barrier_type=barrier_type, state=state
     )
     return Envelope(data=reports, meta={"page": page, "limit": limit, "total": total})
+
+
+# Declared before /{report_id} so "summary" is never parsed as a report ID.
+@router.get("/summary", response_model=Envelope[ReportSummary])
+def get_summary(session: DatabaseSession) -> Envelope[ReportSummary]:
+    return Envelope(data=report_repository.summarize_reports(session))
 
 
 @router.get("/{report_id}", response_model=Envelope[ReportView])
