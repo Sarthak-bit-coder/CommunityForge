@@ -11,7 +11,8 @@ from .database import make_engine
 from .errors import register_handlers
 from .health import router
 from .logging import configure_logging
-from .report_limits import ReportLimiter
+from .planning import router as planning_router
+from .report_limits import PLANS_PER_WINDOW, ReportLimiter
 from .reports import router as reports_router
 
 
@@ -31,7 +32,9 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     register_handlers(app)
     app.include_router(router)
     app.include_router(reports_router)
+    app.include_router(planning_router)
     app.state.report_limiter = ReportLimiter()
+    app.state.plan_limiter = ReportLimiter(PLANS_PER_WINDOW)
 
     @app.middleware("http")
     async def request_id(
