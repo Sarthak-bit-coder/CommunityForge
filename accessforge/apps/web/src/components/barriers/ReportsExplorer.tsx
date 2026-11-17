@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useEffectEvent, useState } from "react";
+import { useEffect, useEffectEvent, useState, type ReactNode } from "react";
 import { NO_FILTER, type Barrier, type BarrierFilter } from "@/lib/barriers";
 import { fetchReport, fetchReports, PAGE_SIZE, reportBarrier } from "@/lib/reports-api";
 import { SAMPLE_BARRIERS, SAMPLE_DATA_NOTICE } from "@/lib/sample-barriers";
@@ -37,8 +37,11 @@ export function ReportsExplorer() {
 
 export function LiveReports({
   initialFilter = NO_FILTER,
+  review,
 }: {
   readonly initialFilter?: BarrierFilter;
+  /** Reviewer-only controls for the selected report; `reload` refreshes the queue. */
+  readonly review?: (report: Barrier, reload: () => void) => ReactNode;
 }) {
   const [filter, setFilter] = useState<BarrierFilter>(initialFilter);
   const [page, setPage] = useState(1);
@@ -164,7 +167,14 @@ export function LiveReports({
       ) : null}
       <BarrierExplorer
         barriers={result?.barriers ?? []}
-        remote={{ filter, onFilter: change, onSelect: select, detail, selectedId: selected }}
+        remote={{
+          filter,
+          onFilter: change,
+          onSelect: select,
+          detail,
+          selectedId: selected,
+          detailActions: detail && review ? review(detail, reload) : undefined,
+        }}
       />
       <nav aria-label="Report pages" className="flex flex-wrap items-center gap-4">
         <button
