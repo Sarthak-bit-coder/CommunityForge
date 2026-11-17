@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { EvidenceProvenanceList } from "./EvidenceProvenanceList";
 import { Badge } from "@/components/ui/Badge";
 import {
@@ -10,7 +11,14 @@ import {
 
 const HEADING_ID = "barrier-details-heading";
 
-export function BarrierDetails({ barrier }: { readonly barrier: Barrier | null }) {
+export function BarrierDetails({
+  barrier,
+  children,
+}: {
+  readonly barrier: Barrier | null;
+  /** Extra controls for the selected barrier, such as reviewer decisions. */
+  readonly children?: ReactNode;
+}) {
   return (
     <section
       aria-labelledby={HEADING_ID}
@@ -21,7 +29,10 @@ export function BarrierDetails({ barrier }: { readonly barrier: Barrier | null }
         {barrier ? barrier.name : "Barrier details"}
       </h2>
       {barrier ? (
-        <BarrierFacts barrier={barrier} />
+        <>
+          <BarrierFacts barrier={barrier} />
+          {children}
+        </>
       ) : (
         <p className="mt-2 text-muted">
           Select a barrier on the map or in the list to see its details.
