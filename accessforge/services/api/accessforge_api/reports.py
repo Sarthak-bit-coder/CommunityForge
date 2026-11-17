@@ -1,0 +1,59 @@
+"""Anonymous JSON report submission and public retrieval, without photos or auth."""
+
+from typing import Annotated
+from uuid import UUID
+
+from fastapi import APIRouter, Depends, HTTPException, Query, Response
+from sqlalchemy.orm import Session
+
+from . import report_repository
+from .database import get_session
+from .report_limits import limit_submission
+from .report_schemas import (
+    DEFAULT_PAGE_SIZE,
+    MAX_PAGE,
+    MAX_PAGE_SIZE,
+    ReportCreate,
+    ReportView,
+)
+from .responses import Envelope
+from .schemas import BarrierType, VerificationStatus
+
+router = APIRouter(prefix="/reports", tags=["reports"])
+DatabaseSession = Annotated[Session, Depends(get_session)]
+
+
+@router.post(
+    "",
+    status_code=201,
+    response_model=Envelope[ReportView],
+    dependencies=[Depends(limit_submission)],
+)
+def submit_report(
+    payload: ReportCreate, session: DatabaseSession, response: Response
+) -> Envelope[ReportView]:
+    report = report_repository.create_report(session, payload)
+    response.headers["Location"] = f"/reports/{report.id}"
+    return Envelope(data=report)
+
+
+@router.get("", response_model=Envelope[tuple[ReportView, ...]])
+def get_reports(
+    session: DatabaseSession,
+    page: Annotated[int, Query(ge=1, le=MAX_PAGE)] = 1,
+    limit: Annotated[int, Query(ge=1, le=MAX_PAGE_SIZE)] = DEFAULT_PAGE_SIZE,
+    barrier_type: Annotated[BarrierType | None, Query(alias="type")] = None,
+    state: VerificationStatus | None = None,
+) -> Envelope[tuple[ReportView, ...]]:
+    reports, total = report_repository.list_reports(
+        session, page=page, limit=limit, barrier_type=barrier_type, state=state
+    )
+    return Envelope(data=reports, meta={"page": page, "limit": limit, "total": total})
+
+
+@router.get("/{report_id}", response_model=Envelope[ReportView])
+def get_report(report_id: UUID, session: DatabaseSession) -> Envelope[ReportView]:
+    report = report_repository.get_report(session, report_id)
+    if report is None:
+        raise HTTPException(404)
+    return Envelope(data=report)
