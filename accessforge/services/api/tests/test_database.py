@@ -11,7 +11,7 @@ from alembic.config import Config
 from alembic.migration import MigrationContext
 from fastapi.testclient import TestClient
 from geoalchemy2 import WKTElement
-from sqlalchemy import Engine, inspect, select, text
+from sqlalchemy import Connection, Engine, inspect, select, text
 from sqlalchemy.exc import DBAPIError, IntegrityError
 from sqlalchemy.orm import Session
 
@@ -139,15 +139,21 @@ def test_database_enforces_provenance_reference(postgis_engine: Engine) -> None:
         connection.rollback()
 
 
+def _schema_drift(connection: Connection) -> list[object]:
+    # PostGIS owns spatial_ref_sys in the public schema; it is not application schema.
+    context = MigrationContext.configure(
+        connection,
+        opts={"include_name": lambda name, kind, _: name != "spatial_ref_sys"},
+    )
+    return list(compare_metadata(context, Base.metadata))
+
+
 def test_migration_roundtrip_and_metadata_match(
     postgis_engine: Engine, migration_config: Config
 ) -> None:
     with postgis_engine.begin() as connection:
         migration_config.attributes["connection"] = connection
-        assert (
-            compare_metadata(MigrationContext.configure(connection), Base.metadata)
-            == []
-        )
+        assert _schema_drift(connection) == []
         indexes = inspect(connection).get_indexes("location")
         assert any(index["name"] == "idx_location_geom" for index in indexes)
         command.downgrade(migration_config, "base")
@@ -160,10 +166,7 @@ def test_migration_roundtrip_and_metadata_match(
         } & set(inspect(connection).get_table_names())
         assert connection.scalar(text("SELECT PostGIS_Version()"))
         command.upgrade(migration_config, "head")
-        assert (
-            compare_metadata(MigrationContext.configure(connection), Base.metadata)
-            == []
-        )
+        assert _schema_drift(connection) == []
 
 
 def test_readiness_on_real_postgis(postgis_engine: Engine) -> None:
