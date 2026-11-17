@@ -16,6 +16,7 @@ const nextConfig: NextConfig = {
     return [
       { source: "/api/reports/:path*", destination: `${origin.origin}/reports/:path*` },
       { source: "/api/planning/:path*", destination: `${origin.origin}/planning/:path*` },
+      { source: "/api/reviewer/:path*", destination: `${origin.origin}/reviewer/:path*` },
     ];
   },
   cacheComponents: true,
