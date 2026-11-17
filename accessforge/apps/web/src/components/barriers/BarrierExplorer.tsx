@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import {
   NO_FILTER,
   STATE_DISPLAY,
@@ -26,6 +26,7 @@ export function BarrierExplorer({
     readonly onSelect: (id: string) => void;
     readonly detail: Barrier | null;
     readonly selectedId: string | null;
+    readonly detailActions?: ReactNode;
   };
 }) {
   const [localFilter, setFilter] = useState<BarrierFilter>(NO_FILTER);
@@ -63,7 +64,9 @@ export function BarrierExplorer({
                 : null
               : selected
           }
-        />
+        >
+          {remote?.detailActions}
+        </BarrierDetails>
       </div>
       <section aria-labelledby="barrier-list-heading">
         <h2 id="barrier-list-heading" className="mb-3 text-lg font-semibold text-ink">
