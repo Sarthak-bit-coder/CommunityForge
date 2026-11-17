@@ -128,3 +128,39 @@ def test_reports_migration_preserves_foundation_data_on_downgrade(
             assert connection.scalar(text(f"SELECT count(*) FROM {table}")) == 1
         command.upgrade(migration_config, "head")
         assert connection.scalar(text("SELECT count(*) FROM report")) == 0
+
+
+def test_summary_counts_reports_by_state_and_type_without_details(
+    report_client: TestClient, postgis_engine: Engine
+) -> None:
+    empty = report_client.get("/reports/summary").json()["data"]
+    assert empty == {
+        "total": 0,
+        "by_state": {},
+        "by_type": {},
+        "first_report_at": None,
+        "last_report_at": None,
+    }
+    created = [
+        report_client.post("/reports", json={**PAYLOAD, "type": kind}).json()["data"]
+        for kind in ("obstruction", "obstruction", "steep_slope")
+    ]
+    with Session(postgis_engine) as session, session.begin():
+        session.execute(
+            update(Barrier)
+            .where(Barrier.id == created[0]["barrier_id"])
+            .values(state=VerificationStatus.confirmed)
+        )
+    summary = report_client.get("/reports/summary").json()["data"]
+    assert summary["total"] == 3
+    assert summary["by_state"] == {"confirmed": 1, "unverified": 2}
+    assert summary["by_type"] == {"obstruction": 2, "steep_slope": 1}
+    assert summary["first_report_at"] == created[0]["created_at"]
+    assert summary["last_report_at"] == created[2]["created_at"]
+    assert set(summary) == {
+        "total",
+        "by_state",
+        "by_type",
+        "first_report_at",
+        "last_report_at",
+    }
