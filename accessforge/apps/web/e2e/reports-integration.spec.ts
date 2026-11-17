@@ -76,7 +76,8 @@ test("submission failure keeps fields and retries only on user action", async ({
   await page.getByLabel("Longitude", { exact: true }).fill("-121.9886");
   await page.getByLabel("Severity (1–5)").selectOption("3");
   await page.getByRole("button", { name: "Submit report", exact: true }).click();
-  await expect(page.getByRole("alert")).toContainText("could not complete");
+  // Next adds its own empty route-announcer alert, so match the form's alert by text.
+  await expect(page.getByRole("alert").filter({ hasText: "could not complete" })).toBeVisible();
   await expect(page.getByLabel("Description", { exact: true })).toHaveValue("Blocked walkway");
   expect(calls).toBe(1);
   await page.getByRole("button", { name: "Submit report", exact: true }).click();
