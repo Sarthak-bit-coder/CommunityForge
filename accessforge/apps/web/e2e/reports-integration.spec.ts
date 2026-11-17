@@ -116,7 +116,7 @@ for (const width of [320, 1440]) {
     await page.goto("/verify");
     await expect(
       page.getByRole("complementary", { name: "Read-only verification dashboard" }),
-    ).toContainText("reviewer authentication and protected review endpoints are not implemented");
+    ).toContainText("Only signed-in reviewers can verify or reject them");
     await expect(page.getByRole("button", { name: /approve|reject/i })).toHaveCount(0);
     await page.getByRole("button", { name: `View details for Report ${report.id}` }).click();
     const detail = page.getByRole("region", { name: `Report ${report.id}` });
