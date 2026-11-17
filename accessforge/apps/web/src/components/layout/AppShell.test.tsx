@@ -3,6 +3,7 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import OverviewPage from "@/app/page";
 import AccessibilityPage from "@/app/accessibility/page";
+import PilotPage from "@/app/pilot/page";
 import PlannerPage from "@/app/planner/page";
 import ReportPage from "@/app/report/page";
 import VerifyPage from "@/app/verify/page";
@@ -61,8 +62,9 @@ describe("AppShell", () => {
 describe.each([
   ["overview", "/", OverviewPage],
   ["demo reporting", "/report", ReportPage],
-  ["verify placeholder", "/verify", VerifyPage],
-  ["planner placeholder", "/planner", PlannerPage],
+  ["verification queue", "/verify", VerifyPage],
+  ["repair planner", "/planner", PlannerPage],
+  ["pilot dashboard", "/pilot", PilotPage],
   ["accessibility statement", "/accessibility", AccessibilityPage],
 ])("%s page", (_name, path, Page) => {
   it("has one h1 and no detectable axe violations", async () => {
