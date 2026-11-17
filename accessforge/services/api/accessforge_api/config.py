@@ -7,6 +7,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 from sqlalchemy.engine import make_url
 from sqlalchemy.exc import ArgumentError
 
+from .auth import parse_reviewer_keys
+
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
@@ -15,6 +17,16 @@ class Settings(BaseSettings):
 
     database_url: SecretStr
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR"] = "INFO"
+    # Comma-separated reviewer-uuid:sha256-hex pairs. Empty means nobody can review.
+    reviewer_keys: SecretStr = SecretStr("")
+    # Disable only for local HTTP development in browsers that drop Secure cookies.
+    reviewer_cookie_secure: bool = True
+
+    @field_validator("reviewer_keys")
+    @classmethod
+    def reviewer_key_pairs(cls, value: SecretStr) -> SecretStr:
+        parse_reviewer_keys(value.get_secret_value())
+        return value
 
     @field_validator("database_url")
     @classmethod
