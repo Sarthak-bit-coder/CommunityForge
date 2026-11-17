@@ -281,8 +281,8 @@ export function RepairPlanner() {
                 networks; city-scale planning needs methods that are not built yet.
               </li>
               <li>
-                Access counts weighted destinations within a fixed travel distance for three modeled
-                mobility profiles. It does not measure real trips. Engine version{" "}
+                Access counts weighted destinations within a fixed travel distance for{" "}
+                {plan.network.profiles.length} modeled mobility profiles. It does not measure real trips. Engine version{" "}
                 {plan.engine_version}.
               </li>
             </ul>
