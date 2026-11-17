@@ -8,12 +8,15 @@ from time import monotonic
 from fastapi import HTTPException, Request
 
 REPORTS_PER_WINDOW = 10
+# Planning runs are read-only but CPU-bound; completed runs are also cached.
+PLANS_PER_WINDOW = 60
 WINDOW_SECONDS = 60
 MAX_TRACKED_CLIENTS = 10_000
 
 
 class ReportLimiter:
-    def __init__(self) -> None:
+    def __init__(self, limit: int = REPORTS_PER_WINDOW) -> None:
+        self._limit = limit
         self._requests: dict[str, deque[float]] = {}
         self._lock = Lock()
 
@@ -34,7 +37,7 @@ class ReportLimiter:
                 times = self._requests.setdefault(client, deque())
             while times and times[0] <= now - WINDOW_SECONDS:
                 times.popleft()
-            if len(times) >= REPORTS_PER_WINDOW:
+            if len(times) >= self._limit:
                 raise HTTPException(
                     429,
                     headers={
@@ -46,8 +49,15 @@ class ReportLimiter:
             times.append(now)
 
 
+def _peer(request: Request) -> str:
+    return request.client.host if request.client else "unknown"
+
+
 def limit_submission(request: Request) -> None:
     # shortcut: process-local limits; use a shared limiter before multiworker deployment.
     # Inactive peer buckets are pruned on requests, never persisted or logged.
-    client = request.client.host if request.client else "unknown"
-    request.app.state.report_limiter.check(client)
+    request.app.state.report_limiter.check(_peer(request))
+
+
+def limit_planning(request: Request) -> None:
+    request.app.state.plan_limiter.check(_peer(request))
