@@ -109,6 +109,9 @@ export function BarrierMap({
         center: [SAMPLE_MAP_CENTER.lng, SAMPLE_MAP_CENTER.lat],
         zoom: SAMPLE_MAP_ZOOM,
         locale: { "Map.Title": MAP_TITLE },
+        // The style is generated here with no third-party tiles, so there is nothing to
+        // attribute; the default control's 15px targets also fail WCAG 2.5.8.
+        attributionControl: false,
       });
       instance = map;
       map.addControl(new maplibre.NavigationControl({ showCompass: false }));
@@ -169,7 +172,8 @@ export function BarrierMap({
 
   return (
     <div className="relative h-80 overflow-hidden rounded-lg border border-line bg-canvas sm:h-[28rem]">
-      <div ref={containerRef} className="absolute inset-0" />
+      {/* Sized by height, not inset: MapLibre forces position: relative on this element. */}
+      <div ref={containerRef} className="h-full w-full" />
       {status === "ready" && loaded && onLocationSelect ? (
         <MapLocationSelection
           map={loaded.map}
