@@ -2,10 +2,17 @@ export type NavItem = {
   readonly href: string;
   readonly label: string;
   readonly description: string;
+  /** Page heading when it differs from the short navigation label. */
+  readonly heading?: string;
 };
 
 export const NAV_ITEMS: readonly NavItem[] = [
-  { href: "/", label: "Overview", description: "Project status and what is coming next." },
+  {
+    href: "/",
+    label: "Overview",
+    description: "What AccessForge does and what works today.",
+    heading: "Fix the barriers that reconnect the most routes",
+  },
   {
     href: "/barriers",
     label: "Barriers",
@@ -21,6 +28,11 @@ export const NAV_ITEMS: readonly NavItem[] = [
     href: "/planner",
     label: "Repair planner",
     description: "Compare which repairs to fund first within a budget.",
+  },
+  {
+    href: "/pilot",
+    label: "Pilot dashboard",
+    description: "Report counts, data sources, methods, and limits for the Fremont pilot.",
   },
   {
     href: "/accessibility",
