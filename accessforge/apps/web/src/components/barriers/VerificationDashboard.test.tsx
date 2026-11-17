@@ -40,7 +40,7 @@ beforeEach(() => {
 });
 afterEach(() => vi.unstubAllGlobals());
 
-it("defaults to pending and shows report facts, provenance, and the authentication blocker", async () => {
+it("defaults to pending and shows report facts, provenance, and read-only access for visitors", async () => {
   const { container } = render(<VerificationPage />);
   expect(screen.getByText("Loading reports…")).toBeInTheDocument();
   const card = (await screen.findByText(report.description)).closest("li")!;
@@ -56,7 +56,7 @@ it("defaults to pending and shows report facts, provenance, and the authenticati
   expect(card).toHaveTextContent("not a verified site visit");
   expect(
     screen.getByRole("complementary", { name: "Read-only verification dashboard" }),
-  ).toHaveTextContent("reviewer authentication and protected review endpoints are not implemented");
+  ).toHaveTextContent("Only signed-in reviewers can verify or reject them");
   expect(screen.queryByRole("button", { name: /approve|reject/i })).not.toBeInTheDocument();
   await waitFor(() => expect(fakeMapControl.instances).toHaveLength(1));
   act(() => fakeMapControl.instances[0].emit("load"));
