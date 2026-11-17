@@ -46,6 +46,17 @@ export function fetchReports(filter: BarrierFilter, page: number, signal: AbortS
   if (filter.state !== "all") query.set("state", filter.state);
   return request<Report[]>(`?${query}`, { signal });
 }
+// Aggregate counts only (FastAPI ReportSummary); no report text or location.
+export type ReportSummary = {
+  readonly total: number;
+  readonly by_state: Readonly<Record<string, number>>;
+  readonly by_type: Readonly<Record<string, number>>;
+  readonly first_report_at: string | null;
+  readonly last_report_at: string | null;
+};
+export function fetchSummary(signal: AbortSignal) {
+  return request<ReportSummary>("/summary", { signal });
+}
 export function fetchReport(id: string, signal: AbortSignal) {
   return request<Report>(`/${encodeURIComponent(id)}`, { signal });
 }
