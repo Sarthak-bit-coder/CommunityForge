@@ -6,6 +6,7 @@ from uuid import uuid4
 
 from fastapi import FastAPI, Request, Response
 
+from .auth import parse_reviewer_keys
 from .config import Settings
 from .database import make_engine
 from .errors import register_handlers
@@ -14,6 +15,7 @@ from .logging import configure_logging
 from .planning import router as planning_router
 from .report_limits import PLANS_PER_WINDOW, ReportLimiter
 from .reports import router as reports_router
+from .reviews import router as reviews_router
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -23,6 +25,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         configure_logging(config.log_level)
         engine = make_engine(config)
         app.state.engine = engine
+        app.state.reviewer_keys = parse_reviewer_keys(
+            config.reviewer_keys.get_secret_value()
+        )
+        app.state.reviewer_cookie_secure = config.reviewer_cookie_secure
         try:
             yield
         finally:
@@ -33,8 +39,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(router)
     app.include_router(reports_router)
     app.include_router(planning_router)
+    app.include_router(reviews_router)
     app.state.report_limiter = ReportLimiter()
     app.state.plan_limiter = ReportLimiter(PLANS_PER_WINDOW)
+    app.state.sign_in_limiter = ReportLimiter()
 
     @app.middleware("http")
     async def request_id(
