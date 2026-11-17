@@ -75,7 +75,12 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
           <h2 id="why-heading" className="text-xl font-semibold text-ink">
             Why these repairs
           </h2>
-          <div className="mt-4 overflow-x-auto rounded-lg border border-line bg-surface">
+          <div
+            role="region"
+            aria-label="Why these repairs, scrollable table"
+            tabIndex={0}
+            className="mt-4 overflow-x-auto rounded-lg border border-line bg-surface"
+          >
             <table className="w-full min-w-[44rem] border-collapse text-sm">
               <caption className="sr-only">
                 Each selected repair, what it fixes, and what the model loses without it
@@ -140,7 +145,12 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
         </h2>
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
           <NetworkDiagram network={plan.network} selected={best.selected_repair_ids} />
-          <div className="overflow-x-auto rounded-lg border border-line bg-surface">
+          <div
+            role="region"
+            aria-label="Repair candidates, scrollable table"
+            tabIndex={0}
+            className="overflow-x-auto rounded-lg border border-line bg-surface"
+          >
             <table className="w-full border-collapse text-sm">
               <caption className="sr-only">All repair candidates in this network</caption>
               <thead>
@@ -186,7 +196,12 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
           Same network, same budget. Methods that rank barriers one at a time can spend money on
           repairs that open no complete route.
         </p>
-        <div className="mt-4 overflow-x-auto rounded-lg border border-line bg-surface">
+        <div
+          role="region"
+          aria-label="Method comparison, scrollable table"
+          tabIndex={0}
+          className="mt-4 overflow-x-auto rounded-lg border border-line bg-surface"
+        >
           <table className="w-full min-w-[38rem] border-collapse text-sm">
             <caption className="sr-only">Modeled gain of each selection method</caption>
             <thead>
@@ -248,7 +263,13 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
               ["By origin group", best.delta_a_by_group],
             ] as const
           ).map(([title, values]) => (
-            <div key={title} className="overflow-x-auto rounded-lg border border-line bg-surface">
+            <div
+              key={title}
+              role="region"
+              aria-label={`${title}, scrollable table`}
+              tabIndex={0}
+              className="overflow-x-auto rounded-lg border border-line bg-surface"
+            >
               <table className="w-full border-collapse text-sm">
                 <caption className={`${TH} border-b-0 text-left`}>{title}</caption>
                 <thead>
