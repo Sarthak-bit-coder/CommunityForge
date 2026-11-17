@@ -14,10 +14,21 @@ export default function AccessibilityPage() {
       <div className="space-y-5">
         <Card title="What we do">
           <ul className="list-disc space-y-1 pl-5">
-            <li>Every map will have an equivalent list or table.</li>
+            <li>Every map, diagram, and chart has an equivalent list or table.</li>
             <li>The site works with a keyboard, with a visible focus indicator.</li>
             <li>Color is never the only way we show meaning.</li>
             <li>We respect your reduced-motion setting.</li>
+            <li>Form errors are written out and announced to screen readers.</li>
+          </ul>
+        </Card>
+        <Card title="How we check">
+          <ul className="list-disc space-y-1 pl-5">
+            <li>Automated axe checks run on every page at phone, tablet, and desktop widths.</li>
+            <li>
+              Automated checks cannot find every problem. Testing with screen readers and with
+              people who use assistive technology has not been done yet and is required before
+              public launch.
+            </li>
           </ul>
         </Card>
         <Card title="Reporting a problem">
