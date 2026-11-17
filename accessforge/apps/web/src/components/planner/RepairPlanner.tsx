@@ -203,7 +203,12 @@ export function RepairPlanner() {
                 to compare them side by side.
               </p>
             ) : (
-              <div className="mt-4 overflow-x-auto rounded-lg border border-line bg-surface">
+              <div
+                role="region"
+                aria-label="Saved scenarios, scrollable table"
+                tabIndex={0}
+                className="mt-4 overflow-x-auto rounded-lg border border-line bg-surface"
+              >
                 <table className="w-full min-w-[40rem] border-collapse text-sm">
                   <caption className="sr-only">Saved scenarios, recommended plan for each</caption>
                   <thead>
