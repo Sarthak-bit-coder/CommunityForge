@@ -13,7 +13,10 @@ const nextConfig: NextConfig = {
     ) {
       throw new Error("API_BASE_URL must be an HTTP(S) origin without credentials or a path.");
     }
-    return [{ source: "/api/reports/:path*", destination: `${origin.origin}/reports/:path*` }];
+    return [
+      { source: "/api/reports/:path*", destination: `${origin.origin}/reports/:path*` },
+      { source: "/api/planning/:path*", destination: `${origin.origin}/planning/:path*` },
+    ];
   },
   cacheComponents: true,
   partialPrefetching: true,
