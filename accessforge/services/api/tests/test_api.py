@@ -46,6 +46,8 @@ def test_only_documented_routes_exist() -> None:
         "/reports",
         "/reports/summary",
         "/reports/{report_id}",
+        "/reports/{report_id}/reviews",
+        "/reviewer/session",
     }
     with TestClient(app) as client:
         response = client.post("/api/v1/reports", json={"description": "not stored"})
