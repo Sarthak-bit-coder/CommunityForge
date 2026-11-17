@@ -35,4 +35,10 @@ line-length = 88
 
 [tool.mypy]
 strict = true
+# The editable engine ships no py.typed marker; read its typed source directly.
+mypy_path = "../engine"
 plugins = ["pydantic.mypy"]
+# The engine is type-checked with its own stubs in services/engine.
+[[tool.mypy.overrides]]
+module = "accessforge_engine.*"
+follow_imports = "silent"
