@@ -6,7 +6,7 @@ export function EvidenceProvenanceList({
   readonly evidence: readonly EvidenceProvenance[];
 }) {
   return (
-    <div className="mt-3 break-words text-sm text-ink">
+    <div className="mt-3 text-sm wrap-anywhere text-ink">
       <p className="font-semibold">Evidence provenance</p>
       {evidence.length ? (
         <ul className="mt-1 space-y-3" aria-label="Evidence provenance">
