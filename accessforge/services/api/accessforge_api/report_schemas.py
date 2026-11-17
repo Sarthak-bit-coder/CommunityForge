@@ -44,3 +44,13 @@ class ReportView(FrozenInput):
     state: VerificationStatus
     created_at: AwareDatetime
     evidence: tuple[EvidenceView, ...]
+
+
+class ReportSummary(FrozenInput):
+    """Aggregate counts only; no report text, location, or identity."""
+
+    total: int
+    by_state: dict[VerificationStatus, int]
+    by_type: dict[BarrierType, int]
+    first_report_at: AwareDatetime | None
+    last_report_at: AwareDatetime | None
