@@ -20,6 +20,14 @@ class ReportLimiter:
         self._requests: dict[str, deque[float]] = {}
         self._lock = Lock()
 
+    def blocked(self, client: str) -> bool:
+        """Report whether the client has used its window, without counting a request."""
+        now = monotonic()
+        with self._lock:
+            times = self._requests.get(client, ())
+            recent = sum(1 for time in times if time > now - WINDOW_SECONDS)
+        return recent >= self._limit
+
     def check(self, client: str) -> None:
         now = monotonic()
         with self._lock:
@@ -61,3 +69,15 @@ def limit_submission(request: Request) -> None:
 
 def limit_planning(request: Request) -> None:
     request.app.state.plan_limiter.check(_peer(request))
+
+
+def refuse_locked_out(request: Request) -> None:
+    """Refuse before any key is evaluated, so a locked-out peer learns nothing."""
+    if request.app.state.sign_in_limiter.blocked(_peer(request)):
+        raise HTTPException(429, headers={"Retry-After": str(WINDOW_SECONDS)})
+
+
+def record_failed_sign_in(request: Request) -> None:
+    # shortcut: peers behind one proxy share a lockout; use per-client limits at the
+    # perimeter before exposing reviewer sign-in on a shared network.
+    request.app.state.sign_in_limiter.check(_peer(request))
