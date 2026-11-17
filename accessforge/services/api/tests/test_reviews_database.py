@@ -1,14 +1,18 @@
 """Real PostGIS transaction, locking, and append-only audit proofs."""
 
+from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
 from uuid import UUID, uuid4
 
 import pytest
+from fastapi.testclient import TestClient
 from sqlalchemy import Engine, func, select, text
 from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import Session
 from test_reports_unit import PAYLOAD
+from test_reviews import REVIEWER_ID, REVIEWER_KEY, reviewer_app
 
+from accessforge_api.database import get_session
 from accessforge_api.models import Barrier, ReportReview
 from accessforge_api.report_repository import create_report, get_report
 from accessforge_api.report_schemas import ReportCreate
@@ -167,3 +171,37 @@ def test_cached_pending_state_cannot_override_a_committed_review(
         history = review_history(session, report_id)
         assert len(history) == 1
         assert history[0].to_state.value == "confirmed"
+
+
+def test_signed_in_reviewer_verifies_a_report_over_http_once(
+    postgis_engine: Engine,
+) -> None:
+    app = reviewer_app()
+
+    def real_session() -> Iterator[Session]:
+        with Session(postgis_engine) as session:
+            yield session
+
+    app.dependency_overrides[get_session] = real_session
+    with TestClient(app, base_url="https://testserver") as client:
+        report = client.post("/reports", json=PAYLOAD).json()["data"]
+        path = f"/reports/{report['id']}/reviews"
+        decision = {"status": "verified", "reason": "Checked on site"}
+        assert client.post(path, json=decision).status_code == 401
+        assert client.get(f"/reports/{report['id']}").json()["data"]["state"] == (
+            "unverified"
+        )
+
+        client.post("/reviewer/session", json={"key": REVIEWER_KEY})
+        review = client.post(path, json=decision)
+        assert review.status_code == 201
+        assert review.json()["data"]["reviewer_id"] == str(REVIEWER_ID)
+        public = client.get(f"/reports/{report['id']}").json()["data"]
+        assert public["state"] == "confirmed"
+        assert "reviewer_id" not in public and "reason" not in public
+
+        assert client.post(path, json=decision).status_code == 409
+        history = client.get(path).json()["data"]
+        assert [item["reason"] for item in history] == ["Checked on site"]
+        missing = f"/reports/{uuid4()}/reviews"
+        assert client.post(missing, json=decision).status_code == 404
