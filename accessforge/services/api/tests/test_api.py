@@ -44,6 +44,7 @@ def test_only_documented_routes_exist() -> None:
         "/health/ready",
         "/planning/plans",
         "/reports",
+        "/reports/summary",
         "/reports/{report_id}",
     }
     with TestClient(app) as client:
