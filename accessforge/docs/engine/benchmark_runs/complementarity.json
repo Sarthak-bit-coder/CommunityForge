@@ -1,0 +1,282 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "engine_version": "0.1.0",
+  "environment": {
+    "python": "3.13.15",
+    "networkx": "3.6.1",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "processor": "arm",
+    "logical_cpus": 8
+  },
+  "protocol": {
+    "case": "complementarity",
+    "configs": [],
+    "seeds": [
+      0
+    ],
+    "budget_fractions": [
+      0.5,
+      1.0
+    ],
+    "methods": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "exhaustive"
+    ],
+    "time_limit_s": 30
+  },
+  "rows": [
+    {
+      "case": "complementarity",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B0",
+      "budget": 10.0,
+      "status": "ok",
+      "runtime_s": 0.0006308750016614795,
+      "error": null,
+      "selected_repair_ids": [
+        "r1"
+      ],
+      "total_cost": 10.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 10.0,
+      "accessibility_after": 10.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "complementarity",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B1",
+      "budget": 10.0,
+      "status": "ok",
+      "runtime_s": 0.00010425003711134195,
+      "error": null,
+      "selected_repair_ids": [
+        "r0"
+      ],
+      "total_cost": 10.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 10.0,
+      "accessibility_after": 10.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "complementarity",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B2",
+      "budget": 10.0,
+      "status": "ok",
+      "runtime_s": 0.00014575000386685133,
+      "error": null,
+      "selected_repair_ids": [
+        "r1"
+      ],
+      "total_cost": 10.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 10.0,
+      "accessibility_after": 10.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "complementarity",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B3",
+      "budget": 10.0,
+      "status": "ok",
+      "runtime_s": 0.0003911249805241823,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 10.0,
+      "accessibility_after": 10.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "complementarity",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "exhaustive",
+      "budget": 10.0,
+      "status": "ok",
+      "runtime_s": 0.00035420898348093033,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 10.0,
+      "accessibility_after": 10.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "complementarity",
+      "seed": 0,
+      "budget_fraction": 1.0,
+      "method": "B0",
+      "budget": 20.0,
+      "status": "ok",
+      "runtime_s": 9.350001346319914e-05,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r1"
+      ],
+      "total_cost": 20.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 10.0,
+      "accessibility_after": 20.0,
+      "delta_a": 10.0,
+      "gain_per_budget": 0.5,
+      "gain_per_spend": 0.5,
+      "delta_a_by_profile": {
+        "wheelchair": 10.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "complementarity",
+      "seed": 0,
+      "budget_fraction": 1.0,
+      "method": "B1",
+      "budget": 20.0,
+      "status": "ok",
+      "runtime_s": 7.758394349366426e-05,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r1"
+      ],
+      "total_cost": 20.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 10.0,
+      "accessibility_after": 20.0,
+      "delta_a": 10.0,
+      "gain_per_budget": 0.5,
+      "gain_per_spend": 0.5,
+      "delta_a_by_profile": {
+        "wheelchair": 10.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "complementarity",
+      "seed": 0,
+      "budget_fraction": 1.0,
+      "method": "B2",
+      "budget": 20.0,
+      "status": "ok",
+      "runtime_s": 0.00010420801118016243,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r1"
+      ],
+      "total_cost": 20.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 10.0,
+      "accessibility_after": 20.0,
+      "delta_a": 10.0,
+      "gain_per_budget": 0.5,
+      "gain_per_spend": 0.5,
+      "delta_a_by_profile": {
+        "wheelchair": 10.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "complementarity",
+      "seed": 0,
+      "budget_fraction": 1.0,
+      "method": "B3",
+      "budget": 20.0,
+      "status": "ok",
+      "runtime_s": 0.0003406659234315157,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 10.0,
+      "accessibility_after": 10.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "complementarity",
+      "seed": 0,
+      "budget_fraction": 1.0,
+      "method": "exhaustive",
+      "budget": 20.0,
+      "status": "ok",
+      "runtime_s": 0.001205249922350049,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r1"
+      ],
+      "total_cost": 20.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 10.0,
+      "accessibility_after": 20.0,
+      "delta_a": 10.0,
+      "gain_per_budget": 0.5,
+      "gain_per_spend": 0.5,
+      "delta_a_by_profile": {
+        "wheelchair": 10.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    }
+  ]
+}
