@@ -282,8 +282,8 @@ export function RepairPlanner() {
               </li>
               <li>
                 Access counts weighted destinations within a fixed travel distance for{" "}
-                {plan.network.profiles.length} modeled mobility profiles. It does not measure real trips. Engine version{" "}
-                {plan.engine_version}.
+                {plan.network.profiles.length} modeled mobility profiles. It does not measure real
+                trips. Engine version {plan.engine_version}.
               </li>
             </ul>
           </section>
