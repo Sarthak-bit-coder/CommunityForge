@@ -1,0 +1,17 @@
+# Disposable PostGIS for integration tests; never point this service at production data.
+services:
+  db:
+    image: postgis/postgis:16-3.5
+    environment:
+      POSTGRES_USER: accessforge_test
+      POSTGRES_DB: accessforge_test
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a throwaway test password}
+    ports:
+      - "127.0.0.1:55432:5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U accessforge_test -d accessforge_test"]
+      interval: 2s
+      timeout: 2s
+      retries: 30
