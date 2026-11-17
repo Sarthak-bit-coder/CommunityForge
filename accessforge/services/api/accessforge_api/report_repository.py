@@ -7,7 +7,7 @@ from sqlalchemy import Float, Row, Select, func, select
 from sqlalchemy.orm import Session
 
 from .models import Barrier, EvidenceProvenance, Location, Report
-from .report_schemas import EvidenceView, ReportCreate, ReportView
+from .report_schemas import EvidenceView, ReportCreate, ReportSummary, ReportView
 from .schemas import BarrierType, EvidenceSource, LocationInput, VerificationStatus
 
 # Assumed neutral prior for unverified reports, not an empirically calibrated probability.
@@ -93,6 +93,29 @@ def list_reports(
         .limit(limit)
     ).all()
     return _views(session, rows), int(total or 0)
+
+
+def summarize_reports(session: Session) -> ReportSummary:
+    rows = session.execute(
+        select(Barrier.state, Barrier.type, func.count())
+        .join(Report, Report.barrier_id == Barrier.id)
+        .group_by(Barrier.state, Barrier.type)
+    ).all()
+    first, last = session.execute(
+        select(func.min(Report.created_at), func.max(Report.created_at))
+    ).one()
+    by_state: dict[VerificationStatus, int] = {}
+    by_type: dict[BarrierType, int] = {}
+    for state, barrier_type, count in rows:
+        by_state[state] = by_state.get(state, 0) + count
+        by_type[barrier_type] = by_type.get(barrier_type, 0) + count
+    return ReportSummary(
+        total=sum(by_state.values()),
+        by_state=by_state,
+        by_type=by_type,
+        first_report_at=first,
+        last_report_at=last,
+    )
 
 
 def create_report(session: Session, payload: ReportCreate) -> ReportView:
