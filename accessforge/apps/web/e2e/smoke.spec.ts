@@ -22,7 +22,9 @@ for (const width of VIEWPORT_WIDTHS) {
       test(`${item.href} has no horizontal overflow or axe violations`, async ({ page }) => {
         await page.goto(item.href);
 
-        await expect(page.getByRole("heading", { level: 1 })).toHaveText(item.label);
+        await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+          item.heading ?? item.label,
+        );
         expect(await horizontalOverflow(page)).toBe(0);
         const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
         expect(results.violations.map((violation) => violation.id)).toEqual([]);
@@ -43,7 +45,7 @@ test.describe("desktop navigation", () => {
       await nav.getByRole("link", { name: item.label, exact: true }).click();
 
       await expect(page).toHaveURL(item.href);
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText(item.label);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(item.heading ?? item.label);
       await expect(nav.locator('[aria-current="page"]')).toHaveText(item.label);
     }
   });
