@@ -37,11 +37,12 @@ def test_readiness_fails_safely_when_database_is_unavailable() -> None:
         assert "SELECT" not in response.text
 
 
-def test_no_auth_or_optimization_routes_exist() -> None:
+def test_only_documented_routes_exist() -> None:
     app = application()
     assert set(app.openapi()["paths"]) == {
         "/health/live",
         "/health/ready",
+        "/planning/plans",
         "/reports",
         "/reports/{report_id}",
     }
