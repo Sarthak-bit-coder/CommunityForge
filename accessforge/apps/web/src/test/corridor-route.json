@@ -1,0 +1,71 @@
+{
+  "threshold_m": 100.0,
+  "current": {
+    "status": "no_route",
+    "reason": "barrier",
+    "generalized_cost": null,
+    "distance_m": null,
+    "node_ids": [],
+    "edge_ids": [],
+    "barriers_on_route": []
+  },
+  "after_repairs": {
+    "status": "accessible",
+    "reason": null,
+    "generalized_cost": 50.0,
+    "distance_m": 50.0,
+    "node_ids": ["a", "b", "c"],
+    "edge_ids": ["e0", "e1"],
+    "barriers_on_route": []
+  },
+  "affecting_barriers": [
+    {
+      "id": "b0",
+      "edge_id": "e0",
+      "node_id": null,
+      "type": "step",
+      "severity": 3,
+      "verified": true,
+      "blocks_profile": true
+    },
+    {
+      "id": "b1",
+      "edge_id": "e1",
+      "node_id": null,
+      "type": "step",
+      "severity": 3,
+      "verified": true,
+      "blocks_profile": true
+    }
+  ],
+  "limitations": [
+    "Synthetic demonstration network. Streets, barriers and destinations are generated, not Fremont data.",
+    "A route is a modeled path over the edges and barriers in this model. It was not checked on site.",
+    "An accessible route is not a guarantee of safety or step-free travel.",
+    "Only recorded barriers are modeled. An unrecorded barrier can block any route.",
+    "Repair effects are modeled for the recommended combination. Real repairs are unverified until checked on site.",
+    "Costs are abstract cost units, not dollars."
+  ],
+  "dataset": "corridor",
+  "synthetic": true,
+  "budget": 20.0,
+  "engine_version": "0.1.0",
+  "snapshot_id": "0c09500d6f84ed60da6e53576915d4ffd8deafd6185e67623bcbad8955a32fa4",
+  "origin_id": "home",
+  "destination_id": "clinic",
+  "profile_id": "wheelchair",
+  "recommended_repair_ids": ["r0", "r1"],
+  "recommended_cost": 20.0,
+  "route_impacts": [
+    {
+      "profile_id": "wheelchair",
+      "origin_id": "home",
+      "destination_id": "clinic",
+      "modeled_reach_before": 0.0,
+      "modeled_reach_after": 1.0,
+      "contributing_repair_ids": ["r0", "r1"],
+      "current_distance_m": null,
+      "modeled_distance_m": 50.0
+    }
+  ]
+}
