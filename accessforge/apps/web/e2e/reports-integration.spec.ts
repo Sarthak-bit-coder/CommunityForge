@@ -70,11 +70,14 @@ test("submission failure keeps fields and retries only on user action", async ({
     );
   });
   await page.goto("/report");
-  await page.getByLabel("Barrier type").selectOption("obstruction");
+  await page.getByRole("radio", { name: "Obstruction", exact: true }).check();
   await page.getByLabel("Description", { exact: true }).fill("Blocked walkway");
   await page.getByLabel("Latitude", { exact: true }).fill("37.5485");
   await page.getByLabel("Longitude", { exact: true }).fill("-121.9886");
-  await page.getByLabel("Severity (1–5)").selectOption("3");
+  await page
+    .getByRole("group", { name: "Severity (1–5)" })
+    .getByLabel("3", { exact: true })
+    .check();
   await page.getByRole("button", { name: "Submit report", exact: true }).click();
   // Next adds its own empty route-announcer alert, so match the form's alert by text.
   await expect(page.getByRole("alert").filter({ hasText: "could not complete" })).toBeVisible();

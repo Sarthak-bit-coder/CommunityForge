@@ -26,6 +26,10 @@ for (const width of VIEWPORT_WIDTHS) {
           item.heading ?? item.label,
         );
         expect(await horizontalOverflow(page)).toBe(0);
+        // Entrance fades blend colours mid-animation; check contrast on the settled page.
+        await page.waitForFunction(() =>
+          document.getAnimations().every((animation) => animation.playState !== "running"),
+        );
         const results = await new AxeBuilder({ page }).withTags(WCAG_TAGS).analyze();
         expect(results.violations.map((violation) => violation.id)).toEqual([]);
       });
