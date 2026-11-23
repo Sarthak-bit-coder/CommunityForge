@@ -8,7 +8,10 @@ import { axeViolations } from "@/test/axe";
 import { fakeMapControl, resetFakeMaplibre } from "@/test/fake-maplibre";
 
 vi.mock("maplibre-gl", () => import("@/test/fake-maplibre"));
-vi.mock("next/navigation", () => ({ usePathname: () => "/barriers" }));
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/barriers",
+  useRouter: () => ({ push: vi.fn() }),
+}));
 
 async function renderLoadedPage() {
   const view = render(
@@ -116,5 +119,20 @@ describe("Barriers page", () => {
     await user.selectOptions(screen.getByLabelText("Verification status"), "Pending");
 
     expect(detailsSection()).toHaveTextContent("Select a barrier on the map or in the list");
+  });
+
+  it("lets small-screen users fold the filters away and back", async () => {
+    const user = userEvent.setup();
+    await renderLoadedPage();
+    const toggle = screen.getByRole("button", { name: "Filters" });
+    const filters = document.getElementById(toggle.getAttribute("aria-controls")!)!;
+    expect(toggle).toHaveAttribute("aria-expanded", "true");
+
+    await user.click(toggle);
+
+    expect(toggle).toHaveAttribute("aria-expanded", "false");
+    expect(filters).toHaveClass("hidden");
+    await user.click(toggle);
+    expect(filters).not.toHaveClass("hidden");
   });
 });

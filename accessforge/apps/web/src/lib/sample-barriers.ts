@@ -1,15 +1,14 @@
 import type { Barrier, LngLat } from "./barriers";
 
-// FICTIONAL SAMPLE DATA. None of these barriers, streets, reports, or dates are real.
-// They exist only to demonstrate the map and list until real data is connected.
+// FICTIONAL SAMPLE DATA. None of these barriers, reports, or dates are real. They are placed on
+// a fictional grid of points, not at surveyed locations, only to demonstrate the map and list.
 
 export const SAMPLE_DATA_NOTICE =
-  "All barriers and streets shown here are fictional sample data for demonstration. They are not real locations, reports, or inspections.";
+  "All barriers shown here are fictional sample data for demonstration. Their positions on the real basemap are invented; they are not real reports, locations, or inspections.";
 
 export const SAMPLE_MAP_CENTER: LngLat = { lng: -121.9886, lat: 37.5485 };
-export const SAMPLE_MAP_ZOOM = 15;
 
-// A fictional street grid drawn without any basemap, so the map needs no network access.
+// Fictional placement grid around the pilot centre.
 const GRID_STREET_COUNT = 5;
 const GRID_SPACING_DEGREES = 0.002;
 const GRID_HALF_SPAN = ((GRID_STREET_COUNT - 1) / 2) * GRID_SPACING_DEGREES;
@@ -23,33 +22,6 @@ function samplePoint(column: number, row: number, alongBlock = 0): LngLat {
   return {
     lng: SAMPLE_MAP_CENTER.lng + gridOffset(column) + alongBlock * GRID_SPACING_DEGREES,
     lat: SAMPLE_MAP_CENTER.lat + gridOffset(row),
-  };
-}
-
-export function sampleStreetGrid(): GeoJSON.FeatureCollection<GeoJSON.LineString> {
-  const { lng, lat } = SAMPLE_MAP_CENTER;
-  const indices = Array.from({ length: GRID_STREET_COUNT }, (_, index) => index);
-  const line = (coordinates: GeoJSON.Position[]): GeoJSON.Feature<GeoJSON.LineString> => ({
-    type: "Feature",
-    properties: {},
-    geometry: { type: "LineString", coordinates },
-  });
-  return {
-    type: "FeatureCollection",
-    features: [
-      ...indices.map((index) =>
-        line([
-          [lng - GRID_HALF_SPAN, lat + gridOffset(index)],
-          [lng + GRID_HALF_SPAN, lat + gridOffset(index)],
-        ]),
-      ),
-      ...indices.map((index) =>
-        line([
-          [lng + gridOffset(index), lat - GRID_HALF_SPAN],
-          [lng + gridOffset(index), lat + GRID_HALF_SPAN],
-        ]),
-      ),
-    ],
   };
 }
 

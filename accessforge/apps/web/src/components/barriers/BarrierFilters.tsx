@@ -14,17 +14,14 @@ type BarrierFiltersProps = {
   readonly onChange: (filter: BarrierFilter) => void;
 };
 
-const SELECT_CLASS =
-  "mt-1 block min-h-11 w-full rounded-md border border-muted bg-surface px-3 text-ink";
-
 export function BarrierFilters({ filter, onChange }: BarrierFiltersProps) {
   return (
-    <fieldset className="grid gap-4 sm:grid-cols-2">
-      <legend className="mb-2 text-lg font-semibold text-ink">Filter barriers</legend>
-      <label className="block font-medium text-ink">
+    <fieldset className="grid gap-3 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+      <legend className="sr-only">Filter barriers</legend>
+      <label className="af-label">
         Barrier type
         <select
-          className={SELECT_CLASS}
+          className="af-select"
           value={filter.type}
           onChange={(event) =>
             onChange({ ...filter, type: event.target.value as BarrierType | typeof ALL })
@@ -38,10 +35,10 @@ export function BarrierFilters({ filter, onChange }: BarrierFiltersProps) {
           ))}
         </select>
       </label>
-      <label className="block font-medium text-ink">
+      <label className="af-label">
         Verification status
         <select
-          className={SELECT_CLASS}
+          className="af-select"
           value={filter.state}
           onChange={(event) =>
             onChange({ ...filter, state: event.target.value as VerificationState | typeof ALL })

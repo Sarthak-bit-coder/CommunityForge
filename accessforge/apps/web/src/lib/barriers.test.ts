@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { NO_FILTER, filterBarriers } from "./barriers";
-import { SAMPLE_BARRIERS, sampleStreetGrid } from "./sample-barriers";
+import { SAMPLE_BARRIERS } from "./sample-barriers";
 
 describe("filterBarriers", () => {
   it("returns every barrier when no filter is set", () => {
@@ -32,9 +32,5 @@ describe("sample data", () => {
       expect(barrier.description).toMatch(/^Fictional example/);
       expect(barrier.locationDescription).toMatch(/\(fictional\)$/);
     }
-  });
-
-  it("draws a square street grid", () => {
-    expect(sampleStreetGrid().features).toHaveLength(10);
   });
 });

@@ -5,6 +5,13 @@ import { vi } from "vitest";
 type MapEvent = { error?: Error; lngLat?: { lat: number; lng: number } };
 type Handler = (event: MapEvent) => void;
 type LngLatTuple = readonly [number, number];
+type MapOptions = {
+  container: HTMLElement;
+  center?: LngLatTuple;
+  zoom?: number;
+  pitch?: number;
+  style?: unknown;
+};
 
 export const fakeMapControl = { throwOnCreate: false, instances: [] as FakeMap[] };
 
@@ -17,13 +24,33 @@ export class FakeMap {
   readonly container: HTMLElement;
   readonly easeTo = vi.fn();
   readonly fitBounds = vi.fn();
+  readonly setMaxBounds = vi.fn();
+  readonly isMoving = vi.fn(() => false);
+  readonly streets = { setData: vi.fn() };
+  readonly addSource = vi.fn();
+  readonly addLayer = vi.fn();
+  readonly jumpTo = vi.fn();
+  readonly flyTo = vi.fn();
+  readonly setPaintProperty = vi.fn();
+  readonly setSky = vi.fn();
+  readonly setLight = vi.fn();
+  readonly getLayer = vi.fn(() => undefined);
+  /** Layers in the loaded basemap style; tests add a building layer to exercise 3D buildings. */
+  styleLayers: { id: string; type?: string; source?: string; "source-layer"?: string }[] = [];
+  getStyle(): {
+    layers: { id: string; type?: string; source?: string; "source-layer"?: string }[];
+  } {
+    return { layers: this.styleLayers };
+  }
+  readonly options: MapOptions;
   isRemoved = false;
   private isLoaded = false;
   private center: LngLatTuple;
   private readonly handlers = new Map<string, Handler[]>();
 
-  constructor(options: { container: HTMLElement; center?: LngLatTuple }) {
+  constructor(options: MapOptions) {
     if (fakeMapControl.throwOnCreate) throw new Error("WebGL is not supported");
+    this.options = options;
     this.container = options.container;
     this.center = options.center ?? [0, 0];
     fakeMapControl.instances.push(this);
@@ -46,8 +73,14 @@ export class FakeMap {
     );
     return this;
   }
+  getSource(id: string): { setData: (data: unknown) => void } | undefined {
+    return id === "streets" ? this.streets : undefined;
+  }
   getCenter(): { lng: number; lat: number } {
     return { lng: this.center[0], lat: this.center[1] };
+  }
+  getZoom(): number {
+    return 13;
   }
   loaded(): boolean {
     return this.isLoaded;
@@ -67,6 +100,8 @@ export class Marker {
 
   constructor(options: { element: HTMLElement }) {
     this.element = options.element;
+    // Like the real Marker: this class is what positions the element on the map.
+    this.element.classList.add("maplibregl-marker");
   }
   setLngLat(lngLat: LngLatTuple): this {
     this.lngLat = lngLat;

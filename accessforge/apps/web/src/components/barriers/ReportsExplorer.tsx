@@ -1,19 +1,31 @@
 "use client";
 
 import { useEffect, useEffectEvent, useState, type ReactNode } from "react";
+import { KineticTitle } from "@/components/ui/KineticTitle";
+import { Notice } from "@/components/ui/Notice";
 import { NO_FILTER, type Barrier, type BarrierFilter } from "@/lib/barriers";
+import { findNavItem } from "@/lib/navigation";
 import { fetchReport, fetchReports, PAGE_SIZE, reportBarrier } from "@/lib/reports-api";
 import { SAMPLE_BARRIERS, SAMPLE_DATA_NOTICE } from "@/lib/sample-barriers";
 import { BarrierExplorer } from "./BarrierExplorer";
 
+const PAGE = findNavItem("/barriers");
+const MAX_PAGE = 10_000;
+
 export function ReportsExplorer() {
   const [demo, setDemo] = useState(false);
-  return (
-    <div className="space-y-6">
-      <label className="block font-medium text-ink">
+  const header = (
+    <>
+      <div>
+        <h1 className="af-display text-2xl">
+          <KineticTitle text={PAGE.label} />
+        </h1>
+        <p className="mt-1 text-sm text-muted">{PAGE.description}</p>
+      </div>
+      <label className="af-label">
         Data source
         <select
-          className="ml-3 min-h-11 rounded border border-line p-2"
+          className="af-select"
           value={demo ? "demo" : "reports"}
           onChange={(event) => setDemo(event.target.value === "demo")}
         >
@@ -21,34 +33,42 @@ export function ReportsExplorer() {
           <option value="demo">Fictional demo data</option>
         </select>
       </label>
-      {demo ? (
+    </>
+  );
+  return demo ? (
+    <BarrierExplorer
+      barriers={SAMPLE_BARRIERS}
+      header={
         <>
-          <aside aria-label="Sample data notice" className="rounded border border-warning p-4">
+          {header}
+          <Notice label="Sample data notice" tone="warning">
             Fictional sample data. {SAMPLE_DATA_NOTICE}
-          </aside>
-          <BarrierExplorer barriers={SAMPLE_BARRIERS} />
+          </Notice>
         </>
-      ) : (
-        <LiveReports />
-      )}
-    </div>
+      }
+    />
+  ) : (
+    <LiveReports header={header} />
   );
 }
+
+type ReportsResult = { readonly barriers: readonly Barrier[]; readonly total: number };
 
 export function LiveReports({
   initialFilter = NO_FILTER,
   review,
+  header,
 }: {
   readonly initialFilter?: BarrierFilter;
   /** Reviewer-only controls for the selected report; `reload` refreshes the queue. */
   readonly review?: (report: Barrier, reload: () => void) => ReactNode;
+  /** Heading and controls shown above the reports notice. */
+  readonly header?: ReactNode;
 }) {
   const [filter, setFilter] = useState<BarrierFilter>(initialFilter);
   const [page, setPage] = useState(1);
   const [retry, setRetry] = useState(0);
-  const [result, setResult] = useState<{ barriers: readonly Barrier[]; total: number } | null>(
-    null,
-  );
+  const [result, setResult] = useState<ReportsResult | null>(null);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
   const [selected, setSelected] = useState<string | null>(null);
@@ -129,74 +149,118 @@ export function LiveReports({
     return () => window.removeEventListener("focus", refresh);
   }, []);
   return (
-    <div className="space-y-4">
-      <p className="text-ink">
-        Submitted reports are real submissions, not fictional samples. Pending reports await
-        verification; verified reports are not official inspections. The map background still uses
-        fictional streets; use coordinates and the equivalent list.
-      </p>
+    <BarrierExplorer
+      barriers={result?.barriers ?? []}
+      remote={{
+        filter,
+        onFilter: change,
+        onSelect: select,
+        detail,
+        selectedId: selected,
+        detailActions: detail && review ? review(detail, reload) : undefined,
+      }}
+      header={
+        <>
+          {header}
+          <Notice label="About submitted reports">
+            Real submissions, not fictional samples. Pending reports await verification; verified
+            reports are not official inspections.
+          </Notice>
+          <ReportsStatus
+            isRefreshing={refreshing}
+            isLoading={!result && !error}
+            hasStaleResult={!!(error && result)}
+            isDetailLoading={detailLoading}
+            error={error}
+            detailError={detailError}
+            onReload={reload}
+          />
+        </>
+      }
+      footer={
+        <nav aria-label="Report pages" className="grid grid-cols-2 gap-2">
+          <p role="status" className="col-span-2 text-center text-sm text-muted">
+            Page {page}. {result ? `${result.total} reports match.` : "Results unavailable."}
+          </p>
+          <button
+            type="button"
+            className="af-button-secondary px-2 text-sm disabled:pointer-events-none disabled:bg-canvas disabled:text-muted"
+            disabled={!result || page === 1}
+            onClick={() => change(filter, page - 1)}
+          >
+            Previous page
+          </button>
+          <button
+            type="button"
+            className="af-button-secondary px-2 text-sm disabled:pointer-events-none disabled:bg-canvas disabled:text-muted"
+            disabled={!result || page * PAGE_SIZE >= result.total || page >= MAX_PAGE}
+            onClick={() => change(filter, page + 1)}
+          >
+            Next page
+          </button>
+        </nav>
+      }
+    />
+  );
+}
+
+type ReportsStatusProps = {
+  readonly isRefreshing: boolean;
+  readonly isLoading: boolean;
+  readonly hasStaleResult: boolean;
+  readonly isDetailLoading: boolean;
+  readonly error: string;
+  readonly detailError: string;
+  readonly onReload: () => void;
+};
+
+function ReportsStatus(props: ReportsStatusProps) {
+  const { isRefreshing, isLoading, hasStaleResult, isDetailLoading, error, detailError } = props;
+  return (
+    <div className="space-y-2 text-sm">
       <button
         type="button"
-        className="min-h-11 rounded-md border border-accent px-4 text-accent"
-        disabled={refreshing}
-        onClick={reload}
+        className="af-button-secondary w-full text-sm"
+        disabled={isRefreshing}
+        onClick={props.onReload}
       >
         Refresh reports
       </button>
-      {refreshing ? <p role="status">Refreshing reports…</p> : null}
-      {error && result ? (
+      {isRefreshing ? <p role="status">Refreshing reports…</p> : null}
+      {hasStaleResult ? (
         <p role="status">Showing previously loaded reports; statuses may be out of date.</p>
       ) : null}
-      {!result && !error ? <p role="status">Loading reports…</p> : null}
+      {isLoading ? <p role="status">Loading reports…</p> : null}
       {error ? (
-        <div role="alert">
-          <p>{error}</p>
-          <button type="button" className="min-h-11 underline" onClick={reload}>
-            Retry reports
-          </button>
-        </div>
+        <ErrorNotice message={error} retryLabel="Retry reports" onRetry={props.onReload} />
       ) : null}
-      {detailLoading ? <p role="status">Loading report details…</p> : null}
+      {isDetailLoading ? <p role="status">Loading report details…</p> : null}
       {detailError ? (
-        <div role="alert">
-          <p>{detailError}</p>
-          <button type="button" className="min-h-11 underline" onClick={reload}>
-            Retry report details
-          </button>
-        </div>
+        <ErrorNotice
+          message={detailError}
+          retryLabel="Retry report details"
+          onRetry={props.onReload}
+        />
       ) : null}
-      <BarrierExplorer
-        barriers={result?.barriers ?? []}
-        remote={{
-          filter,
-          onFilter: change,
-          onSelect: select,
-          detail,
-          selectedId: selected,
-          detailActions: detail && review ? review(detail, reload) : undefined,
-        }}
-      />
-      <nav aria-label="Report pages" className="flex flex-wrap items-center gap-4">
-        <button
-          type="button"
-          className="min-h-11 underline disabled:opacity-50"
-          disabled={!result || page === 1}
-          onClick={() => change(filter, page - 1)}
-        >
-          Previous page
-        </button>
-        <p role="status">
-          Page {page}. {result ? `${result.total} reports match.` : "Results unavailable."}
-        </p>
-        <button
-          type="button"
-          className="min-h-11 underline disabled:opacity-50"
-          disabled={!result || page * PAGE_SIZE >= result.total || page >= 10000}
-          onClick={() => change(filter, page + 1)}
-        >
-          Next page
-        </button>
-      </nav>
+    </div>
+  );
+}
+
+function ErrorNotice({
+  message,
+  retryLabel,
+  onRetry,
+}: {
+  readonly message: string;
+  readonly retryLabel: string;
+  readonly onRetry: () => void;
+}) {
+  return (
+    <div role="alert" className="rounded-lg border border-warning bg-warning-soft p-3 text-warning">
+      <p className="font-semibold">{message}</p>
+      <button type="button" className="mt-1 min-h-11 font-semibold underline" onClick={onRetry}>
+        {retryLabel}
+      </button>
     </div>
   );
 }

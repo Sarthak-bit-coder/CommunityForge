@@ -21,7 +21,12 @@ export const VERIFICATION_STATES = [
 ] as const;
 export type VerificationState = (typeof VERIFICATION_STATES)[number];
 
-export const BARRIER_SOURCES = ["community_report", "city_record", "field_verification"] as const;
+export const BARRIER_SOURCES = [
+  "community_report",
+  "city_record",
+  "field_verification",
+  "open_map_data",
+] as const;
 export type BarrierSource = (typeof BARRIER_SOURCES)[number];
 
 export const MIN_SEVERITY = 1;
@@ -65,6 +70,7 @@ export const SOURCE_LABELS: Record<BarrierSource, string> = {
   community_report: "Community report",
   city_record: "City record",
   field_verification: "Field verification",
+  open_map_data: "OpenStreetMap",
 };
 
 type StateDisplay = {
