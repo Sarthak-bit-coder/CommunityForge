@@ -16,7 +16,13 @@ export default defineConfig({
       provider: "v8",
       include: ["src/**/*.{ts,tsx}"],
       // Root layout loads next/font, which only runs under Next; Playwright covers it.
-      exclude: ["src/test/**", "src/**/*.test.{ts,tsx}", "src/app/layout.tsx"],
+      // The 3D route scene needs WebGL, which jsdom lacks; Playwright renders it.
+      exclude: [
+        "src/test/**",
+        "src/**/*.test.{ts,tsx}",
+        "src/app/layout.tsx",
+        "src/components/home/RepairRouteScene.tsx",
+      ],
       reporter: ["text", "html"],
       thresholds: {
         lines: COVERAGE_THRESHOLD,
