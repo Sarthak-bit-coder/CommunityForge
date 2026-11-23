@@ -31,6 +31,7 @@ let signedIn: boolean;
 let reviews: unknown[];
 let reviewStatus: number;
 let calls: Call[];
+let reportState: string;
 
 function reply(data: unknown, status = 200) {
   return new Response(
@@ -47,6 +48,7 @@ beforeEach(() => {
   reviews = [];
   reviewStatus = 201;
   calls = [];
+  reportState = "unverified";
   vi.stubGlobal(
     "fetch",
     vi.fn().mockImplementation((url: string, init: RequestInit = {}) => {
@@ -70,7 +72,8 @@ beforeEach(() => {
             ? reply(review, reviewStatus)
             : reply(signedIn ? reviews : null, signedIn ? 200 : 401),
         );
-      return Promise.resolve(reply(url.includes("?") ? [report] : report));
+      const current = { ...report, state: reportState };
+      return Promise.resolve(reply(url.includes("?") ? [current] : current));
     }),
   );
 });
@@ -80,6 +83,9 @@ async function signInAndOpenReport(user: ReturnType<typeof userEvent.setup>) {
   await user.type(await screen.findByLabelText("Reviewer access key"), "right-key");
   await user.click(screen.getByRole("button", { name: "Sign in" }));
   await screen.findByRole("heading", { name: "Signed in as a reviewer" });
+  // The queue opens on pending reports; reviewers switch the filter to reach repair steps.
+  if (reportState !== "unverified")
+    await user.selectOptions(screen.getByLabelText("Verification status"), reportState);
   await user.click(
     await screen.findByRole("button", { name: `View details for Report ${report.id}` }),
   );
@@ -116,6 +122,8 @@ it("lets a signed-in reviewer verify a pending report with a required reason", a
   await user.click(within(detail).getByRole("button", { name: "✓ Verify report" }));
   const reason = within(detail).getByLabelText("Reason for your decision");
   expect(reason).toHaveAccessibleDescription(/Give a reason/);
+  // Focus returns to the field so a screen reader announces the error with it.
+  await waitFor(() => expect(reason).toHaveFocus());
   expect(calls.some((call) => call.method === "POST" && call.url.endsWith("/reviews"))).toBe(false);
   expect(await axeViolations(container)).toEqual([]);
 
@@ -140,9 +148,38 @@ it("rejects a report, shows audit history, and explains an already-reviewed conf
 
   await user.type(within(detail).getByLabelText("Reason for your decision"), "Duplicate");
   await user.click(within(detail).getByRole("button", { name: "✕ Reject report" }));
-  expect(await within(detail).findByRole("alert")).toHaveTextContent("already reviewed");
+  expect(await within(detail).findByRole("alert")).toHaveTextContent("status already changed");
   expect(calls.at(-1)?.body).toEqual({ status: "rejected", reason: "Duplicate" });
   expect(within(detail).getByRole("button", { name: "✕ Reject report" })).toBeEnabled();
+});
+
+it.each([
+  ["confirmed", "Mark repair planned", "repair_planned", "marked repair planned"],
+  ["repair_planned", "Mark repair completed", "repair_completed", "marked repair completed"],
+  ["repair_completed", "Mark resolved after site visit", "resolved", "marked resolved"],
+])("offers only the next repair step for a %s report", async (state, action, decision, message) => {
+  const user = userEvent.setup();
+  reportState = state;
+  const { container } = render(<ReviewDashboard />);
+  const detail = await signInAndOpenReport(user);
+  expect(within(detail).queryByRole("button", { name: /verify report|reject report/i })).toBeNull();
+  expect(await axeViolations(container)).toEqual([]);
+
+  await user.type(within(detail).getByLabelText("Note for this repair update"), "Crew booked");
+  await user.click(within(detail).getByRole("button", { name: action }));
+
+  expect(await screen.findByText(`Report ${report.id} was ${message}.`)).toBeInTheDocument();
+  const posted = calls.filter((call) => call.method === "POST" && call.url.endsWith("/reviews"));
+  expect(posted.at(-1)?.body).toEqual({ status: decision, reason: "Crew booked" });
+});
+
+it("shows no further steps for a resolved report", async () => {
+  const user = userEvent.setup();
+  reportState = "resolved";
+  render(<ReviewDashboard />);
+  const detail = await signInAndOpenReport(user);
+  expect(await within(detail).findByText(/No further steps remain/)).toBeInTheDocument();
+  expect(within(detail).queryByRole("textbox")).toBeNull();
 });
 
 it("restores an existing session and signs out back to read-only", async () => {
@@ -153,4 +190,27 @@ it("restores an existing session and signs out back to read-only", async () => {
   await user.click(screen.getByRole("button", { name: "Sign out" }));
   expect(await screen.findByText("Signed out.")).toBeInTheDocument();
   expect(screen.getByLabelText("Reviewer access key")).toHaveValue("");
+});
+
+it("prints selected visits without report text, removes entries and clears them on sign-out", async () => {
+  const user = userEvent.setup();
+  const print = vi.fn();
+  vi.stubGlobal("print", print);
+  render(<ReviewDashboard />);
+  expect(screen.queryByRole("region", { name: "Field visit checklist" })).toBeNull();
+  const detail = await signInAndOpenReport(user);
+  const add = within(detail).getByRole("button", { name: "Add to field checklist" });
+  await user.click(add);
+  const checklist = screen.getByRole("region", { name: "Field visit checklist" });
+  expect(checklist).toHaveTextContent("Obstruction");
+  expect(checklist).toHaveTextContent("37.5485, -121.9886");
+  expect(checklist).not.toHaveTextContent(report.description);
+  expect(checklist).not.toHaveTextContent(REVIEWER);
+  await user.click(within(checklist).getByRole("button", { name: "Print field checklist" }));
+  expect(print).toHaveBeenCalledOnce();
+  await user.click(within(checklist).getByRole("button", { name: /Remove report/ }));
+  expect(within(checklist).queryByRole("listitem")).toBeNull();
+  await user.click(add);
+  await user.click(screen.getByRole("button", { name: "Sign out" }));
+  expect(screen.queryByRole("region", { name: "Field visit checklist" })).toBeNull();
 });

@@ -8,7 +8,10 @@ import {
   STATE_DISPLAY,
   VERIFICATION_STATES,
 } from "@/lib/barriers";
+import { CountUp } from "@/components/motion/CountUp";
+import { SpotlightCard } from "@/components/motion/SpotlightCard";
 import { dataUri } from "@/lib/planning-api";
+import { FeedbackForm } from "./FeedbackForm";
 import { fetchSummary, type ReportSummary } from "@/lib/reports-api";
 
 const PERCENT = 100;
@@ -21,9 +24,11 @@ function day(value: string | null): string {
   return value ? value.slice(0, 10) : "No reports yet";
 }
 
-export function summaryCsv(summary: ReportSummary): string {
+export function summaryCsv(summary: ReportSummary, generatedAt: Date = new Date()): string {
   const rows = [
     ["notice", `"${NOTICE}"`],
+    ["generated_at", generatedAt.toISOString()],
+    ["source", "Community reports submitted to AccessForge (anonymous; no city records)"],
     ["first_report_at", summary.first_report_at ?? ""],
     ["last_report_at", summary.last_report_at ?? ""],
     ["total_reports", summary.total],
@@ -105,25 +110,14 @@ export function PilotDashboard({ feedbackEmail }: { readonly feedbackEmail: stri
 
   const verified = summary?.by_state.confirmed ?? 0;
   const pending = summary?.by_state.unverified ?? 0;
+  const inRepair =
+    (summary?.by_state.repair_planned ?? 0) + (summary?.by_state.repair_completed ?? 0);
+  const resolved = summary?.by_state.resolved ?? 0;
 
   return (
     <div className="space-y-10">
-      <aside
-        aria-labelledby="pilot-status-heading"
-        className="rounded-lg border border-warning bg-warning-soft p-4 text-ink"
-      >
-        <h2 id="pilot-status-heading" className="font-semibold">
-          Pilot preview, not an official dashboard
-        </h2>
-        <p className="mt-1">
-          AccessForge is an independent project preparing a pilot in Fremont, California. The City
-          of Fremont has not reviewed, endorsed, or adopted it. No repair has been made or confirmed
-          because of anything shown here.
-        </p>
-      </aside>
-
       <section aria-labelledby="counts-heading">
-        <h2 id="counts-heading" className="text-xl font-semibold text-ink">
+        <h2 id="counts-heading" className="af-h2">
           Reports received
         </h2>
         {error ? (
@@ -146,19 +140,23 @@ export function PilotDashboard({ feedbackEmail }: { readonly feedbackEmail: stri
           </p>
         ) : (
           <>
-            <dl className="mt-4 grid gap-4 sm:grid-cols-3">
+            <dl className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               {(
                 [
                   ["Total reports", summary.total, "Everything submitted through this site."],
                   ["Verified", verified, "Confirmed by a signed-in reviewer."],
                   ["Pending", pending, "Not yet checked. Treat as unconfirmed."],
+                  ["Repair underway", inRepair, "Repair planned, or done but not yet rechecked."],
+                  ["Resolved", resolved, "Repair rechecked on site by a reviewer."],
                 ] as const
               ).map(([label, value, note]) => (
-                <div key={label} className="rounded-lg border border-line bg-surface p-4">
+                <SpotlightCard key={label} className="rounded-lg border border-line bg-surface p-4">
                   <dt className="text-sm font-medium text-muted">{label}</dt>
-                  <dd className="mt-1 text-3xl font-bold text-ink">{value}</dd>
+                  <dd className="mt-1 text-3xl font-bold text-ink">
+                    <CountUp value={value} />
+                  </dd>
                   <dd className="mt-1 text-sm text-muted">{note}</dd>
-                </div>
+                </SpotlightCard>
               ))}
             </dl>
             {summary.total === 0 ? (
@@ -200,12 +198,20 @@ export function PilotDashboard({ feedbackEmail }: { readonly feedbackEmail: stri
       </section>
 
       <section aria-labelledby="provenance-heading">
-        <h2 id="provenance-heading" className="text-xl font-semibold text-ink">
+        <h2 id="provenance-heading" className="af-h2">
           Where the data comes from
         </h2>
         <dl className="mt-3 grid max-w-prose grid-cols-[auto_1fr] gap-x-6 gap-y-2">
+          <dt className="font-semibold text-ink">Run by</dt>
+          <dd>
+            AccessForge, an independent community project piloting in Fremont, California. Not
+            affiliated with or endorsed by the City of Fremont.
+          </dd>
           <dt className="font-semibold text-ink">Source</dt>
-          <dd>Community reports submitted through this site. No city records are loaded.</dd>
+          <dd>
+            Community reports submitted through this site. Repair statuses are recorded by
+            AccessForge reviewers. No City records are loaded.
+          </dd>
           <dt className="font-semibold text-ink">First report</dt>
           <dd>{summary ? day(summary.first_report_at) : "Unavailable"}</dd>
           <dt className="font-semibold text-ink">Latest report</dt>
@@ -222,7 +228,7 @@ export function PilotDashboard({ feedbackEmail }: { readonly feedbackEmail: stri
       </section>
 
       <section aria-labelledby="modeled-heading">
-        <h2 id="modeled-heading" className="text-xl font-semibold text-ink">
+        <h2 id="modeled-heading" className="af-h2">
           Modeled repair planning
         </h2>
         <p className="mt-2 max-w-prose">
@@ -238,7 +244,7 @@ export function PilotDashboard({ feedbackEmail }: { readonly feedbackEmail: stri
       </section>
 
       <section aria-labelledby="limits-heading">
-        <h2 id="limits-heading" className="text-xl font-semibold text-ink">
+        <h2 id="limits-heading" className="af-h2">
           Method and limits
         </h2>
         <ul className="mt-3 max-w-prose list-disc space-y-1 pl-5">
@@ -248,30 +254,28 @@ export function PilotDashboard({ feedbackEmail }: { readonly feedbackEmail: stri
           </li>
           <li>Counts reflect who chose to report, not how many barriers exist.</li>
           <li>Several reports can describe the same barrier; duplicates are not merged yet.</li>
+          <li>A repair status does not mean the repair happened because of this site.</li>
           <li>Nothing here says a route is safe or usable.</li>
         </ul>
       </section>
 
       <section aria-labelledby="feedback-heading">
-        <h2 id="feedback-heading" className="text-xl font-semibold text-ink">
+        <h2 id="feedback-heading" className="af-h2">
           Feedback from advocates, residents, and city staff
         </h2>
+        <FeedbackForm />
         {feedbackEmail ? (
-          <p className="mt-2 max-w-prose">
-            Tell us what is wrong, missing, or unclear:{" "}
+          <p className="mt-4 max-w-prose text-muted">
+            Prefer email? Write to{" "}
             <a
               className="font-semibold text-accent underline"
               href={`mailto:${feedbackEmail}?subject=${encodeURIComponent("AccessForge pilot feedback")}`}
             >
               {feedbackEmail}
             </a>
-            . Please do not include private details about other people.
+            .
           </p>
-        ) : (
-          <p className="mt-2 max-w-prose text-muted">
-            A feedback contact has not been set up for this deployment yet.
-          </p>
-        )}
+        ) : null}
       </section>
     </div>
   );

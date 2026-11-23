@@ -1,11 +1,44 @@
 // Reviewer-only calls. The access key lives in an HTTP-only cookie set by the API;
 // this code never stores it and cannot read it back.
 
-export type ReviewDecision = "verified" | "rejected";
+import type { Barrier } from "./barriers";
+
+export type ReviewDecision =
+  "verified" | "rejected" | "repair_planned" | "repair_completed" | "resolved";
+
+type RepairStep = {
+  readonly decision: ReviewDecision;
+  readonly action: string;
+  readonly help: string;
+  readonly done: string;
+};
+
+// The one allowed next step per state; mirrors REVIEW_TRANSITIONS in the API.
+export const REPAIR_STEPS: Partial<Record<Barrier["state"], RepairStep>> = {
+  confirmed: {
+    decision: "repair_planned",
+    action: "Mark repair planned",
+    help: "Use when a repair is scheduled or funded. Note who scheduled it and when, if known.",
+    done: "marked repair planned",
+  },
+  repair_planned: {
+    decision: "repair_completed",
+    action: "Mark repair completed",
+    help: "Use when the repair is reported finished. A follow-up site visit is still needed.",
+    done: "marked repair completed",
+  },
+  repair_completed: {
+    decision: "resolved",
+    action: "Mark resolved after site visit",
+    help: "Use only after someone visited the site and confirmed the barrier is gone.",
+    done: "marked resolved",
+  },
+};
 export type Review = {
   readonly id: string;
   readonly report_id: string;
   readonly reviewer_id: string;
+  readonly from_state: string;
   readonly to_state: string;
   readonly reason: string;
   readonly reviewed_at: string;
@@ -31,7 +64,7 @@ async function call(path: string, unauthorized: string, init: RequestInit = {}):
   if (response.ok) return response;
   if (response.status === UNAUTHORIZED) throw new Error(unauthorized);
   if (response.status === CONFLICT)
-    throw new Error("This report was already reviewed. Refresh reports to see its status.");
+    throw new Error("This report's status already changed. Refresh reports to see its status.");
   if (response.status === TOO_MANY_REQUESTS)
     throw new Error("Too many failed sign-in attempts. Wait a minute before trying again.");
   throw new Error("The review service could not complete this request. Please try again.");

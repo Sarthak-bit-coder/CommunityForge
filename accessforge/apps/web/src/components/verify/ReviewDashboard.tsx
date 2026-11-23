@@ -3,6 +3,7 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { LiveReports } from "@/components/barriers/ReportsExplorer";
 import { fetchSession, signIn, signOut } from "@/lib/review-api";
+import { FieldChecklist, type FieldVisit } from "./FieldChecklist";
 import { ReviewForm } from "./ReviewForm";
 
 const BUTTON = "min-h-11 rounded-md border border-accent px-4 font-semibold disabled:opacity-60";
@@ -10,6 +11,8 @@ const BUTTON = "min-h-11 rounded-md border border-accent px-4 font-semibold disa
 /** Public visitors get the read-only queue; signed-in reviewers also get decisions. */
 export function ReviewDashboard() {
   const [reviewer, setReviewer] = useState<string | null>(null);
+  const [visits, setVisits] = useState<readonly FieldVisit[]>([]);
+  const remove = (id: string) => setVisits((items) => items.filter((item) => item.id !== id));
   const [key, setKey] = useState("");
   const [error, setError] = useState("");
   const [notice, setNotice] = useState("");
@@ -43,6 +46,7 @@ export function ReviewDashboard() {
     setError("");
     try {
       await signOut();
+      setVisits([]);
       setReviewer(null);
       setNotice("Signed out.");
     } catch (failure) {
@@ -54,7 +58,7 @@ export function ReviewDashboard() {
     <>
       <aside
         aria-labelledby="review-access-heading"
-        className="mb-6 rounded-lg border border-warning bg-warning-soft p-4 text-ink"
+        className="print:hidden mb-6 rounded-lg border border-warning bg-warning-soft p-4 text-ink"
       >
         <h2 id="review-access-heading" className="font-semibold">
           {reviewer ? "Signed in as a reviewer" : "Read-only verification dashboard"}
@@ -62,8 +66,9 @@ export function ReviewDashboard() {
         {reviewer ? (
           <>
             <p className="break-words">
-              Reviewer ID {reviewer}. Select a pending report to verify or reject it. Each decision
-              is recorded with your ID, your reason, and the time.
+              Reviewer ID {reviewer}. Select a pending report to verify or reject it, or change the
+              status filter to record the next repair step for a verified report. Each decision is
+              recorded with your ID, your reason, and the time.
             </p>
             <button type="button" className={`${BUTTON} mt-3 bg-surface`} onClick={handleSignOut}>
               Sign out
@@ -85,7 +90,7 @@ export function ReviewDashboard() {
                   type="password"
                   autoComplete="off"
                   required
-                  className="mt-1 min-h-11 w-64 max-w-full rounded border border-line bg-surface p-2"
+                  className="mt-1 min-h-11 w-64 max-w-full rounded border border-control bg-surface p-2"
                   value={key}
                   onChange={(event) => setKey(event.target.value)}
                 />
@@ -107,30 +112,58 @@ export function ReviewDashboard() {
         ) : null}
         <p className="mt-3">
           Pending reports await verification. Verified reports have been confirmed by a reviewer.
-          Rejected reports were not accepted by a reviewer. These records are not official
-          inspections.
+          Rejected reports were not accepted by a reviewer. Verified barriers then move through
+          repair planned, repair completed, and resolved; resolved needs a follow-up site visit.
+          These records are not official inspections or City repair records.
         </p>
       </aside>
-      <p role="status" className="mb-4 font-medium text-ink">
+      <p role="status" className="print:hidden mb-4 font-medium text-ink">
         {notice}
       </p>
-      <LiveReports
-        initialFilter={{ type: "all", state: "unverified" }}
-        review={
-          reviewer
-            ? (report, reload) => (
-                <ReviewForm
-                  key={report.id}
-                  report={report}
-                  onReviewed={(message) => {
-                    setNotice(message);
-                    reload();
-                  }}
-                />
-              )
-            : undefined
-        }
-      />
+      {reviewer && <FieldChecklist visits={visits} remove={remove} />}
+      <div className={reviewer ? "print:hidden" : undefined}>
+        <LiveReports
+          initialFilter={{ type: "all", state: "unverified" }}
+          review={
+            reviewer
+              ? (report, reload) => (
+                  <>
+                    {report.state === "unverified" && (
+                      <button
+                        type="button"
+                        className="af-button-secondary mb-3"
+                        disabled={visits.some((item) => item.id === report.id)}
+                        onClick={() =>
+                          setVisits((items) =>
+                            items.some((item) => item.id === report.id)
+                              ? items
+                              : [
+                                  ...items,
+                                  { id: report.id, type: report.type, location: report.location },
+                                ],
+                          )
+                        }
+                      >
+                        {visits.some((item) => item.id === report.id)
+                          ? "Added to checklist"
+                          : "Add to field checklist"}
+                      </button>
+                    )}
+                    <ReviewForm
+                      key={report.id}
+                      report={report}
+                      onReviewed={(message) => {
+                        remove(report.id);
+                        setNotice(message);
+                        reload();
+                      }}
+                    />
+                  </>
+                )
+              : undefined
+          }
+        />
+      </div>
     </>
   );
 }
