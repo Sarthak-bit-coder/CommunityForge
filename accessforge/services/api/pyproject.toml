@@ -42,3 +42,7 @@ plugins = ["pydantic.mypy"]
 [[tool.mypy.overrides]]
 module = "accessforge_engine.*"
 follow_imports = "silent"
+# networkx ships no stubs here; the engine pins types-networkx for its own checks.
+[[tool.mypy.overrides]]
+module = "networkx.*"
+ignore_missing_imports = true

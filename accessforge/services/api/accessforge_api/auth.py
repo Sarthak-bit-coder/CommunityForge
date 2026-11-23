@@ -72,4 +72,12 @@ def require_reviewer(request: Request) -> UUID:
     return reviewer
 
 
+def optional_reviewer(request: Request) -> UUID | None:
+    """Like require_reviewer, but anonymous callers get None; wrong keys still count."""
+    if _presented_key(request) is None:
+        return None
+    return require_reviewer(request)
+
+
 Reviewer = Annotated[UUID, Depends(require_reviewer)]
+MaybeReviewer = Annotated[UUID | None, Depends(optional_reviewer)]

@@ -10,12 +10,22 @@ from .auth import parse_reviewer_keys
 from .config import Settings
 from .database import make_engine
 from .errors import register_handlers
+from .feedback import router as feedback_router
 from .health import router
 from .logging import configure_logging
+from .network import router as network_router
+from .pilot_plans import start_precompute
 from .planning import router as planning_router
-from .report_limits import PLANS_PER_WINDOW, ReportLimiter
+from .report_limits import (
+    FEEDBACK_PER_WINDOW,
+    PLANS_PER_WINDOW,
+    ReportLimiter,
+    parse_proxy_ips,
+)
 from .reports import router as reports_router
 from .reviews import router as reviews_router
+from .routing import router as routing_router
+from .trips import router as trips_router
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -29,6 +39,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             config.reviewer_keys.get_secret_value()
         )
         app.state.reviewer_cookie_secure = config.reviewer_cookie_secure
+        app.state.trusted_proxies = parse_proxy_ips(config.trusted_proxy_ips)
+        start_precompute(engine)
         try:
             yield
         finally:
@@ -40,9 +52,15 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     app.include_router(reports_router)
     app.include_router(planning_router)
     app.include_router(reviews_router)
+    app.include_router(feedback_router)
+    app.include_router(network_router)
+    app.include_router(routing_router)
+    app.include_router(trips_router)
     app.state.report_limiter = ReportLimiter()
     app.state.plan_limiter = ReportLimiter(PLANS_PER_WINDOW)
     app.state.sign_in_limiter = ReportLimiter()
+    app.state.trusted_proxies = frozenset[str]()
+    app.state.feedback_limiter = ReportLimiter(FEEDBACK_PER_WINDOW)
 
     @app.middleware("http")
     async def request_id(

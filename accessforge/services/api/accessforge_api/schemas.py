@@ -32,6 +32,7 @@ class EvidenceSource(str, Enum):
     community_report = "community_report"
     city_record = "city_record"
     field_verification = "field_verification"
+    open_map_data = "open_map_data"
 
 
 class FrozenInput(BaseModel):

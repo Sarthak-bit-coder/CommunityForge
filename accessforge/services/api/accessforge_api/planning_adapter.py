@@ -1,10 +1,19 @@
-"""Adapter from labeled synthetic networks to the engine; no selection logic here."""
+"""Adapter from labeled networks (fictional or the Fremont pilot) to the engine.
 
+No selection logic here.
+"""
+
+import hashlib
+import json
+from collections.abc import Mapping
+from dataclasses import fields, is_dataclass
+from enum import Enum
 from functools import lru_cache
 from math import fsum
 
 from accessforge_engine import EvaluationMetrics, SolveParams, evaluate, solve
 from accessforge_engine.baselines import BASELINE_METHODS, select_baseline
+from accessforge_engine.evaluation import evaluate_route_impacts
 from accessforge_engine.optimization import COST_PERTURBATION_FRACTION, ENGINE_VERSION
 from accessforge_engine.synthetic import (
     SyntheticConfig,
@@ -27,6 +36,7 @@ from .planning_schemas import (
     PlanView,
     ProfileView,
     RepairView,
+    RouteImpactView,
 )
 
 PLAN_TIME_LIMIT_S = 10.0
@@ -54,7 +64,9 @@ def demo_network(dataset: PlanningDataset) -> SyntheticNetwork:
     return generate_network(config, seed=DEMO_SEED)
 
 
-def _network_view(network: SyntheticNetwork) -> NetworkView:
+def _network_view(
+    network: SyntheticNetwork, names: Mapping[str, str | None]
+) -> NetworkView:
     instance = network.instance
     return NetworkView(
         nodes=tuple(
@@ -83,7 +95,11 @@ def _network_view(network: SyntheticNetwork) -> NetworkView:
         ),
         destinations=tuple(
             DestinationView(
-                id=d.id, node_id=d.node_id, category=d.category, weight=d.weight
+                id=d.id,
+                node_id=d.node_id,
+                category=d.category,
+                weight=d.weight,
+                name=names.get(d.id),
             )
             for d in instance.destinations
         ),
@@ -100,10 +116,13 @@ def _network_view(network: SyntheticNetwork) -> NetworkView:
 
 
 def _method_plan(
-    network: SyntheticNetwork, method: PlanningMethod, budget: float
+    network: SyntheticNetwork,
+    method: PlanningMethod,
+    budget: float,
+    time_limit_s: float,
 ) -> tuple[MethodPlanView, EvaluationMetrics]:
     params = SolveParams(
-        budget, method.value, DEMO_SCENARIOS, DEMO_SEED, None, PLAN_TIME_LIMIT_S
+        budget, method.value, DEMO_SCENARIOS, DEMO_SEED, None, time_limit_s
     )
     explanations: tuple[ExplanationView, ...] = ()
     if method.value in BASELINE_METHODS:
@@ -133,23 +152,61 @@ def _method_plan(
         delta_a_by_group=dict(metrics.delta_a_by_group),
         optimality_proven=method == PlanningMethod.exhaustive,
         explanations=explanations,
+        route_impacts=tuple(
+            RouteImpactView.model_validate(impact, from_attributes=True)
+            for impact in evaluate_route_impacts(network.instance, selected, params)
+        ),
     )
     return plan, metrics
 
 
+def network_snapshot_id(network: SyntheticNetwork) -> str:
+    """SHA-256 of the exact instance and engine version that plans and routes evaluate."""
+    payload = {"engine_version": ENGINE_VERSION, "instance": network.instance}
+    return hashlib.sha256(
+        json.dumps(payload, sort_keys=True, default=_canonical).encode()
+    ).hexdigest()
+
+
+def _canonical(value: object) -> object:
+    if is_dataclass(value) and not isinstance(value, type):
+        return {f.name: getattr(value, f.name) for f in fields(value)}
+    if isinstance(value, Mapping):
+        return dict(value)  # e.g. mappingproxy edge attributes
+    if isinstance(value, (set, frozenset)):
+        return sorted(value)  # frozensets have no stable order across processes
+    if isinstance(value, Enum):
+        return value.value
+    raise TypeError(f"cannot canonicalise {type(value).__name__}")
+
+
 @lru_cache(maxsize=PLAN_CACHE_SIZE)
 def run_plan(dataset: PlanningDataset, budget: float) -> PlanView:
-    """Deterministic for a dataset and budget, so completed runs are cached."""
-    network = demo_network(dataset)
-    results = tuple(_method_plan(network, method, budget) for method in PlanningMethod)
+    """Fictional networks only. Deterministic for a dataset and budget, so runs are cached."""
+    if dataset == PlanningDataset.fremont_pilot:
+        raise ValueError("the Fremont pilot plans come from pilot_plans, not run_plan")
+    return build_plan(demo_network(dataset), dataset, budget, PLAN_TIME_LIMIT_S, {})
+
+
+def build_plan(
+    network: SyntheticNetwork,
+    dataset: PlanningDataset,
+    budget: float,
+    time_limit_s: float,
+    destination_names: Mapping[str, str | None],
+) -> PlanView:
+    results = tuple(
+        _method_plan(network, method, budget, time_limit_s) for method in PlanningMethod
+    )
     return PlanView(
         dataset=dataset,
-        synthetic=True,
+        synthetic=dataset != PlanningDataset.fremont_pilot,
         budget=budget,
         total_repair_cost=fsum(r.cost for r in network.instance.repairs),
         accessibility_before=results[0][1].before.total,
         cost_perturbation_fraction=COST_PERTURBATION_FRACTION,
         engine_version=ENGINE_VERSION,
-        network=_network_view(network),
+        snapshot_id=network_snapshot_id(network),
+        network=_network_view(network, destination_names),
         plans=tuple(plan for plan, _ in results),
     )

@@ -13,6 +13,34 @@ class ReviewStatus(str, Enum):
     pending = "pending"
     verified = "verified"
     rejected = "rejected"
+    repair_planned = "repair_planned"
+    repair_completed = "repair_completed"
+    resolved = "resolved"
+
+
+# The only allowed lifecycle steps (PRODUCT_REQUIREMENTS §7). Migration
+# 0007_repair_tracking enforces the same (from_state, to_state) pairs in the database.
+REVIEW_TRANSITIONS: dict[
+    tuple[VerificationStatus, ReviewStatus], VerificationStatus
+] = {
+    (
+        VerificationStatus.unverified,
+        ReviewStatus.verified,
+    ): VerificationStatus.confirmed,
+    (VerificationStatus.unverified, ReviewStatus.rejected): VerificationStatus.rejected,
+    (
+        VerificationStatus.confirmed,
+        ReviewStatus.repair_planned,
+    ): VerificationStatus.repair_planned,
+    (
+        VerificationStatus.repair_planned,
+        ReviewStatus.repair_completed,
+    ): VerificationStatus.repair_completed,
+    (
+        VerificationStatus.repair_completed,
+        ReviewStatus.resolved,
+    ): VerificationStatus.resolved,
+}
 
 
 class ReviewInput(FrozenInput):
@@ -31,7 +59,7 @@ class ReviewView(FrozenInput):
 
 
 class ReviewConflict(ValueError):
-    """This report's barrier is no longer pending, or the decision is invalid."""
+    """The decision is not an allowed next step from the barrier's current state."""
 
 
 class ReportNotFound(LookupError):
@@ -41,10 +69,9 @@ class ReportNotFound(LookupError):
 def review_transition(
     current: VerificationStatus, decision: ReviewStatus
 ) -> VerificationStatus:
-    if current != VerificationStatus.unverified or decision == ReviewStatus.pending:
-        raise ReviewConflict("Only pending reports may be verified or rejected.")
-    return (
-        VerificationStatus.confirmed
-        if decision == ReviewStatus.verified
-        else VerificationStatus.rejected
-    )
+    target = REVIEW_TRANSITIONS.get((current, decision))
+    if target is None:
+        raise ReviewConflict(
+            f"A report in state '{current.value}' cannot move to '{decision.value}'."
+        )
+    return target

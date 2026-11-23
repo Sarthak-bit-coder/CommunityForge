@@ -44,7 +44,9 @@ def test_submission_persists_unverified_barrier_location_report_and_evidence(
     assert report["location"] == PAYLOAD["location"]
     assert report["evidence"][0]["source"] == "community_report"
     assert report["evidence"][0]["source_ref"] == report["id"]
-    assert report_client.get(response.headers["Location"]).json()["data"] == report
+    # The public read hides unmoderated text; everything else matches the submission.
+    public = report_client.get(response.headers["Location"]).json()["data"]
+    assert public == {**report, "description": None}
     with Session(postgis_engine) as session:
         assert all(
             session.scalar(select(func.count()).select_from(model)) == 1

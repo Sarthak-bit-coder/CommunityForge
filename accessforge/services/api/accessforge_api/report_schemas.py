@@ -34,11 +34,23 @@ class EvidenceView(FrozenInput):
     recorded_at: AwareDatetime
 
 
+# Free text is public only after a reviewer confirms it; see redact_for_public.
+PUBLIC_TEXT_STATES = frozenset(
+    {
+        VerificationStatus.confirmed,
+        VerificationStatus.repair_planned,
+        VerificationStatus.repair_completed,
+        VerificationStatus.resolved,
+    }
+)
+
+
 class ReportView(FrozenInput):
     id: UUID
     barrier_id: UUID
     type: BarrierType
-    description: str
+    # None means hidden from the public until a reviewer confirms the report.
+    description: str | None
     location: LocationInput
     severity: int
     state: VerificationStatus
@@ -54,3 +66,9 @@ class ReportSummary(FrozenInput):
     by_type: dict[BarrierType, int]
     first_report_at: AwareDatetime | None
     last_report_at: AwareDatetime | None
+
+
+def redact_for_public(report: ReportView) -> ReportView:
+    if report.state in PUBLIC_TEXT_STATES:
+        return report
+    return report.model_copy(update={"description": None})

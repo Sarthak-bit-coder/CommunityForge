@@ -20,6 +20,7 @@ from sqlalchemy import (
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .database import Base
+from .review_schemas import REVIEW_TRANSITIONS
 from .schemas import (
     DESCRIPTION_MAX_LENGTH,
     SOURCE_REFERENCE_MAX_LENGTH,
@@ -157,15 +158,20 @@ class Report(Base):
     )
 
 
+REVIEW_TRANSITION_SQL = "(from_state, to_state) IN ({})".format(
+    ", ".join(
+        f"('{current.value}', '{target.value}')"
+        for (current, _), target in REVIEW_TRANSITIONS.items()
+    )
+)
+
+
 class ReportReview(Base):
     """Private reviewer identity and reason; database-enforced append-only audit."""
 
     __tablename__ = "report_review"
     __table_args__ = (
-        CheckConstraint("from_state = 'unverified'", name="ck_review_from_state"),
-        CheckConstraint(
-            "to_state IN ('confirmed', 'rejected')", name="ck_review_to_state"
-        ),
+        CheckConstraint(REVIEW_TRANSITION_SQL, name="ck_review_transition"),
         CheckConstraint(
             f"char_length(reason) BETWEEN 1 AND {DESCRIPTION_MAX_LENGTH} AND reason ~ '[^[:space:]]'",
             name="ck_review_reason",
@@ -185,3 +191,32 @@ class ReportReview(Base):
     reviewed_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, server_default=func.clock_timestamp()
     )
+
+
+class Feedback(Base):
+    """Anonymous site feedback: no name, contact, address, or client identifier."""
+
+    __tablename__ = "feedback"
+    __table_args__ = (
+        CheckConstraint(
+            "topic IN ('usability', 'accessibility', 'data', 'other')",
+            name="ck_feedback_topic",
+        ),
+        CheckConstraint(
+            f"char_length(message) BETWEEN 1 AND {DESCRIPTION_MAX_LENGTH} AND message ~ '[^[:space:]]'",
+            name="ck_feedback_message",
+        ),
+    )
+
+    id: Mapped[UUID] = mapped_column(
+        Uuid, primary_key=True, server_default=text("gen_random_uuid()")
+    )
+    topic: Mapped[str] = mapped_column(String(16), nullable=False)
+    message: Mapped[str] = mapped_column(Text, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), nullable=False, server_default=func.clock_timestamp()
+    )
+
+
+# Register network tables on the shared metadata used by Alembic and drift tests.
+from . import network_models  # noqa: F401

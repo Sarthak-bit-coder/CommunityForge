@@ -13,6 +13,7 @@ from accessforge_api.report_limits import PLANS_PER_WINDOW
 # Corridor fixture: wheelchair weight 0.5 x origin weight 10 x clinic weight 2.
 CORRIDOR_PAIR_GAIN = 10.0
 CORRIDOR_REPAIR_COST = 10.0
+SNAPSHOT_ID_LENGTH = 64  # hex SHA-256
 
 
 def plans(client: TestClient, dataset: str, budget: float) -> dict[str, dict]:
@@ -52,6 +53,32 @@ def test_budget_for_one_corridor_repair_buys_no_modeled_access() -> None:
     # Severity ranking spends the budget on a repair with no modeled benefit.
     assert result["B1"]["selected_repair_ids"] == ["r0"]
     assert result["B1"]["delta_a"] == 0
+
+
+def test_plans_reject_a_stale_snapshot_id_and_accept_the_current_one() -> None:
+    with TestClient(application()) as client:
+        current = client.get(
+            "/planning/plans",
+            params={"dataset": "corridor", "budget": CORRIDOR_REPAIR_COST},
+        ).json()["data"]["snapshot_id"]
+        matching = client.get(
+            "/planning/plans",
+            params={
+                "dataset": "corridor",
+                "budget": CORRIDOR_REPAIR_COST,
+                "snapshot_id": current,
+            },
+        )
+        stale = client.get(
+            "/planning/plans",
+            params={
+                "dataset": "corridor",
+                "budget": CORRIDOR_REPAIR_COST,
+                "snapshot_id": "0" * SNAPSHOT_ID_LENGTH,
+            },
+        )
+    assert matching.status_code == 200
+    assert stale.status_code == 409
 
 
 def test_zero_budget_selects_nothing() -> None:

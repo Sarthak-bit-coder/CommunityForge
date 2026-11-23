@@ -40,14 +40,19 @@ def test_readiness_fails_safely_when_database_is_unavailable() -> None:
 def test_only_documented_routes_exist() -> None:
     app = application()
     assert set(app.openapi()["paths"]) == {
+        "/feedback",
         "/health/live",
         "/health/ready",
+        "/network/streets",
         "/planning/plans",
         "/reports",
         "/reports/summary",
         "/reports/{report_id}",
         "/reports/{report_id}/reviews",
         "/reviewer/session",
+        "/routing/analysis",
+        "/trips",
+        "/trips/{trip_id}",
     }
     with TestClient(app) as client:
         response = client.post("/api/v1/reports", json={"description": "not stored"})

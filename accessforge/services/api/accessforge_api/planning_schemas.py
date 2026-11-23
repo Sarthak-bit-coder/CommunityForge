@@ -13,8 +13,9 @@ Budget = Annotated[float, Field(ge=0, le=MAX_BUDGET, allow_inf_nan=False)]
 
 
 class PlanningDataset(str, Enum):
-    """Synthetic demonstration networks only; no real street data is loaded."""
+    """Fictional demonstration networks, plus the ingested Fremont pilot network."""
 
+    fremont_pilot = "fremont_pilot"
     corridor = "corridor"
     grid_scattered = "grid_scattered"
     grid_clustered = "grid_clustered"
@@ -66,6 +67,8 @@ class DestinationView(FrozenInput):
     node_id: str
     category: str
     weight: float
+    # OSM name on the Fremont pilot; fictional networks have none.
+    name: str | None = None
 
 
 class ProfileView(FrozenInput):
@@ -94,6 +97,17 @@ class ExplanationView(FrozenInput):
     stable_under_cost_perturbation: bool
 
 
+class RouteImpactView(FrozenInput):
+    """Modeled fraction of scenarios reaching this destination within the profile threshold."""
+
+    profile_id: str
+    origin_id: str
+    destination_id: str
+    modeled_reach_before: float
+    modeled_reach_after: float
+    contributing_repair_ids: tuple[str, ...]
+
+
 class MethodPlanView(FrozenInput):
     method: PlanningMethod
     selected_repair_ids: tuple[str, ...]
@@ -105,6 +119,7 @@ class MethodPlanView(FrozenInput):
     optimality_proven: bool
     # Present only for engine solvers; proxy rankings produce no explanations.
     explanations: tuple[ExplanationView, ...]
+    route_impacts: tuple[RouteImpactView, ...] = ()
 
 
 class PlanView(FrozenInput):
@@ -115,5 +130,6 @@ class PlanView(FrozenInput):
     accessibility_before: float
     cost_perturbation_fraction: float
     engine_version: str
+    snapshot_id: str  # identifies the exact network instance; route analysis checks it
     network: NetworkView
     plans: tuple[MethodPlanView, ...]

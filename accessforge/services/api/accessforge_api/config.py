@@ -8,6 +8,7 @@ from sqlalchemy.engine import make_url
 from sqlalchemy.exc import ArgumentError
 
 from .auth import parse_reviewer_keys
+from .report_limits import parse_proxy_ips
 
 
 class Settings(BaseSettings):
@@ -21,6 +22,16 @@ class Settings(BaseSettings):
     reviewer_keys: SecretStr = SecretStr("")
     # Disable only for local HTTP development in browsers that drop Secure cookies.
     reviewer_cookie_secure: bool = True
+    # Comma-separated proxy IPs whose rightmost X-Forwarded-For entry is trusted.
+    # Set only when an edge proxy that sets X-Forwarded-For sits in front of the web
+    # app: Next.js passes a client-supplied X-Forwarded-For through unchanged.
+    trusted_proxy_ips: str = ""
+
+    @field_validator("trusted_proxy_ips")
+    @classmethod
+    def proxy_addresses(cls, value: str) -> str:
+        parse_proxy_ips(value)
+        return value
 
     @field_validator("reviewer_keys")
     @classmethod

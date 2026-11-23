@@ -39,19 +39,31 @@ def test_pending_review_transitions(decision: str, target: str) -> None:
     )
 
 
+ALLOWED_STEPS = {
+    ("unverified", "verified"): "confirmed",
+    ("unverified", "rejected"): "rejected",
+    ("confirmed", "repair_planned"): "repair_planned",
+    ("repair_planned", "repair_completed"): "repair_completed",
+    ("repair_completed", "resolved"): "resolved",
+}
+
+
 @pytest.mark.parametrize("current", list(VerificationStatus))
 @pytest.mark.parametrize("decision", list(ReviewStatus))
-def test_only_pending_can_be_reviewed(
+def test_only_lifecycle_steps_are_allowed(
     current: VerificationStatus, decision: ReviewStatus
 ) -> None:
-    if current == VerificationStatus.unverified and decision != ReviewStatus.pending:
-        assert review_transition(current, decision) in (
-            VerificationStatus.confirmed,
-            VerificationStatus.rejected,
-        )
-    else:
+    expected = ALLOWED_STEPS.get((current.value, decision.value))
+    if expected is None:
         with pytest.raises(ReviewConflict):
             review_transition(current, decision)
+    else:
+        assert review_transition(current, decision).value == expected
+
+
+def test_repair_cannot_skip_a_step() -> None:
+    with pytest.raises(ReviewConflict, match="'confirmed' cannot move to 'resolved'"):
+        review_transition(VerificationStatus.confirmed, ReviewStatus.resolved)
 
 
 @pytest.mark.parametrize(

@@ -205,3 +205,38 @@ def test_signed_in_reviewer_verifies_a_report_over_http_once(
         assert [item["reason"] for item in history] == ["Checked on site"]
         missing = f"/reports/{uuid4()}/reviews"
         assert client.post(missing, json=decision).status_code == 404
+
+
+def test_full_repair_lifecycle_is_audited_in_order(postgis_engine: Engine) -> None:
+    report_id = pending(postgis_engine)
+    steps = ("verified", "repair_planned", "repair_completed", "resolved")
+    with Session(postgis_engine) as session:
+        for step in steps:
+            review_report(
+                session,
+                report_id,
+                ReviewInput.model_validate({"status": step, "reason": f"Step {step}"}),
+                reviewer_id=REVIEWER_ID,
+            )
+        history = review_history(session, report_id)
+        report = get_report(session, report_id)
+    assert [(item.from_state.value, item.to_state.value) for item in history] == [
+        ("unverified", "confirmed"),
+        ("confirmed", "repair_planned"),
+        ("repair_planned", "repair_completed"),
+        ("repair_completed", "resolved"),
+    ]
+    assert report is not None and report.state.value == "resolved"
+
+
+def test_database_rejects_a_skipped_repair_step(postgis_engine: Engine) -> None:
+    report_id = pending(postgis_engine)
+    with postgis_engine.begin() as connection, pytest.raises(DBAPIError):
+        connection.execute(
+            text(
+                "INSERT INTO report_review (report_id, reviewer_id, from_state, "
+                "to_state, reason) VALUES (:report, :reviewer, 'confirmed', "
+                "'resolved', 'Skipped')"
+            ),
+            {"report": report_id, "reviewer": uuid4()},
+        )

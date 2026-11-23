@@ -1,6 +1,7 @@
 """Bounded process-local submission limits; never trust forwarded client headers."""
 
 from collections import deque
+from ipaddress import ip_address
 from math import ceil
 from threading import Lock
 from time import monotonic
@@ -10,6 +11,7 @@ from fastapi import HTTPException, Request
 REPORTS_PER_WINDOW = 10
 # Planning runs are read-only but CPU-bound; completed runs are also cached.
 PLANS_PER_WINDOW = 60
+FEEDBACK_PER_WINDOW = 5
 WINDOW_SECONDS = 60
 MAX_TRACKED_CLIENTS = 10_000
 
@@ -57,8 +59,27 @@ class ReportLimiter:
             times.append(now)
 
 
+def parse_proxy_ips(value: str) -> frozenset[str]:
+    try:
+        return frozenset(
+            str(ip_address(part.strip())) for part in value.split(",") if part.strip()
+        )
+    except ValueError as error:
+        raise ValueError(
+            "TRUSTED_PROXY_IPS must be comma-separated IP addresses"
+        ) from error
+
+
 def _peer(request: Request) -> str:
-    return request.client.host if request.client else "unknown"
+    host = request.client.host if request.client else "unknown"
+    if host not in request.app.state.trusted_proxies:
+        return host
+    # The rightmost entry was added by the trusted edge proxy; earlier ones are client-controlled.
+    forwarded = request.headers.get("X-Forwarded-For", "").split(",")[-1].strip()
+    try:
+        return str(ip_address(forwarded))
+    except ValueError:
+        return host
 
 
 def limit_submission(request: Request) -> None:
@@ -69,6 +90,10 @@ def limit_submission(request: Request) -> None:
 
 def limit_planning(request: Request) -> None:
     request.app.state.plan_limiter.check(_peer(request))
+
+
+def limit_feedback(request: Request) -> None:
+    request.app.state.feedback_limiter.check(_peer(request))
 
 
 def refuse_locked_out(request: Request) -> None:
