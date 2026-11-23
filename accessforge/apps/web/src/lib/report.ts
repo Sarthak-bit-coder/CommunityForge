@@ -2,7 +2,7 @@ import { BARRIER_TYPES, type LngLat } from "./barriers";
 
 export const MAX_DESCRIPTION_LENGTH = 2000;
 export const MAX_PHOTO_BYTES = 5 * 1024 * 1024;
-export const PHOTO_TYPES = ["image/jpeg", "image/png", "image/webp"] as const;
+export const PHOTO_ACCEPT = "image/*";
 export type ReportDraft = {
   readonly type: string;
   readonly description: string;
@@ -40,7 +40,10 @@ export function validateReport(draft: ReportDraft): ReportErrors {
 
 export function photoError(file: File | undefined): string | undefined {
   if (!file) return undefined;
-  if (!PHOTO_TYPES.some((type) => type === file.type)) return "Choose a JPEG, PNG, or WebP photo.";
+  // Empty type: some OSes report none for HEIC/RAW; the preview's decode check catches non-images.
+  const isPhoto =
+    file.type === "" || (file.type.startsWith("image/") && file.type !== "image/svg+xml");
+  if (!isPhoto) return "Choose a photo file.";
   if (file.size === 0) return "This photo is empty. Choose another file.";
   if (file.size > MAX_PHOTO_BYTES) return "Choose a photo no larger than 5 MiB.";
   return undefined;

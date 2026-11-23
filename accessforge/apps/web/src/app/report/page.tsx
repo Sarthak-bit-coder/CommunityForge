@@ -18,9 +18,9 @@ export default function Page() {
       >
         <Badge label="Public reports · Pending verification" tone="warning" />
         <p className="mt-2">
-          Submissions are saved and publicly visible as pending reports. The map background uses
-          fictional streets; confirm coordinates carefully. Do not include sensitive personal
-          information. Photos are local previews only.
+          The barrier type, severity, and location are public as soon as you submit. Your
+          description stays private until a reviewer confirms the report. Confirm the location
+          carefully. Do not include sensitive personal information. Photos are local previews only.
         </p>
       </aside>
       <ReportForm />

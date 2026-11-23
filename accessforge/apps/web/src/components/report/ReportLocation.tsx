@@ -2,7 +2,8 @@
 
 import { useMemo } from "react";
 import { BarrierMap } from "@/components/barriers/BarrierMap";
-import type { Barrier, LngLat } from "@/lib/barriers";
+import { NearbyReports } from "./NearbyReports";
+import { BARRIER_TYPES, type Barrier, type LngLat } from "@/lib/barriers";
 import { parseLocation, type ReportDraft, type ReportErrors } from "@/lib/report";
 import { FieldError, INPUT_CLASS } from "./ReportField";
 
@@ -19,12 +20,14 @@ export function ReportLocation({ draft, errors, onEdit, onSelect }: Props) {
     () => parseLocation(draft.latitude, draft.longitude),
     [draft.latitude, draft.longitude],
   );
+  const type = BARRIER_TYPES.find((value) => value === draft.type);
   return (
     <fieldset className="space-y-3">
       <legend className="text-lg font-semibold text-ink">Location</legend>
       <p id="location-help" className="text-muted">
-        This map shows fictional streets. Click to choose a point, or focus the map, pan with arrow
-        keys, then choose “Use map center”. You can also enter coordinates without the map.
+        Click the map to choose a point, or focus the map, pan with arrow keys, then choose “Use map
+        center”. The note under the map says whether it shows real streets. You can also enter
+        coordinates without the map.
       </p>
       <div className="grid gap-4 sm:grid-cols-2">
         {(["latitude", "longitude"] as const).map((field) => (
@@ -64,6 +67,13 @@ export function ReportLocation({ draft, errors, onEdit, onSelect }: Props) {
           </dd>
         </div>
       </dl>
+      {type && location && (
+        <NearbyReports
+          key={`${type}/${location.lat}/${location.lng}`}
+          type={type}
+          point={location}
+        />
+      )}
     </fieldset>
   );
 }

@@ -1,4 +1,4 @@
-import { verificationState } from "./barriers";
+import { verificationDisplay, verificationState } from "./barriers";
 import type { Barrier, BarrierFilter, EvidenceProvenance, BarrierType, Severity } from "./barriers";
 import type { ReportDraft } from "./report";
 
@@ -7,7 +7,8 @@ export type Report = {
   readonly evidence: readonly EvidenceProvenance[];
   readonly id: string;
   readonly type: BarrierType;
-  readonly description: string;
+  // null: hidden from the public until a reviewer confirms the report.
+  readonly description: string | null;
   readonly severity: Severity;
   readonly state?: unknown;
   readonly location: { readonly longitude: number; readonly latitude: number };
@@ -15,6 +16,8 @@ export type Report = {
 };
 type Envelope<T> = { data: T; meta: { page: number; limit: number; total: number } };
 export const PAGE_SIZE = 20;
+export const HIDDEN_DESCRIPTION =
+  "Description hidden until a reviewer confirms this report, to keep unchecked text private.";
 const REQUEST_TIMEOUT_MS = 15_000;
 
 async function request<T>(path: string, options: RequestInit = {}): Promise<Envelope<T>> {
@@ -40,11 +43,16 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<Enve
   }
 }
 
-export function fetchReports(filter: BarrierFilter, page: number, signal: AbortSignal) {
+export function fetchReports(
+  filter: BarrierFilter,
+  page: number,
+  signal: AbortSignal,
+  credentials: RequestCredentials = "same-origin",
+) {
   const query = new URLSearchParams({ page: String(page), limit: String(PAGE_SIZE) });
   if (filter.type !== "all") query.set("type", filter.type);
   if (filter.state !== "all") query.set("state", filter.state);
-  return request<Report[]>(`?${query}`, { signal });
+  return request<Report[]>(`?${query}`, { signal, credentials });
 }
 // Aggregate counts only (FastAPI ReportSummary); no report text or location.
 export type ReportSummary = {
@@ -57,6 +65,17 @@ export type ReportSummary = {
 export function fetchSummary(signal: AbortSignal) {
   return request<ReportSummary>("/summary", { signal });
 }
+// ReportView.id is a UUID; only report IDs belong in public tracking links.
+export function isReportId(value: unknown): value is string {
+  return typeof value === "string" && /^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$/i.test(value);
+}
+
+export function reportStatusLabel(state: unknown): string {
+  return verificationState(state) === "unknown"
+    ? "Status unavailable"
+    : verificationDisplay(state).label;
+}
+
 export function fetchReport(id: string, signal: AbortSignal) {
   return request<Report>(`/${encodeURIComponent(id)}`, { signal });
 }
@@ -77,7 +96,7 @@ export function reportBarrier(report: Report): Barrier {
     id: report.id,
     name: `Report ${report.id}`,
     type: report.type,
-    description: report.description,
+    description: report.description ?? HIDDEN_DESCRIPTION,
     severity: report.severity,
     state: verificationState(report.state),
     source: "community_report",

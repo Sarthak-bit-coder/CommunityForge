@@ -33,9 +33,9 @@ describe("demo report validation", () => {
       expect(parseLocation(lat, lng)).toBeNull();
     }
   });
-  it("allows optional JPEG, PNG and WebP files up to 5 MiB", () => {
+  it("allows any optional photo format up to 5 MiB", () => {
     expect(photoError(undefined)).toBeUndefined();
-    for (const type of ["image/jpeg", "image/png", "image/webp"]) {
+    for (const type of ["image/jpeg", "image/png", "image/webp", "image/heic", "image/avif", ""]) {
       expect(photoError(new File(["photo"], "photo", { type }))).toBeUndefined();
     }
     expect(
@@ -47,7 +47,10 @@ describe("demo report validation", () => {
       ),
     ).toMatch(/5 MiB/);
     expect(photoError(new File(["<svg/>"], "photo.svg", { type: "image/svg+xml" }))).toMatch(
-      /JPEG, PNG, or WebP/,
+      /photo file/,
+    );
+    expect(photoError(new File(["%PDF"], "doc.pdf", { type: "application/pdf" }))).toMatch(
+      /photo file/,
     );
     expect(photoError(new File([], "empty.png", { type: "image/png" }))).toMatch(/empty/);
   });
