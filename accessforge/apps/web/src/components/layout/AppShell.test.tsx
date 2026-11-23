@@ -12,7 +12,10 @@ import { AppShell } from "./AppShell";
 
 const pathname = vi.hoisted(() => ({ current: "/" }));
 vi.mock("maplibre-gl", () => import("@/test/fake-maplibre"));
-vi.mock("next/navigation", () => ({ usePathname: () => pathname.current }));
+vi.mock("next/navigation", () => ({
+  usePathname: () => pathname.current,
+  useRouter: () => ({ push: vi.fn() }),
+}));
 
 beforeEach(() => {
   pathname.current = "/";
@@ -49,6 +52,25 @@ describe("AppShell", () => {
 
     await user.keyboard("{Escape}");
     expect(menuButton).toHaveAttribute("aria-expanded", "false");
+  });
+
+  it("returns focus to the menu button when Escape closes the menu from a link", async () => {
+    // Arrange
+    const user = userEvent.setup();
+    render(<AppShell>content</AppShell>);
+    const menuButton = screen.getByRole("button", { name: "Menu" });
+    await user.click(menuButton);
+    const mobileList = document.getElementById(menuButton.getAttribute("aria-controls") ?? "");
+    within(mobileList as HTMLElement)
+      .getByRole("link", { name: "Barriers" })
+      .focus();
+
+    // Act
+    await user.keyboard("{Escape}");
+
+    // Assert
+    expect(menuButton).toHaveAttribute("aria-expanded", "false");
+    expect(menuButton).toHaveFocus();
   });
 
   it("shows the required disclaimers on every page", () => {

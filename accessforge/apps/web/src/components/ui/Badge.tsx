@@ -1,12 +1,17 @@
-export type BadgeTone = "neutral" | "info" | "success" | "warning";
+export type BadgeTone = "neutral" | "info" | "success" | "warning" | "modeled";
 
+// Evidence vocabulary: success = observed/verified, warning = unverified, modeled = estimate.
+// Every colour meets 4.5:1 on canvas and surface. Modeled also gets a dashed underline, so an
+// estimate never looks like observed evidence even without colour.
 const TONE_CLASSES: Record<BadgeTone, string> = {
-  neutral: "border-line bg-canvas text-ink",
-  info: "border-accent bg-accent-soft text-accent",
-  success: "border-success bg-success-soft text-success",
-  warning: "border-warning bg-warning-soft text-warning",
+  neutral: "text-muted",
+  info: "text-accent",
+  success: "text-success",
+  warning: "text-warning",
+  modeled: "text-modeled underline decoration-dashed decoration-1 underline-offset-[5px]",
 };
 
+// A typeset label, not a pill: same small caps rhythm as the section eyebrows.
 // Tone is decoration only; the label text always carries the meaning (WCAG 1.4.1).
 export function Badge({
   label,
@@ -17,7 +22,7 @@ export function Badge({
 }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full border px-2.5 py-0.5 text-sm font-medium ${TONE_CLASSES[tone]}`}
+      className={`inline-flex items-center text-xs leading-5 font-bold tracking-[0.12em] uppercase ${TONE_CLASSES[tone]}`}
     >
       {label}
     </span>

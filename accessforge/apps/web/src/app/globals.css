@@ -1,33 +1,375 @@
 @import "tailwindcss";
 
-/* Design tokens. Text colors meet ≥ 4.5:1 on both canvas and surface (WCAG 1.4.3). */
+/*
+ * Design tokens. Every text pairing meets WCAG 2.2 AA (≥ 4.5:1) on its background.
+ * --color-control is the 3:1 non-text boundary for inputs and buttons (WCAG 1.4.11).
+ * Existing token names are kept so components keep resolving them.
+ */
 @theme {
-  --color-canvas: #f6f6f3;
+  /* Cool paper, deep ink, street-paint teal. Ratios: ink 15.7:1, muted 7.0:1, accent 5.8:1 on canvas. */
+  --color-canvas: #f2f4f7;
   --color-surface: #ffffff;
-  --color-ink: #1b1f24;
-  --color-muted: #4a5260;
-  --color-line: #d3d3cd;
-  --color-accent: #0a5aa8;
-  --color-accent-soft: #e6f0fa;
+  --color-ink: #0d1b2e;
+  --color-muted: #475467;
+  --color-line: #dde3ea;
+  --color-control: #7b8698;
+  --color-accent: #0a6b62;
+  --color-accent-hover: #075049;
+  --color-accent-soft: #e2f2ef;
+  /* Decorative only (route marks, rules): never text on light surfaces. 10.3:1 on ink. */
+  --color-marker: #f2c230;
   --color-success: #1d6a38;
   --color-success-soft: #e7f4ec;
   --color-warning: #8a4a00;
   --color-warning-soft: #fdf1e2;
+  /* Modeled estimates get their own hue so they never read as observed evidence. 6.7:1 on soft. */
+  --color-modeled: #5a3ea6;
+  --color-modeled-soft: #efebfa;
+  /* Ink sidebar. Text pairings: sidebar-ink 16.2:1, sidebar-muted 8.9:1 on sidebar. */
+  --color-sidebar: #0b1626;
+  --color-sidebar-raised: #172539;
+  --color-sidebar-ink: #eef2f8;
+  --color-sidebar-muted: #a9b6cc;
+  /* Non-text indicator on the sidebar (≥ 3:1). */
+  --color-sidebar-accent: #f2c230;
   --font-sans: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-heading), ui-serif, Georgia, serif;
+
+  --shadow-card: 0 1px 2px rgb(13 27 46 / 0.05), 0 12px 32px -18px rgb(13 27 46 / 0.18);
+  --shadow-lift: 0 2px 4px rgb(13 27 46 / 0.08), 0 24px 48px -24px rgb(13 27 46 / 0.3);
 }
 
 body {
   background: var(--color-canvas);
   color: var(--color-ink);
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: tabular-nums;
 }
 
-/* Visible focus for every interactive element (WCAG 2.4.7, 2.4.13). */
-:focus-visible {
-  outline: 3px solid var(--color-accent);
-  outline-offset: 2px;
+/* Above-the-fold entrance without JavaScript, so first paint never waits on hydration. */
+@keyframes af-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+}
+@utility af-rise {
+  /* Same duration and easing as MOTION_DURATION_S.slow / MOTION_EASE_ENTER in motion-tokens.ts. */
+  animation: af-rise 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+/* Opacity only: a transform on a page wrapper would trap position: fixed descendants. */
+@keyframes af-fade {
+  from {
+    opacity: 0;
+  }
+}
+@utility af-fade {
+  animation: af-fade 0.35s ease-out both;
+}
+
+/* Selected map marker: a ring expands three times, then stops (under 5 s, WCAG 2.2.2).
+   Transform and opacity only, on a pseudo-element so the marker's own ring and shadow stay. */
+@keyframes af-pulse {
+  from {
+    opacity: 0.6;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2);
+  }
+}
+@utility af-pulse {
+  &::after {
+    content: "";
+    position: absolute;
+    inset: -3px;
+    border: 3px solid var(--color-ink);
+    border-radius: 9999px;
+    pointer-events: none;
+    animation: af-pulse 1.2s cubic-bezier(0.16, 1, 0.3, 1) 3 both;
+  }
+}
+
+/* The "modeled" ≈ mark drifts side to side, then stops (under 5 s, WCAG 2.2.2). */
+@keyframes af-drift {
+  50% {
+    translate: 1.5px 0;
+  }
+}
+@utility af-drift {
+  animation: af-drift 1.4s ease-in-out 1s 3 both;
+}
+
+/* Map pins drop in with a small bounce. Uses the `translate` property, not `transform`,
+   because MapLibre positions each marker with its own transform. */
+@keyframes af-drop {
+  from {
+    opacity: 0;
+    translate: 0 -28px;
+  }
+  60% {
+    opacity: 1;
+    translate: 0 4px;
+  }
+  to {
+    translate: 0 0;
+  }
+}
+@utility af-drop {
+  animation: af-drop 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Dialog entrance: short drop-in with a faded backdrop. */
+@keyframes af-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+@utility af-pop {
+  animation: af-pop 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
+  &::backdrop {
+    background: rgb(11 22 38 / 0.55);
+    animation: af-fade 0.2s ease-out both;
+  }
+}
+
+/* Page titles (components/ui/KineticTitle.tsx): each word tumbles up out of a soft blur,
+   staggered by its index --i. Plays once on page load, well under 5 s (WCAG 2.2.2). */
+@keyframes af-word {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(0.55em) rotate(6deg) scale(0.92);
+  }
+  60% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(-0.06em) rotate(-1.5deg) scale(1.02);
+  }
+}
+@utility af-word {
+  display: inline-block;
+  white-space: pre;
+  transform-origin: 0 100%;
+  animation: af-word 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation-delay: calc(var(--i, 0) * 70ms + 60ms);
+}
+
+/* Accent rule under the page title draws itself in once the words have landed. */
+@keyframes af-underline-draw {
+  from {
+    transform: scaleX(0);
+  }
+}
+@utility af-underline-draw {
+  transform-origin: left;
+  animation: af-underline-draw 0.6s cubic-bezier(0.16, 1, 0.3, 1) 0.45s both;
+}
+
+/* Section headings wipe in left to right as they scroll into view. Scroll-driven, so it
+   plays at the reader's pace; browsers without scroll timelines just show the heading. */
+@keyframes af-wipe {
+  from {
+    opacity: 0;
+    clip-path: inset(0 100% 0 0);
+    transform: translateX(-0.4em);
+  }
+}
+
+/*
+ * Lively text on every page except the Overview (which marks itself data-page="overview").
+ * In the base layer behind :where(), so any utility animation (af-rise, af-h2, af-word) wins.
+ * Screen only and skipped under reduced motion, so print and still readers see plain text.
+ * Every effect plays once and finishes well under 5 s (WCAG 2.2.2).
+ */
+@keyframes af-text-in {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+    translate: 0 0.5em;
+  }
+}
+@keyframes af-highlight {
+  from {
+    background-size: 0% 0.55em;
+  }
+}
+@keyframes af-dash-grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+@media screen and (prefers-reduced-motion: no-preference) {
+  @layer base {
+    /* Body text comes into focus as it rises, cascading down the page by sibling order. */
+    :where(main:not(:has([data-page="overview"])))
+      :where(p, li, dt, dd, label, blockquote, figcaption, caption, h4, h5, h6):where(
+        :not(.sr-only)
+      ) {
+      animation: af-text-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+      animation-delay: 80ms;
+      /* Browsers without sibling-index() keep the flat delay above. */
+      animation-delay: calc(min(sibling-index(), 8) * 55ms + 80ms);
+    }
+    /* Section headings wipe in at the reader's scroll pace, like af-h2. */
+    :where(main:not(:has([data-page="overview"]))) :where(h2, h3):where(:not(.sr-only)) {
+      @supports (animation-timeline: view()) {
+        animation: af-wipe linear both;
+        animation-timeline: view();
+        animation-range: entry 0% entry 90%;
+      }
+    }
+    /* Bold phrases get a street-paint highlighter stroke as they scroll into view. */
+    :where(main:not(:has([data-page="overview"]))) :where(strong) {
+      background: linear-gradient(rgb(242 194 48 / 0.45), rgb(242 194 48 / 0.45)) no-repeat 0 88% /
+        100% 0.55em;
+      box-decoration-break: clone;
+      @supports (animation-timeline: view()) {
+        animation: af-highlight ease-out both;
+        animation-timeline: view();
+        animation-range: entry 40% cover 35%;
+      }
+    }
+    /* Eyebrow dash paints itself in. */
+    :where(main:not(:has([data-page="overview"]))) :where(.af-eyebrow)::before {
+      transform-origin: left;
+      animation: af-dash-grow 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.2s backwards;
+    }
+  }
+  /* Text links lift their underline on hover and focus. Unlayered so it beats the
+     transition-colors that af-link brings from the utilities layer. */
+  :where(main:not(:has([data-page="overview"]))) :where(.af-link) {
+    transition-property: color, text-decoration-color, text-underline-offset;
+    &:hover,
+    &:focus-visible {
+      text-underline-offset: 7px;
+    }
+  }
+}
+
+/* Pointer-following glow behind a hero. Moves only with the visitor's pointer, never by itself.
+   --glow-x / --glow-y are set by components/home/HeroGlow.tsx. */
+@utility af-glow {
+  background:
+    radial-gradient(
+      28rem circle at var(--glow-x, 70%) var(--glow-y, 30%),
+      rgb(10 107 98 / 0.22),
+      transparent 70%
+    ),
+    radial-gradient(
+      22rem circle at calc(100% - var(--glow-x, 70%)) calc(100% - var(--glow-y, 30%)),
+      rgb(242 194 48 / 0.2),
+      transparent 70%
+    );
+}
+
+/* Scroll reveals start transparent; printed pages must never hide content. */
+@media print {
+  * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+}
+
+/* Visible focus for every interactive element (WCAG 2.4.7, 2.4.13). In the base layer so a
+   surface-specific outline colour utility (the navy sidebar) can override it. */
+@layer base {
+  :focus-visible {
+    outline: 3px solid var(--color-accent);
+    outline-offset: 2px;
+  }
+}
+
+/* Shared surface treatments: keep these in one place so cards and panels match. */
+@utility af-eyebrow {
+  @apply flex items-center gap-2 text-xs font-bold tracking-[0.14em] text-accent uppercase;
+  &::before {
+    content: "";
+    @apply h-0.5 w-6 shrink-0 rounded-full bg-marker;
+  }
+}
+@utility af-display {
+  @apply font-display font-semibold tracking-[-0.02em] text-ink;
+  font-optical-sizing: auto;
+  text-wrap: balance;
+}
+@utility af-link {
+  @apply font-semibold text-accent underline decoration-accent/30 decoration-2 underline-offset-4 transition-colors hover:decoration-accent;
+}
+@utility af-panel {
+  @apply rounded-2xl border border-line bg-surface shadow-card;
+}
+/* Section heading inside a page: smaller than the page title, still the display face. */
+@utility af-h2 {
+  @apply af-display text-2xl sm:text-[1.75rem];
+  @supports (animation-timeline: view()) {
+    animation: af-wipe linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 90%;
+  }
+}
+@utility af-button {
+  @apply inline-flex min-h-11 items-center justify-center gap-2 rounded-lg px-5 font-semibold transition-[color,background-color,border-color,scale] duration-150 active:scale-[0.98] disabled:cursor-not-allowed;
+}
+@utility af-label {
+  @apply flex flex-col gap-1.5 text-sm font-semibold text-ink;
+}
+/* Native select with a drawn chevron; keeps the platform's accessible picker. */
+@utility af-select {
+  @apply min-h-11 w-full appearance-none rounded-lg border border-control bg-surface py-2 pr-10 pl-3 text-base font-normal text-ink shadow-sm transition-colors duration-150 hover:border-ink;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none' stroke='%2314213d' stroke-width='2'%3E%3Cpath d='M5 8l5 5 5-5'/%3E%3C/svg%3E");
+  background-position: right 0.75rem center;
+  background-repeat: no-repeat;
+  background-size: 1rem;
+}
+
+/* MapLibre controls, restyled to match: larger targets (WCAG 2.5.8) and the shared depth. */
+.maplibregl-ctrl-group:not(:empty) {
+  border-radius: 0.75rem;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.maplibregl-ctrl-group button {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+.maplibregl-ctrl-attrib {
+  font-size: 0.75rem;
+}
+@utility af-button-primary {
+  @apply af-button bg-ink text-surface hover:bg-accent;
+}
+@utility af-button-secondary {
+  @apply af-button border border-control bg-surface text-ink hover:border-ink;
+}
+
+/* Page transitions (app/template.tsx): the old page fades out quickly, the new one settles in.
+   The page title morphs between pages with the shared entrance easing. */
+::view-transition-old(root) {
+  animation-duration: 0.18s;
+}
+::view-transition-new(root) {
+  animation-duration: 0.35s;
+}
+::view-transition-group(.af-morph) {
+  animation-duration: 0.45s;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+  /* Staggered delays and scroll timelines would still hide text briefly; show it outright. */
+  .af-word,
+  .af-underline-draw,
+  .af-h2 {
+    animation: none !important;
+  }
   *,
   *::before,
   *::after {
