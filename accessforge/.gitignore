@@ -2,3 +2,9 @@ graphify-out/
 .DS_Store
 .serena/
 .playwright-mcp/
+# Secrets: never commit local or production environment files.
+.env
+.env.*
+!.env.example
+# Hypothesis test database (local cache).
+.hypothesis/
