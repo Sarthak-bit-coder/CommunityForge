@@ -61,8 +61,8 @@ Core tables (an outline; the final schema arrives in Phase 2 migrations):
 | `barrier` | id, geom, edge_id/node_id, type, severity, state, presence_prob, source, source_ref, created_at |
 | `barrier_event` | barrier_id, from_state, to_state, actor_id, photo_id, note, at (append-only audit) |
 | `repair_candidate` | id, barrier_ids[], type, cost_estimate, cost_low, cost_high, cost_source |
-| `destination` | id, geom, category, weight, source |
-| `origin` | id (census block), geom, population, disability_est, source_year |
+| `destination` | id, geom, category, name, weight, node_id, source_id, source_ref |
+| `origin` | id (census block), geom, population, disability_rate (modeled, nullable), node_id, source_id, disability_source_id |
 | `scenario` | id, owner_id, params (JSONB, validated), engine_version, created_at |
 | `job` | id, scenario_id, status, attempts, error, timestamps |
 | `scenario_result` | scenario_id, method, selected_repairs, delta_a, metrics (JSONB), explanations (JSONB) |
@@ -110,6 +110,8 @@ evaluate(instance, selected_repair_ids, params) -> metrics   # used for before/a
 ```
 
 Errors: `InvalidInstanceError` for dangling ids, negative costs, or probabilities outside [0, 1]. The engine never returns partial results silently.
+
+**Proposed change (2026-11-17, Claude Code, awaiting maintainer approval):** route analysis in `services/api/accessforge_api/routing_core.py` calls `networkx.single_source_dijkstra` on `build_graph` output to get a path, its edges and its cost. Path finding is not in the contract. Proposed: add `route(instance, origin_id, destination_id, profile_id, *, present_barrier_ids) -> RouteResult | None` to `accessforge_engine`, returning node IDs, edge IDs, generalized cost and length, with the same threshold cutoff as `evaluate`. Codex would own it, and the API would then drop its networkx import. Until approved, the API keeps the current call.
 
 ## 4. Data flow
 

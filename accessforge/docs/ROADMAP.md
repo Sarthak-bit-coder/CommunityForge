@@ -2,7 +2,7 @@
 
 Phases are gated by acceptance criteria, not dates. No phase is "done" until all of its criteria hold.
 
-## Phase 0: Research and foundation (current)
+## Phase 0: Research and foundation (done)
 **Owner:** Claude Code
 - [x] Competitor and prior-work analysis with evidence tags (`docs/COMPETITOR_ANALYSIS.md`)
 - [x] Falsifiable research hypothesis, algorithms, baselines, and metrics (`docs/RESEARCH_HYPOTHESIS.md`)
@@ -12,7 +12,7 @@ Phases are gated by acceptance criteria, not dates. No phase is "done" until all
 
 **Acceptance:** all documents exist with no placeholders, every external claim is tagged, and the open questions are listed.
 
-## Phase 1: Engine prototype on synthetic data
+## Phase 1: Engine prototype on synthetic data (done: 155 engine tests, 98.9% coverage, 2026-11-17)
 **Owner:** Codex (engine). Claude Code: evidence-gap research in parallel.
 - `accessforge_engine` package: contract types, graph builder, profile costs, accessibility metric A, scenario sampler, B0–B3, P1, `evaluate`.
 - Synthetic instance generator with controllable size, barrier density, and **barrier clustering**.
@@ -33,6 +33,21 @@ Phases are gated by acceptance criteria, not dates. No phase is "done" until all
 - A structured team barrier audit of the pilot area, with photos and a documented protocol. Contact Project Sidewalk about a possible Fremont deployment.
 - Discovery: request conversations with Fremont staff and local disability organizations. Record findings in `docs/DISCOVERY.md`, including what we **could not** confirm.
 - Codex: P2 bundle generation, the exact MILP on small instances, and optimality-gap measurement.
+
+**Status (2026-11-17): partly done.**
+- [x] Pilot area chosen with documented criteria (`docs/PILOT_AREA.md`).
+- [x] OSM network, destinations, 2020 Census population and CDC PLACES disability share ingested (`pipelines/ingest`). Coverage gaps recorded.
+- [x] Migration `0004_network` with up/down tests. The network is loaded as its largest connected component, and the dropped pieces are documented.
+- [x] Barrier source with provenance: 20 OSM `kerb=raised` nodes, as unverified `open_map_data` evidence.
+- [x] Data catalog with licenses (`docs/DATA_CATALOG.md`).
+- [x] Discovery notes exist (`docs/DISCOVERY.md`). They record that **no conversations have happened yet**.
+- [x] Origins and destinations snap to the nearest routable node within 200 m (2026-11-18). Before that, exact-position matching linked 0 of 53 census blocks.
+- [x] First modeled pilot finding, from unverified OSM curbs (`docs/PILOT_FINDING.md`).
+- [x] The planner and route analysis run on the Fremont pilot network (dataset `fremont_pilot`, default in the UI). Repairs cost one repair unit each. Budgets are limited to 0 to 2 units because exhaustive search does not finish at 3. Plans are precomputed when the API starts.
+- [ ] OSM coverage checked against imagery (needs a person).
+- [ ] Team field audit with photos. The protocol is drafted (`docs/AUDIT_PROTOCOL.md`); the audit itself has not been done.
+- [ ] Contact Fremont staff, disability organizations and Project Sidewalk.
+- [ ] Codex: P2 bundles and MILP benchmark.
 
 **Acceptance:** PostGIS schema migrated with up/down tests; the pilot network is a single connected component or has documented, justified components; ≥ 1 source of barriers loaded with provenance; the data catalog lists the license of every source; discovery notes exist; P2 is benchmarked against the MILP.
 

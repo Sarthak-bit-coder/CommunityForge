@@ -1,40 +1,68 @@
 # AccessForge AI
 
-AccessForge AI is an accessibility infrastructure intelligence platform. It helps communities find pedestrian accessibility barriers, understand how those barriers cut people off from essential destinations, choose which repairs to fund under a limited budget, and verify that repairs actually happened.
+AccessForge helps a community map pedestrian accessibility barriers, check them, and choose the **set** of sidewalk repairs that opens the most accessible routes within a budget.
 
-**Initial target:** Fremont, California (one pilot area). **Long-term goal:** a deployment playbook other communities can reuse.
+> AccessForge outputs are planning estimates. They are **not** official accessibility inspections, ADA compliance determinations, or safe-route guarantees. AccessForge is an independent project with no partnership with, or endorsement from, the City of Fremont or any other organization.
 
-> AccessForge outputs are planning estimates. They are **not** official accessibility inspections, ADA compliance determinations, or safe-route guarantees.
+## The problem
 
-## Current status: Phase 0 complete (research and documentation only)
+A route is usable only if every piece of it is. Repair lists that rank barriers one at a time cannot see that two repairs may only be worth funding together, so a limited budget can be spent on fixes that open no complete route. AccessForge scores repairs as a group, on the network they sit on, and explains each choice.
 
-- No application code exists yet.
-- No user interviews, partnerships, or measured results exist yet. Every claim about users and outcomes in the docs is labeled as an assumption or a proposal.
+## Status (2026-11-17)
 
-## The core idea
+| | |
+|---|---|
+| Barrier reporting, map with an equivalent list, filters | Working. Stored in PostgreSQL/PostGIS |
+| Reviewer sign-in, verify/reject with an append-only audit log | Working |
+| Report text hidden from the public until a reviewer confirms it | Working |
+| Repair planner: budget, four methods compared, explanations, saved scenarios, CSV/JSON/print | Working, **on synthetic networks only** |
+| Pilot dashboard: counts by status and type, CSV, anonymous feedback form | Working |
+| Fremont network, destinations, population (OSM, Census, CDC PLACES) | Ingested for the pilot area; **not yet connected to the planner** |
+| Repair tracking: reviewers move verified barriers through repair planned → repair completed → resolved, each step in the append-only audit log; pilot dashboard counts repairs | Working. Statuses are reviewer records, not City records |
+| Real repair costs, photos, equity-targeted planning | Not built |
+| Deployment | **Not deployed.** Runs locally; see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
+| Community participation and real-world outcomes | **None yet.** See [docs/DISCOVERY.md](docs/DISCOVERY.md) |
 
-Tools such as Project Sidewalk (barrier data) and AccessMap (personalized routing) already answer *where the barriers are* and *how to route around them*. AccessForge aims at a different question:
+## Quick start
 
-> **Given a budget, which *set* of repairs most improves access to essential destinations, for which people, and how sure are we?**
+Full instructions: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) §2.
 
-The proposed **Accessibility Impact Optimization Engine** models the pedestrian network as a profile-specific weighted graph. It accounts for **complementary repairs** (two fixes that are only useful together), for **uncertainty** about whether reported barriers really exist, and for **equity** across groups. It explains each recommendation and is benchmarked against simpler per-defect ranking. The primary hypothesis is falsifiable and pre-registered. See [docs/RESEARCH_HYPOTHESIS.md](docs/RESEARCH_HYPOTHESIS.md).
+```sh
+cd services/api && uv sync --extra dev && uv run alembic upgrade head && uv run uvicorn accessforge_api.main:create_app --factory --port 8000
+cd apps/web && npm install && npm run dev   # http://localhost:3000
+```
+
+## Layout
+
+| Path | What |
+|---|---|
+| `apps/web` | Next.js + TypeScript web app (MapLibre map, every map has a matching list) |
+| `services/api` | FastAPI, SQLAlchemy, Alembic migrations, PostGIS |
+| `services/engine` | `accessforge_engine`: graph model, access metric, optimizers (pure Python, NetworkX) |
+| `pipelines/ingest` | Fremont pilot-area data ingestion (OSM, Census, CDC PLACES) |
+| `scripts/verify-deployment.sh` | Read-only smoke test of a running deployment |
 
 ## Documents
 
-| Doc | Contents |
+| For | Doc |
 |---|---|
-| [docs/COMPETITOR_ANALYSIS.md](docs/COMPETITOR_ANALYSIS.md) | Project Sidewalk, AccessMap/OpenSidewalks, AccessNow, vendors, academic work, evidence gaps |
-| [docs/RESEARCH_HYPOTHESIS.md](docs/RESEARCH_HYPOTHESIS.md) | Model, hypotheses H1–H4, algorithms, baselines, metrics, limitations |
-| [docs/PRODUCT_REQUIREMENTS.md](docs/PRODUCT_REQUIREMENTS.md) | Users, use cases, MVP scope and exclusions, accessibility, privacy, verification |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Components, engine contract, data flow, API, deployment, security |
-| [docs/ROADMAP.md](docs/ROADMAP.md) | Phases with acceptance criteria |
-| [docs/AGENT_OWNERSHIP.md](docs/AGENT_OWNERSHIP.md) | Claude Code vs. Codex file ownership |
-| [AGENTS.md](AGENTS.md) | Repository conventions and testing requirements |
+| Residents, reviewers, planners | [docs/USER_GUIDE.md](docs/USER_GUIDE.md) |
+| Running and deploying | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
+| Architecture | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| Optimization method and limits | [services/engine/README.md](services/engine/README.md), [docs/RESEARCH_HYPOTHESIS.md](docs/RESEARCH_HYPOTHESIS.md), [docs/engine/BENCHMARK_RESULTS.md](docs/engine/BENCHMARK_RESULTS.md) |
+| Privacy, pilot method, retention | [docs/METHODOLOGY_AND_PRIVACY.md](docs/METHODOLOGY_AND_PRIVACY.md) |
+| Accessibility statement | `/accessibility` in the running app |
+| Pilot launch checklist, outreach email, press pitch, impact template | [docs/LAUNCH.md](docs/LAUNCH.md) |
+| Demo script and outreach plan | [docs/DEMO.md](docs/DEMO.md) |
+| Pilot area, data sources, field audit | [docs/PILOT_AREA.md](docs/PILOT_AREA.md), [docs/DATA_CATALOG.md](docs/DATA_CATALOG.md), [docs/AUDIT_PROTOCOL.md](docs/AUDIT_PROTOCOL.md) |
+| Roadmap, conventions | [docs/ROADMAP.md](docs/ROADMAP.md), [AGENTS.md](AGENTS.md) |
 
-## Planned stack
+## Checks
 
-Next.js + TypeScript (web, MapLibre), Python + FastAPI (API + worker), PostgreSQL + PostGIS, and NetworkX + NumPy + SciPy/HiGHS in a pure-Python engine package. A computer vision service is planned for after the MVP.
+```sh
+cd services/engine && uv run pytest
+cd services/api && uv run pytest && uv run ruff check . && uv run mypy accessforge_api migrations
+cd apps/web && npm run check && npm run build && npm run test:e2e
+```
 
-## Next step
-
-Phase 1: Codex builds the engine prototype on synthetic data (see the "Phase 1" section of [docs/ROADMAP.md](docs/ROADMAP.md)).
+Set `TEST_DATABASE_URL` to include the real-PostGIS API tests; without it they skip.
