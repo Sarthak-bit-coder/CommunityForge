@@ -152,3 +152,13 @@ def test_invalid_edge_attributes_fail(attrs: dict[str, float | str]) -> None:
 def test_empty_ids_fail() -> None:
     with pytest.raises(InvalidInstanceError, match="nonempty"):
         Node(" ")
+
+
+def test_scalar_barrier_type_cannot_silently_make_blocked_routes_passable() -> None:
+    with pytest.raises(InvalidInstanceError, match="impassable_types"):
+        replace(profile(), impassable_types="step")  # type: ignore[arg-type]
+
+
+def test_scalar_repair_target_cannot_split_into_unrelated_barrier_ids() -> None:
+    with pytest.raises(InvalidInstanceError, match="barrier_ids"):
+        Repair("repair", "ab", 1, 1, 1)  # type: ignore[arg-type]

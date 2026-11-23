@@ -1,7 +1,9 @@
 """Hand-computed modeled access and removal-only invariants."""
 
 from dataclasses import replace
+from unittest.mock import patch
 
+import networkx as nx
 import pytest
 from hypothesis import given, strategies as st
 
@@ -137,10 +139,43 @@ def test_zero_distance_counts_isolated_colocated_destination() -> None:
     assert result.before.total == result.after.total == 6
 
 
+@pytest.mark.parametrize("presence", [0, 0.5, 1])
+def test_colocated_destination_respects_node_barrier_presence(presence: float) -> None:
+    data = replace(
+        instance(),
+        barriers=(Barrier("barrier", None, "b", "step", 3, presence),),
+        origins=(Origin("home", "b", 1, "tract"),),
+        profiles=(replace(profile(), threshold_m=0),),
+    )
+
+    result = evaluate(data, ("repair",), params(n_scenarios=4))
+
+    assert result.before.total == 1 - presence
+    assert result.after.total == 1
+
+
 def test_empty_origins_or_destinations_have_zero_access() -> None:
     for data in (replace(instance(), origins=()), replace(instance(), destinations=())):
         result = evaluate(data, (), params())
         assert result.before.total == result.after.total == result.delta_a_expected == 0
+
+
+def test_unchanged_scenario_and_colocated_origins_share_one_search() -> None:
+    data = replace(
+        instance(),
+        barriers=(),
+        repairs=(),
+        origins=(Origin("home", "a", 2, "north"), Origin("other", "a", 3, "south")),
+    )
+    with patch(
+        "accessforge_engine.evaluation.nx.single_source_dijkstra_path_length",
+        wraps=nx.single_source_dijkstra_path_length,
+    ) as search:
+        result = evaluate(data, (), params())
+
+    assert search.call_count == 1
+    assert result.before == result.after
+    assert result.after.by_group == {"north": 2, "south": 3}
 
 
 def test_explicit_directionality_preserves_three_argument_call() -> None:
@@ -286,3 +321,23 @@ def test_zero_weights_preserve_reachability_without_contributing_score() -> None
     assert result.after.total == 0
     assert result.after.by_profile == {"wheelchair": 0, "other": 0}
     assert len(result.after.reachable_probabilities) == 2
+
+
+def test_repair_shortens_detour_without_connecting_isolated_destination() -> None:
+    data = replace(
+        corridor(),
+        edges=(*corridor().edges, Edge("detour", "a", "c", 12, {"incline": 0})),
+        profiles=(
+            replace(profile(), threshold_m=10),
+            replace(profile(), id="longer", threshold_m=12),
+        ),
+        destinations=(
+            Destination("clinic", "c", "health", 2),
+            Destination("park", "isolated", "park", 9),
+        ),
+    )
+    result = evaluate(data, ("a", "b"), params(), directed=True)
+    assert result.before.by_profile == {"wheelchair": 0, "longer": 6}
+    assert result.after.by_profile == {"wheelchair": 6, "longer": 6}
+    assert all(key[2] != "park" for key in result.after.reachable_probabilities)
+    assert evaluate(data, ("a", "b"), params(), directed=True) == result

@@ -118,6 +118,19 @@ def test_zero_probability_barrier_is_absent() -> None:
     assert nx.has_path(build_graph(data, "wheelchair", directed=False), "a", "b")
 
 
+def test_known_absent_barrier_cannot_be_present_in_an_explicit_scenario() -> None:
+    data = replace(
+        instance(), barriers=(replace(instance().barriers[0], presence_prob=0),)
+    )
+    with pytest.raises(InvalidInstanceError, match="known-absent"):
+        build_graph(
+            data,
+            "wheelchair",
+            directed=False,
+            present_barrier_ids=frozenset({"barrier"}),
+        )
+
+
 def test_invalid_graph_arguments_fail() -> None:
     with pytest.raises(InvalidInstanceError, match="unknown profile"):
         build_graph(instance(), "missing", directed=False)

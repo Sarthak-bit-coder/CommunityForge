@@ -10,14 +10,20 @@ import networkx as nx
 from .contract import Barrier, ProblemInstance, Profile
 from .validation import InvalidInstanceError
 
+BLOCKED_BY_BARRIER = "blocked_by_barrier"
+
 
 def _present_ids(
     instance: ProblemInstance, present: frozenset[str] | None
 ) -> frozenset[str]:
-    known = {barrier.id for barrier in instance.barriers}
     if present is not None:
-        if not present <= known:
+        probabilities = {
+            barrier.id: barrier.presence_prob for barrier in instance.barriers
+        }
+        if not present <= probabilities.keys():
             raise InvalidInstanceError("scenario contains unknown barrier IDs")
+        if any(probabilities[key] == 0 for key in present):
+            raise InvalidInstanceError("scenario contains a known-absent barrier")
         return frozenset(present)
     if any(b.presence_prob not in (0, 1) for b in instance.barriers):
         raise InvalidInstanceError(
@@ -57,7 +63,7 @@ def build_graph(
     Direction is explicit; directed edges follow u -> v. Incline is a signed
     rise/run ratio; its absolute value is compared with max_incline. Unknown
     incline fails closed when the profile requires an incline limit. Hard node
-    barriers isolate the node. Soft node penalties are rejected: the contract
+    barriers isolate and mark the node as blocked. Soft node penalties are rejected: the contract
     does not define their traversal costs. Explicit presence is a realized
     scenario, not a probability-weighted graph. Parallel edges stay distinct.
     """
@@ -71,6 +77,8 @@ def build_graph(
     graph: nx.MultiGraph[str]
     graph = nx.MultiDiGraph() if directed else nx.MultiGraph()
     graph.add_nodes_from(node.id for node in instance.nodes)
+    for node_id in blocked_nodes:
+        graph.nodes[node_id][BLOCKED_BY_BARRIER] = True
     for edge in instance.edges:
         barriers = by_edge[edge.id]
         if edge.u in blocked_nodes or edge.v in blocked_nodes:

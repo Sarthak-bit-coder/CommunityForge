@@ -4,6 +4,7 @@ from dataclasses import dataclass, replace
 from fractions import Fraction
 from itertools import combinations
 from math import fsum, inf
+from sys import float_info
 from time import monotonic
 from collections.abc import Mapping
 
@@ -109,9 +110,9 @@ def _cost_stability(run: _Run, selected: tuple[str, ...]) -> set[str]:
     stable = set(selected)
     for factor in (1 - COST_PERTURBATION_FRACTION, 1 + COST_PERTURBATION_FRACTION):
         # Uniform cost scaling is equivalent to inverse scaling of the budget.
-        perturbed = replace(
-            run, params=replace(run.params, budget=run.params.budget / factor)
-        )
+        # Every representable portfolio cost fits once the scaled budget overflows.
+        budget = min(run.params.budget / factor, float_info.max)
+        perturbed = replace(run, params=replace(run.params, budget=budget))
         stable.intersection_update(_search(perturbed))
     return stable
 

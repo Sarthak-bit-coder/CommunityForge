@@ -83,6 +83,8 @@ class Repair:
 
     def __post_init__(self) -> None:
         identifier(self.id, "repair.id")
+        if isinstance(self.barrier_ids, (str, bytes)):
+            raise InvalidInstanceError("repair.barrier_ids must be a collection of IDs")
         ids = tuple(self.barrier_ids)
         for barrier_id in ids:
             identifier(barrier_id, "repair.barrier_id")
@@ -109,6 +111,10 @@ class Profile:
         number(self.threshold_m, "profile.threshold_m")
         if self.max_incline is not None:
             number(self.max_incline, "profile.max_incline")
+        if isinstance(self.impassable_types, (str, bytes)):
+            raise InvalidInstanceError(
+                "profile.impassable_types must be a collection of types"
+            )
         types = frozenset(self.impassable_types)
         for barrier_type in types:
             identifier(barrier_type, "profile.impassable_type")

@@ -2,6 +2,7 @@
 
 from dataclasses import FrozenInstanceError, replace
 from itertools import combinations
+from sys import float_info
 from unittest.mock import patch
 
 import pytest
@@ -318,3 +319,32 @@ def test_solver_respects_directed_graphs_and_disconnected_destinations() -> None
         data, destinations=(Destination("clinic", "isolated", "health", 1),)
     )
     assert solve(disconnected, solve_params()).delta_a_expected == 0
+
+
+@pytest.mark.parametrize("method", ["exhaustive", "B3"])
+def test_maximum_finite_budget_keeps_a_valid_recommendation(method: str) -> None:
+    data = instance()
+    result = solve(data, solve_params(method, float_info.max))
+
+    assert result.selected_repair_ids == (data.repairs[0].id,)
+    assert result.total_cost == data.repairs[0].cost
+    assert result.explanations[0].stable_under_cost_perturbation
+
+
+@pytest.mark.parametrize("method", ["exhaustive", "B3"])
+def test_competing_repairs_for_one_barrier_earn_one_trip_gain(method: str) -> None:
+    data = instance()
+    original = data.repairs[0]
+    alternative = replace(original, id="alternative")
+    data = replace(data, repairs=(original, alternative))
+    options = solve_params(method, original.cost + alternative.cost)
+
+    result = solve(data, options)
+
+    assert result.selected_repair_ids == ("alternative",)
+    assert result.total_cost == original.cost
+    assert (
+        result.delta_a_expected
+        == evaluate(data, (original.id,), options).delta_a_expected
+    )
+    assert result == solve(data, options)

@@ -1,6 +1,6 @@
 """Cumulative-opportunity accessibility estimates, without portfolio optimization."""
 
-from collections import Counter
+from collections import Counter, defaultdict
 from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from math import fsum
@@ -10,7 +10,7 @@ from types import MappingProxyType
 import networkx as nx
 
 from .contract import ProblemInstance, SolveParams
-from .graph import build_graph
+from .graph import BLOCKED_BY_BARRIER, build_graph
 from .validation import InvalidInstanceError, identifier, number, unique
 
 ReachKey = tuple[str, str, str]  # profile ID, origin ID, destination ID
@@ -61,6 +61,18 @@ class EvaluationMetrics:
         )
 
 
+@dataclass(frozen=True)
+class RouteImpact:
+    """Modeled reachability change for one traveler profile and trip."""
+
+    profile_id: str
+    origin_id: str
+    destination_id: str
+    modeled_reach_before: float
+    modeled_reach_after: float
+    contributing_repair_ids: tuple[str, ...]
+
+
 def _finite_sum(values: Iterable[float]) -> float:
     try:
         value = fsum(values)
@@ -104,17 +116,26 @@ def _scenarios(
 def _reachable(
     instance: ProblemInstance, present: frozenset[str], *, directed: bool
 ) -> Iterator[ReachKey]:
+    origins_by_node: dict[str, list[str]] = defaultdict(list)
+    for origin in instance.origins:
+        origins_by_node[origin.node_id].append(origin.id)
+
     for profile in instance.profiles:
         graph = build_graph(
             instance, profile.id, directed=directed, present_barrier_ids=present
         )
-        for origin in instance.origins:
+        for node_id, origin_ids in origins_by_node.items():
+            if graph.nodes[node_id].get(BLOCKED_BY_BARRIER):
+                continue
             distances = nx.single_source_dijkstra_path_length(
-                graph, origin.node_id, cutoff=profile.threshold_m, weight="weight"
+                graph, node_id, cutoff=profile.threshold_m, weight="weight"
             )
-            for destination in instance.destinations:
-                if destination.node_id in distances:
-                    yield profile.id, origin.id, destination.id
+            destinations = [
+                item.id for item in instance.destinations if item.node_id in distances
+            ]
+            for origin_id in origin_ids:
+                for destination_id in destinations:
+                    yield profile.id, origin_id, destination_id
 
 
 def _accessibility(
@@ -165,12 +186,57 @@ def evaluate(
     before: Counter[ReachKey] = Counter()
     after: Counter[ReachKey] = Counter()
     for present in _scenarios(instance, n_scenarios=n_scenarios, seed=params.seed):
-        before.update(_reachable(instance, present, directed=directed))
-        after.update(_reachable(instance, present - removed, directed=directed))
+        remaining = present - removed
+        trips = _reachable(instance, present, directed=directed)
+        if remaining == present:
+            for trip in trips:
+                before[trip] += 1
+                after[trip] += 1
+        else:
+            before.update(trips)
+            after.update(_reachable(instance, remaining, directed=directed))
     return EvaluationMetrics(
         _accessibility(instance, before, n_scenarios),
         _accessibility(instance, after, n_scenarios),
         total_cost,
         total_cost <= params.budget,
         n_scenarios,
+    )
+
+
+def evaluate_route_impacts(
+    instance: ProblemInstance,
+    selected_repair_ids: tuple[str, ...],
+    params: SolveParams,
+    *,
+    directed: bool = False,
+) -> tuple[RouteImpact, ...]:
+    """Report trips with increased modeled reach within the profile threshold.
+
+    A repair contributes when omitting it from this portfolio reduces reach
+    on the same sampled scenarios. Interchangeable repairs may have zero
+    individual contribution. Trips are ordered by profile, origin, destination.
+    Portfolios exceeding the supplied budget are rejected.
+    """
+    full = evaluate(instance, selected_repair_ids, params, directed=directed)
+    if not full.budget_feasible:
+        raise InvalidInstanceError("repair portfolio exceeds the budget")
+    before = full.before.reachable_probabilities
+    after = full.after.reachable_probabilities
+    contributors: dict[ReachKey, list[str]] = {
+        trip: [] for trip, reach in sorted(after.items()) if reach > before.get(trip, 0)
+    }
+    if not contributors:
+        return ()
+
+    for repair_id in sorted(selected_repair_ids):
+        other_ids = tuple(key for key in selected_repair_ids if key != repair_id)
+        without = evaluate(instance, other_ids, params, directed=directed)
+        for trip, repair_ids in contributors.items():
+            if after[trip] > without.after.reachable_probabilities.get(trip, 0):
+                repair_ids.append(repair_id)
+
+    return tuple(
+        RouteImpact(*trip, before.get(trip, 0), after[trip], tuple(repair_ids))
+        for trip, repair_ids in contributors.items()
     )
