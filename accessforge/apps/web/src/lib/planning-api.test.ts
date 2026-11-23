@@ -1,12 +1,14 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import corridor from "@/test/corridor-plan.json";
 import {
-  EXPORT_NOTICE,
   dataUri,
+  exportNotice,
   fetchPlan,
   parseBudget,
   planCsv,
   recommended,
+  repairName,
+  repairSummary,
   repairTarget,
   type Plan,
 } from "./planning-api";
@@ -40,14 +42,53 @@ describe("plan helpers", () => {
     expect(repairTarget(plan.network, "missing")).toBe("");
   });
 
+  it("names repairs by their position, falling back to the id", () => {
+    expect(repairName(plan.network, "r0")).toBe("Repair 1");
+    expect(repairName(plan.network, "r1")).toBe("Repair 2");
+    expect(repairName(plan.network, "missing")).toBe("missing");
+  });
+
+  it("describes a repair for residents without internal ids", () => {
+    expect(repairSummary(plan.network, "r0")).toBe("Step on a sidewalk segment");
+    expect(
+      repairSummary(
+        {
+          ...plan.network,
+          barriers: [
+            { id: "b", edge_id: null, node_id: "n", type: "missing_curb_ramp", severity: 1 },
+          ],
+          repairs: [{ id: "x", barrier_ids: ["b"], cost: 1 }],
+        },
+        "x",
+      ),
+    ).toBe("Missing curb ramp at a corner");
+    expect(repairSummary(plan.network, "missing")).toBe("Unknown barrier");
+  });
+
   it("exports every method with provenance and escapes commas", () => {
     const csv = planCsv(plan);
     const lines = csv.split("\n");
-    expect(lines[0]).toBe(`notice,"${EXPORT_NOTICE}"`);
+    expect(lines[0]).toBe(`notice,"${exportNotice(plan)}"`);
+    expect(exportNotice(plan)).toContain("synthetic demonstration network");
     expect(lines).toContain("dataset,corridor");
+    expect(planCsv(plan, new Date("2026-11-17T00:00:00Z"))).toContain(
+      "generated_at,2026-11-17T00:00:00.000Z",
+    );
+    expect(csv).toContain('cost_units,"Relative synthetic units, not dollars"');
     expect(lines).toContain("exhaustive,r0,step on segment e0,10,20,10,20");
     expect(lines).toContain("B3,,no repair selected,0,0,0,10");
     expect(decodeURIComponent(dataUri("text/csv", csv))).toBe(`data:text/csv;charset=utf-8,${csv}`);
+  });
+});
+
+describe("Fremont pilot exports", () => {
+  it("label the real network, unverified barriers, and repair units", () => {
+    const pilot = { ...plan, dataset: "fremont_pilot", synthetic: false } as Plan;
+    const csv = planCsv(pilot);
+    expect(exportNotice(pilot)).toContain("Fremont pilot network from OpenStreetMap");
+    expect(exportNotice(pilot)).toContain("unverified barriers");
+    expect(csv).toContain('cost_units,"Repair units, one per barrier, not dollars"');
+    expect(csv).not.toContain("synthetic");
   });
 });
 

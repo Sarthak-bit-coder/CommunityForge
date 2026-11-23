@@ -3,22 +3,29 @@ import {
   METHOD_NOTES,
   formatNumber,
   recommended,
-  repairTarget,
+  repairName,
+  repairNames,
+  repairSummary,
   type Plan,
 } from "@/lib/planning-api";
+import { SpotlightCard } from "@/components/motion/SpotlightCard";
 import { NetworkDiagram } from "./NetworkDiagram";
 
 const PERCENT = 100;
 const TH = "border-b border-line px-3 py-2 text-left font-semibold text-ink";
 const TD = "border-b border-line px-3 py-2 align-top";
 
+// Result sections rise in one after another when a plan arrives, like a results reveal.
+const REVEAL_STEP_MS = 120;
+const reveal = (step: number) => ({ animationDelay: `${step * REVEAL_STEP_MS}ms` });
+
 function Stat({ label, value, note }: { label: string; value: string; note: string }) {
   return (
-    <div className="rounded-lg border border-line bg-surface p-4">
+    <SpotlightCard className="rounded-lg border border-line bg-surface p-4">
       <dt className="text-sm font-medium text-muted">{label}</dt>
       <dd className="mt-1 text-2xl font-bold text-ink">{value}</dd>
       <dd className="mt-1 text-sm text-muted">{note}</dd>
-    </div>
+    </SpotlightCard>
   );
 }
 
@@ -36,8 +43,8 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
 
   return (
     <div className="space-y-10">
-      <section aria-labelledby="plan-heading">
-        <h2 id="plan-heading" className="text-xl font-semibold text-ink">
+      <section aria-labelledby="plan-heading" className="af-rise" style={reveal(0)}>
+        <h2 id="plan-heading" className="af-h2">
           Recommended plan
         </h2>
         <dl className="mt-4 grid gap-4 sm:grid-cols-3">
@@ -71,8 +78,8 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
       </section>
 
       {best.explanations.length ? (
-        <section aria-labelledby="why-heading">
-          <h2 id="why-heading" className="text-xl font-semibold text-ink">
+        <section aria-labelledby="why-heading" className="af-rise" style={reveal(1)}>
+          <h2 id="why-heading" className="af-h2">
             Why these repairs
           </h2>
           <div
@@ -114,12 +121,14 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
                 {best.explanations.map((item) => (
                   <tr key={item.repair_id}>
                     <th scope="row" className={`${TD} text-left font-semibold text-ink`}>
-                      {item.repair_id}
+                      {repairName(plan.network, item.repair_id)}
                     </th>
-                    <td className={TD}>{repairTarget(plan.network, item.repair_id)}</td>
+                    <td className={TD}>{repairSummary(plan.network, item.repair_id)}</td>
                     <td className={TD}>{formatNumber(costs.get(item.repair_id) ?? 0)}</td>
                     <td className={TD}>{formatNumber(item.marginal_delta_a)}</td>
-                    <td className={TD}>{list(item.complementary_repair_ids)}</td>
+                    <td className={TD}>
+                      {repairNames(plan.network, item.complementary_repair_ids)}
+                    </td>
                     <td className={TD}>
                       {list(item.profiles_benefiting)}
                       <span className="block text-muted">
@@ -139,12 +148,16 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
         </section>
       ) : null}
 
-      <section aria-labelledby="network-heading">
-        <h2 id="network-heading" className="text-xl font-semibold text-ink">
+      <section aria-labelledby="network-heading" className="af-rise" style={reveal(2)}>
+        <h2 id="network-heading" className="af-h2">
           Network and repair candidates
         </h2>
         <div className="mt-4 grid gap-4 lg:grid-cols-2">
-          <NetworkDiagram network={plan.network} selected={best.selected_repair_ids} />
+          <NetworkDiagram
+            network={plan.network}
+            selected={best.selected_repair_ids}
+            synthetic={plan.synthetic}
+          />
           <div
             role="region"
             aria-label="Repair candidates, scrollable table"
@@ -173,9 +186,9 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
                 {plan.network.repairs.map((repair) => (
                   <tr key={repair.id}>
                     <th scope="row" className={`${TD} text-left font-semibold text-ink`}>
-                      {repair.id}
+                      {repairName(plan.network, repair.id)}
                     </th>
-                    <td className={TD}>{repairTarget(plan.network, repair.id)}</td>
+                    <td className={TD}>{repairSummary(plan.network, repair.id)}</td>
                     <td className={TD}>{formatNumber(repair.cost)}</td>
                     <td className={TD}>
                       {best.selected_repair_ids.includes(repair.id) ? "✓ Yes" : "No"}
@@ -188,8 +201,8 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
         </div>
       </section>
 
-      <section aria-labelledby="methods-heading">
-        <h2 id="methods-heading" className="text-xl font-semibold text-ink">
+      <section aria-labelledby="methods-heading" className="af-rise" style={reveal(3)}>
+        <h2 id="methods-heading" className="af-h2">
           How other ways of choosing compare
         </h2>
         <p className="mt-1 max-w-prose text-muted">
@@ -231,7 +244,7 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
                         {METHOD_NOTES[item.method]}
                       </span>
                     </th>
-                    <td className={TD}>{list(item.selected_repair_ids)}</td>
+                    <td className={TD}>{repairNames(plan.network, item.selected_repair_ids)}</td>
                     <td className={TD}>{formatNumber(item.total_cost)}</td>
                     <td className={TD}>
                       {formatNumber(item.delta_a)}
@@ -252,8 +265,8 @@ export function PlanResults({ plan }: { readonly plan: Plan }) {
         </div>
       </section>
 
-      <section aria-labelledby="who-heading">
-        <h2 id="who-heading" className="text-xl font-semibold text-ink">
+      <section aria-labelledby="who-heading" className="af-rise" style={reveal(4)}>
+        <h2 id="who-heading" className="af-h2">
           Who gains in the recommended plan
         </h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">

@@ -5,21 +5,24 @@ import {
   DATASETS,
   DATASET_LABELS,
   DATASET_NOTES,
-  EXPORT_NOTICE,
-  MAX_BUDGET,
+  PILOT_DATASET,
+  budgetProblem,
   dataUri,
+  defaultBudget,
+  exportNotice,
   fetchPlan,
   formatNumber,
   parseBudget,
   planCsv,
   recommended,
+  repairNames,
   type Dataset,
   type Plan,
 } from "@/lib/planning-api";
+import { BudgetComparison } from "./BudgetComparison";
 import { PlanResults } from "./PlanResults";
 
-const DEFAULT_DATASET: Dataset = "corridor";
-const DEFAULT_BUDGET = 20; // Enough for both corridor repairs, so the first run shows a pair.
+const DEFAULT_DATASET: Dataset = PILOT_DATASET;
 const MAX_SAVED = 6;
 const BUDGET_ERROR_ID = "budget-error";
 const BUTTON =
@@ -29,13 +32,17 @@ const TD = "border-b border-line px-3 py-2 align-top";
 
 type Run = { readonly dataset: Dataset; readonly budget: number; readonly attempt: number };
 
-export function RepairPlanner() {
-  const [dataset, setDataset] = useState<Dataset>(DEFAULT_DATASET);
-  const [budgetText, setBudgetText] = useState(String(DEFAULT_BUDGET));
+export function RepairPlanner({
+  defaultDataset = DEFAULT_DATASET,
+}: {
+  readonly defaultDataset?: Dataset;
+}) {
+  const [dataset, setDataset] = useState<Dataset>(defaultDataset);
+  const [budgetText, setBudgetText] = useState(String(defaultBudget(defaultDataset)));
   const [budgetError, setBudgetError] = useState("");
   const [run, setRun] = useState<Run>({
-    dataset: DEFAULT_DATASET,
-    budget: DEFAULT_BUDGET,
+    dataset: defaultDataset,
+    budget: defaultBudget(defaultDataset),
     attempt: 0,
   });
   const [plan, setPlan] = useState<Plan | null>(null);
@@ -62,8 +69,11 @@ export function RepairPlanner() {
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
     const budget = parseBudget(budgetText);
-    if (budget === null) {
-      setBudgetError(`Enter a budget between 0 and ${formatNumber(MAX_BUDGET)}.`);
+    const problem = budgetProblem(dataset, budget);
+    if (problem || budget === null) {
+      setBudgetError(problem);
+      // After the error renders, so screen readers announce it as the field's description.
+      requestAnimationFrame(() => document.getElementById("budget")?.focus());
       return;
     }
     setBudgetError("");
@@ -74,7 +84,12 @@ export function RepairPlanner() {
 
   const isSaved =
     plan !== null &&
-    saved.some((item) => item.dataset === plan.dataset && item.budget === plan.budget);
+    saved.some(
+      (item) =>
+        item.dataset === plan.dataset &&
+        item.budget === plan.budget &&
+        item.snapshot_id === plan.snapshot_id,
+    );
 
   return (
     <div className="space-y-8">
@@ -82,14 +97,37 @@ export function RepairPlanner() {
         aria-labelledby="synthetic-heading"
         className="rounded-lg border border-warning bg-warning-soft p-4 text-ink"
       >
-        <h2 id="synthetic-heading" className="font-semibold">
-          Synthetic demonstration, not Fremont data
-        </h2>
-        <p className="mt-1">
-          These networks, barriers, and costs are generated for demonstration. Costs are abstract
-          cost units, not dollars. Results are modeled estimates from the AccessForge engine, not
-          inspections, compliance findings, or safe routes.
-        </p>
+        {dataset === PILOT_DATASET ? (
+          <>
+            <h2 id="synthetic-heading" className="font-semibold">
+              Real Fremont streets, unverified barriers
+            </h2>
+            <p className="mt-1">Modeled estimates. Budget is in repair units, not dollars.</p>
+            {/* Full provenance stays one click away; the visible line keeps the key caveats. */}
+            <details className="mt-2">
+              <summary className="inline-flex min-h-6 cursor-pointer items-center font-semibold underline underline-offset-4">
+                Data details
+              </summary>
+              <p className="mt-1">
+                The network, homes, and destinations come from OpenStreetMap and the 2020 Census.
+                The raised curbs are mapped in OpenStreetMap and nobody has checked them on site.
+                Budget is in repair units, one per curb, not dollars. Results are modeled estimates,
+                not inspections, compliance findings, or safe routes.
+              </p>
+            </details>
+          </>
+        ) : (
+          <>
+            <h2 id="synthetic-heading" className="font-semibold">
+              Synthetic demonstration, not Fremont data
+            </h2>
+            <p className="mt-1">
+              These networks, barriers, and costs are generated for demonstration. Costs are
+              abstract cost units, not dollars. Results are modeled estimates from the AccessForge
+              engine, not inspections, compliance findings, or safe routes.
+            </p>
+          </>
+        )}
       </aside>
 
       <form
@@ -99,14 +137,19 @@ export function RepairPlanner() {
       >
         <div>
           <label htmlFor="dataset" className="block font-medium text-ink">
-            Demonstration network
+            Network
           </label>
           <select
             id="dataset"
-            className="mt-1 min-h-11 w-full rounded border border-line bg-surface p-2"
+            className="mt-1 min-h-11 w-full rounded border border-control bg-surface p-2"
             value={dataset}
             aria-describedby="dataset-note"
-            onChange={(event) => setDataset(event.target.value as Dataset)}
+            onChange={(event) => {
+              const next = event.target.value as Dataset;
+              setDataset(next);
+              setBudgetText(String(defaultBudget(next)));
+              setBudgetError("");
+            }}
           >
             {DATASETS.map((key) => (
               <option key={key} value={key}>
@@ -122,7 +165,7 @@ export function RepairPlanner() {
           <input
             id="budget"
             inputMode="decimal"
-            className="mt-1 min-h-11 w-full rounded border border-line bg-surface p-2"
+            className="mt-1 min-h-11 w-full rounded border border-control bg-surface p-2"
             value={budgetText}
             aria-invalid={budgetError ? true : undefined}
             aria-describedby={budgetError ? BUDGET_ERROR_ID : undefined}
@@ -167,10 +210,10 @@ export function RepairPlanner() {
           <PlanResults plan={plan} />
 
           <section aria-labelledby="save-heading">
-            <h2 id="save-heading" className="text-xl font-semibold text-ink">
+            <h2 id="save-heading" className="af-h2">
               Compare and export
             </h2>
-            <div className="mt-4 flex flex-wrap gap-3">
+            <div className="mt-4 flex flex-wrap gap-3 print:hidden">
               <button
                 type="button"
                 disabled={isSaved || saved.length >= MAX_SAVED}
@@ -191,11 +234,18 @@ export function RepairPlanner() {
                 download={`accessforge-plan-${plan.dataset}-${plan.budget}.json`}
                 href={dataUri(
                   "application/json",
-                  JSON.stringify({ notice: EXPORT_NOTICE, ...plan }, null, 2),
+                  JSON.stringify({ notice: exportNotice(plan), ...plan }, null, 2),
                 )}
               >
                 Download full result (JSON)
               </a>
+              <button
+                type="button"
+                className={`${BUTTON} border-line bg-surface text-ink`}
+                onClick={() => window.print()}
+              >
+                Print report
+              </button>
             </div>
             {saved.length === 0 ? (
               <p className="mt-3 text-muted">
@@ -235,7 +285,7 @@ export function RepairPlanner() {
                       const best = recommended(item);
                       const name = `${DATASET_LABELS[item.dataset]} at budget ${formatNumber(item.budget)}`;
                       return (
-                        <tr key={`${item.dataset}-${item.budget}`}>
+                        <tr key={`${item.dataset}-${item.budget}-${item.snapshot_id ?? ""}`}>
                           <th scope="row" className={`${TD} text-left font-semibold text-ink`}>
                             {DATASET_LABELS[item.dataset]}
                           </th>
@@ -245,7 +295,9 @@ export function RepairPlanner() {
                           <td className={TD}>
                             {formatNumber(best.accessibility_after)} (+{formatNumber(best.delta_a)})
                           </td>
-                          <td className={TD}>{best.selected_repair_ids.join(", ") || "None"}</td>
+                          <td className={TD}>
+                            {repairNames(item.network, best.selected_repair_ids)}
+                          </td>
                           <td className={TD}>
                             <button
                               type="button"
@@ -265,10 +317,11 @@ export function RepairPlanner() {
                 </table>
               </div>
             )}
+            <BudgetComparison current={plan} saved={saved} />
           </section>
 
           <section aria-labelledby="limits-heading">
-            <h2 id="limits-heading" className="text-xl font-semibold text-ink">
+            <h2 id="limits-heading" className="af-h2">
               What this model does not know
             </h2>
             <ul className="mt-3 max-w-prose list-disc space-y-1 pl-5 text-muted">

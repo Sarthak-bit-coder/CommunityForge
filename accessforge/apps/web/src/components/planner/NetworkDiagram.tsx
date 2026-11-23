@@ -5,13 +5,15 @@ const SCALE = 3.2; // SVG units per modeled meter; grid blocks are 25 m.
 const NODE_RADIUS = 5;
 const MARKER = 9;
 
-/** Schematic of the synthetic network. The repair table beside it carries the same facts. */
+/** Schematic of the network. The repair table beside it carries the same facts. */
 export function NetworkDiagram({
   network,
   selected,
+  synthetic,
 }: {
   readonly network: Network;
   readonly selected: readonly string[];
+  readonly synthetic: boolean;
 }) {
   const at = new Map(
     network.nodes.map((node) => [
@@ -29,6 +31,12 @@ export function NetworkDiagram({
       barrier.edge_id ? [[barrier.edge_id, barrier] as const] : [],
     ),
   );
+  // Fremont curbs sit on corners (nodes), not on segments.
+  const barrierOnNode = new Map(
+    network.barriers.flatMap((barrier) =>
+      barrier.node_id ? [[barrier.node_id, barrier] as const] : [],
+    ),
+  );
   const origins = new Set(network.origins.map((origin) => origin.node_id));
   const destinations = new Set(network.destinations.map((item) => item.node_id));
   const fixed = network.barriers.filter((b) => selected.includes(repairOf.get(b.id) ?? "")).length;
@@ -37,7 +45,7 @@ export function NetworkDiagram({
     <figure className="rounded-lg border border-line bg-surface p-4">
       <svg
         role="img"
-        aria-label={`Schematic of the synthetic network: ${network.nodes.length} corners, ${network.edges.length} segments, ${network.barriers.length} barriers, ${fixed} repaired in this plan. The repair table lists the same information.`}
+        aria-label={`Schematic of the ${synthetic ? "synthetic" : "Fremont pilot"} network: ${network.nodes.length} corners, ${network.edges.length} segments, ${network.barriers.length} barriers, ${fixed} repaired in this plan. The repair table lists the same information.`}
         viewBox={`0 0 ${width} ${height}`}
         className="mx-auto block max-h-80 w-full text-ink"
       >
@@ -102,6 +110,32 @@ export function NetworkDiagram({
           const point = at.get(node.id);
           if (!point) return null;
           const letter = origins.has(node.id) ? "H" : destinations.has(node.id) ? "D" : "";
+          const barrier = barrierOnNode.get(node.id);
+          if (barrier) {
+            const isFixed = selected.includes(repairOf.get(barrier.id) ?? "");
+            return (
+              <g key={node.id} className={isFixed ? "text-success" : "text-warning"}>
+                <circle
+                  cx={point.x}
+                  cy={point.y}
+                  r={MARKER}
+                  fill="var(--color-surface)"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                />
+                <text
+                  x={point.x}
+                  y={point.y + 4}
+                  textAnchor="middle"
+                  fontSize="11"
+                  fontWeight="700"
+                  fill="currentColor"
+                >
+                  {isFixed ? "✓" : "✕"}
+                </text>
+              </g>
+            );
+          }
           return (
             <g key={node.id}>
               <circle
@@ -127,9 +161,9 @@ export function NetworkDiagram({
         })}
       </svg>
       <figcaption className="mt-3 text-sm text-muted">
-        H marks where modeled trips start (homes), D marks destinations. A dashed segment with ✕ has
-        a barrier that stays; a solid segment with ✓ is repaired in this plan. Fictional layout, not
-        a map of any real place.
+        {synthetic
+          ? "H marks where modeled trips start (homes), D marks destinations. A dashed segment with ✕ has a barrier that stays; a solid segment with ✓ is repaired in this plan. Fictional layout, not a map of any real place."
+          : "H marks census blocks where modeled trips start, D marks destinations. A circle with ✕ is a raised curb that stays; ✓ is repaired in this plan. Schematic of the OpenStreetMap pilot network around Fremont BART, north up, not to a map scale you can measure."}
       </figcaption>
     </figure>
   );
