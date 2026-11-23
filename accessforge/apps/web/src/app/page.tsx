@@ -1,8 +1,39 @@
-import Link from "next/link";
+import { HeroGlow } from "@/components/home/HeroGlow";
+import { HeroRoute } from "@/components/home/HeroRoute";
+import { BarrierBreakHeading } from "@/components/home/BarrierBreakHeading";
+import { HomeMapPreview } from "@/components/home/HomeMapPreview";
+import { RepairStory } from "@/components/home/RepairStory";
+import { RouteCompare } from "@/components/home/RouteCompare";
+import { StatusMark, StatusStamp } from "@/components/home/StatusStamp";
+import { StepTitle } from "@/components/home/StepTitle";
+import { MotionLink } from "@/components/motion/MotionLink";
+import { MOTION_STAGGER_S } from "@/components/motion/motion-tokens";
+import { Reveal } from "@/components/motion/Reveal";
+import { ScrollSkew } from "@/components/motion/ScrollSkew";
+import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { Badge } from "@/components/ui/Badge";
+import { preconnect } from "react-dom";
+import { basemap } from "@/lib/basemap";
 import { findNavItem } from "@/lib/navigation";
 
 const item = findNavItem("/");
+const ROUTE_WORD = "reconnect";
+
+// The headline reads as plain text to assistive tech; the drawn route is decorative.
+function HeroHeading({ text }: { readonly text: string }) {
+  const index = text.indexOf(ROUTE_WORD);
+  if (index === -1) return text;
+  return (
+    <>
+      {text.slice(0, index)}
+      <span className="relative inline-block">
+        {ROUTE_WORD}
+        <HeroRoute />
+      </span>
+      {text.slice(index + ROUTE_WORD.length)}
+    </>
+  );
+}
 
 const STEPS = [
   {
@@ -27,164 +58,266 @@ const STEPS = [
 
 const STATUS = [
   {
-    label: "Working now",
+    label: "Ready to use",
     tone: "success",
     items: [
-      "Barrier reporting, map, and matching list",
-      "Reviewer sign-in with recorded verify and reject decisions",
-      "Budget-limited repair planning on synthetic networks, with explanations and exports",
+      "Report barriers on a live map with a matching accessible list",
+      "Reviewer sign-in with every verify and reject decision recorded",
+      "Budget-limited repair planning with explanations and exports",
     ],
   },
   {
-    label: "Modeled, not measured",
-    tone: "warning",
+    label: "Modeled estimates",
+    tone: "modeled",
     items: [
-      "Every access number is an estimate from a simplified model",
-      "Planner networks and costs are generated examples, not Fremont streets or dollars",
-    ],
-  },
-  {
-    label: "Not done yet",
-    tone: "neutral",
-    items: [
-      "Fremont sidewalk network, destinations, and real repair costs",
-      "Photo evidence, repair tracking, and equity-targeted planning",
-      "Any agreement with the City of Fremont",
+      "Every access number is an estimate from a transparent model",
+      "Planner networks and costs are illustrative examples, not Fremont streets or dollars",
     ],
   },
 ] as const;
 
-export default function OverviewPage() {
-  return (
-    <>
-      <header className="border-b border-line pb-10">
-        <p className="mb-4">
-          <Badge label="Pilot in preparation · Fremont, California" tone="info" />
-        </p>
-        <h1 className="max-w-3xl text-4xl leading-tight font-bold tracking-tight text-ink sm:text-5xl">
-          {item.heading}
-        </h1>
-        <p className="mt-5 max-w-2xl text-xl text-muted">
-          A sidewalk route is only as good as its worst gap. AccessForge helps a community map
-          pedestrian barriers, check them, and choose the combination of repairs that opens the most
-          accessible routes within a budget.
-        </p>
-        <div className="mt-7 flex flex-wrap gap-3">
-          <Link
-            href="/planner"
-            className="inline-flex min-h-12 items-center rounded-md bg-accent px-5 text-lg font-semibold text-surface hover:bg-ink"
-          >
-            Try the repair planner
-          </Link>
-          <Link
-            href="/report"
-            className="inline-flex min-h-12 items-center rounded-md border border-accent bg-surface px-5 text-lg font-semibold text-accent hover:bg-accent-soft"
-          >
-            Report a barrier
-          </Link>
-        </div>
-      </header>
+// The three kinds of information on this site, in the same tones every page uses.
+const EVIDENCE_KINDS = [
+  {
+    label: "Verified",
+    tone: "success",
+    text: "A trained reviewer checked the report and confirmed it.",
+  },
+  {
+    label: "Unverified",
+    tone: "warning",
+    text: "Reported by the community or mapped in OpenStreetMap, not yet checked.",
+  },
+  {
+    label: "Modeled estimate",
+    tone: "modeled",
+    text: "Calculated by the AccessForge engine. A projection, not a measurement.",
+  },
+] as const;
 
-      <section aria-labelledby="why-heading" className="grid gap-8 py-10 lg:grid-cols-2">
-        <div>
-          <h2 id="why-heading" className="text-2xl font-bold text-ink">
-            Why fixing the “worst” barrier first can waste the budget
-          </h2>
-          <p className="mt-3 text-lg text-muted">
-            Picture one block between a home and a clinic with two steps in the way. Fixing either
-            step alone opens nothing for someone using a wheelchair. Fixing both opens the whole
-            route.
-          </p>
-          <p className="mt-3 text-lg text-muted">
-            Lists that rank barriers one at a time cannot see that. AccessForge scores repairs as a
-            group, on the network of routes they sit on.
-          </p>
+function EvidenceKey() {
+  return (
+    <section
+      aria-labelledby="evidence-heading"
+      className="af-rise mt-16 rounded-2xl border border-line bg-surface/70 p-5 [animation-delay:320ms] sm:p-6"
+    >
+      <h2 id="evidence-heading" className="text-sm font-bold text-ink">
+        How to read what you see
+      </h2>
+      <dl className="mt-4 grid gap-5 sm:grid-cols-3">
+        {EVIDENCE_KINDS.map((kind) => (
+          <div key={kind.label} className="flex flex-col gap-2">
+            <dt>
+              <Badge label={kind.label} tone={kind.tone} />
+            </dt>
+            <dd className="text-sm leading-relaxed text-muted">{kind.text}</dd>
+          </div>
+        ))}
+      </dl>
+    </section>
+  );
+}
+
+const ROUTING_POINTS = [
+  "Current routes come from the mapped street network in the pilot area.",
+  "Modeled routes show what a recommended repair would open. They are estimates.",
+  "AccessForge does not give directions and cannot say whether a path is safe.",
+] as const;
+
+const BUDGET_POINTS = [
+  "Repairs are chosen as a group within the budget, because a repair can matter more alongside others.",
+  "Each recommendation carries its explanation, so a planner can see why it was chosen.",
+  "Costs in the planner are generated examples until real Fremont estimates exist.",
+] as const;
+
+// The hero map's tiles come from here; connecting during HTML parse saves a round trip later.
+const TILE_ORIGIN = new URL(basemap(process.env.NEXT_PUBLIC_MAPTILER_KEY).styleUrl).origin;
+
+export default function OverviewPage() {
+  preconnect(TILE_ORIGIN, { crossOrigin: "anonymous" });
+  return (
+    // data-page opts the Overview out of the lively text styles in globals.css.
+    <div data-page="overview" className="flex flex-col">
+      <ScrollProgress />
+
+      <section
+        aria-labelledby="home-heading"
+        className="relative isolate pt-6 pb-20 lg:pt-12 lg:pb-28"
+      >
+        <HeroGlow />
+        <div className="mx-auto grid max-w-5xl items-center gap-14 lg:max-w-none lg:grid-cols-[1.1fr_1fr] lg:items-start lg:gap-16">
+          {/* CSS entrance, not JS: the hero must paint before hydration (LCP, no-JS). */}
+          {/* Top padding = map panel border + padding, so the eyebrow lines up with the map's top edge. */}
+          <div className="lg:pt-[17px]">
+            <p className="af-eyebrow af-rise">Fremont pilot · Pedestrian access</p>
+            <h1
+              id="home-heading"
+              className="af-display af-rise mt-6 text-[2.75rem] leading-[1] [animation-delay:80ms] sm:text-6xl lg:text-[4.75rem]"
+            >
+              <HeroHeading text={item.heading ?? item.label} />
+            </h1>
+            <p className="af-rise mt-7 max-w-prose text-lg leading-relaxed text-muted [animation-delay:160ms] sm:text-xl">
+              AccessForge helps planners see which sidewalk repairs would reconnect the most routes,
+              and checks whether repairs worked. It is a research pilot, not an official inspection
+              tool.
+            </p>
+            <div className="af-rise mt-9 flex flex-wrap items-center gap-3 [animation-delay:240ms]">
+              <MotionLink href="/report" className="af-button-primary">
+                Report a barrier
+              </MotionLink>
+              <MotionLink href="/planner" className="af-button-secondary">
+                Open the repair planner
+              </MotionLink>
+            </div>
+          </div>
+          <div className="af-rise relative [animation-delay:200ms]">
+            <span
+              aria-hidden="true"
+              className="absolute -inset-3 -z-10 rounded-[1.75rem] bg-[repeating-linear-gradient(135deg,var(--color-line)_0_1px,transparent_1px_10px)]"
+            />
+            <div className="af-panel p-3 shadow-lift sm:p-4">
+              <HomeMapPreview />
+            </div>
+          </div>
         </div>
-        <figure className="rounded-lg border border-line bg-surface p-5">
-          <ol className="space-y-4">
-            {(
-              [
-                ["Fix one step", "✕", "✓", "Half the budget spent. Route still blocked."],
-                ["Fix both steps", "✓", "✓", "Route open from home to clinic."],
-              ] as const
-            ).map(([label, first, second, result]) => (
-              <li key={label}>
-                <p className="font-semibold text-ink">{label}</p>
-                <p
-                  aria-hidden="true"
-                  className="mt-1 flex items-center gap-2 font-mono text-lg text-ink"
-                >
-                  <span className="rounded bg-accent px-2 text-surface">Home</span>
-                  <span className="h-0.5 flex-1 bg-ink" />
-                  <span className="rounded border-2 border-ink px-2">{first}</span>
-                  <span className="h-0.5 flex-1 bg-ink" />
-                  <span className="rounded border-2 border-ink px-2">{second}</span>
-                  <span className="h-0.5 flex-1 bg-ink" />
-                  <span className="rounded bg-accent px-2 text-surface">Clinic</span>
-                </p>
-                <p className="mt-1 text-muted">{result}</p>
+        <EvidenceKey />
+      </section>
+
+      <section aria-labelledby="story-heading" className="border-t border-line py-20 lg:py-28">
+        <div className="mx-auto max-w-5xl">
+          <Reveal>
+            <p className="af-eyebrow">Why repairs are planned as a group</p>
+            <ScrollSkew>
+              <h2 id="story-heading" className="af-display mt-4 max-w-3xl text-4xl sm:text-5xl">
+                One ramp can open nothing. The right pair can open the whole trip.
+              </h2>
+            </ScrollSkew>
+          </Reveal>
+          <div className="mt-12">
+            <RepairStory />
+          </div>
+          <ul className="mt-10 grid gap-3 text-sm leading-relaxed text-muted sm:grid-cols-2">
+            {BUDGET_POINTS.slice(1).map((point) => (
+              <li key={point} className="border-l-2 border-marker pl-4">
+                {point}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section aria-labelledby="steps-heading" className="border-t border-line py-20 lg:py-28">
+        <div className="mx-auto max-w-5xl">
+          <ScrollSkew>
+            <BarrierBreakHeading
+              id="steps-heading"
+              before="From a reported barrier"
+              after="to a funded repair"
+              className="af-display text-4xl sm:text-5xl"
+            />
+          </ScrollSkew>
+          <ol className="mt-16 flex flex-col gap-20">
+            {STEPS.map((step, index) => (
+              <li key={step.href}>
+                <Reveal>
+                  <article
+                    className={`grid items-start gap-6 md:grid-cols-[auto_1fr] md:gap-14 ${
+                      index % 2 === 1 ? "md:[&>p]:order-2" : ""
+                    }`}
+                  >
+                    <p
+                      aria-hidden="true"
+                      className="af-display text-7xl leading-none text-accent sm:text-8xl"
+                    >
+                      {String(index + 1).padStart(2, "0")}
+                    </p>
+                    <div className="flex max-w-xl flex-col gap-4">
+                      <StepTitle text={step.title} className="af-display text-3xl" />
+                      <p className="text-lg leading-relaxed text-muted">{step.text}</p>
+                      <MotionLink href={step.href} className="af-link">
+                        {step.action}
+                      </MotionLink>
+                    </div>
+                  </article>
+                </Reveal>
               </li>
             ))}
           </ol>
-          <figcaption className="mt-4 text-sm text-muted">
-            An illustration of the two-barrier example. Run it with the real engine in the{" "}
-            <Link href="/planner" className="font-semibold text-accent underline">
-              repair planner
-            </Link>
-            .
-          </figcaption>
-        </figure>
-      </section>
-
-      <section aria-labelledby="how-heading" className="border-t border-line py-10">
-        <h2 id="how-heading" className="text-2xl font-bold text-ink">
-          How it works
-        </h2>
-        <ol className="mt-6 grid gap-5 md:grid-cols-3">
-          {STEPS.map((step, index) => (
-            <li key={step.title} className="rounded-lg border border-line bg-surface p-5">
-              <p className="text-sm font-semibold text-muted">Step {index + 1}</p>
-              <h3 className="mt-1 text-xl font-bold text-ink">{step.title}</h3>
-              <p className="mt-2 text-muted">{step.text}</p>
-              <Link
-                href={step.href}
-                className="mt-3 inline-flex min-h-11 items-center font-semibold text-accent underline underline-offset-4"
-              >
-                {step.action}
-              </Link>
-            </li>
-          ))}
-        </ol>
-      </section>
-
-      <section aria-labelledby="status-heading" className="border-t border-line py-10">
-        <h2 id="status-heading" className="text-2xl font-bold text-ink">
-          What is real today
-        </h2>
-        <p className="mt-2 max-w-prose text-muted">
-          AccessForge is an independent project. It is not run, endorsed, or used by the City of
-          Fremont.
-        </p>
-        <div className="mt-6 grid gap-5 md:grid-cols-3">
-          {STATUS.map((group) => (
-            <div key={group.label} className="rounded-lg border border-line bg-surface p-5">
-              <h3>
-                <Badge label={group.label} tone={group.tone} />
-              </h3>
-              <ul className="mt-3 list-disc space-y-2 pl-5 text-muted">
-                {group.items.map((text) => (
-                  <li key={text}>{text}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
         </div>
-        <p className="mt-6">
-          <Link href="/pilot" className="font-semibold text-accent underline underline-offset-4">
-            See the pilot dashboard for report counts, sources, and limits
-          </Link>
-        </p>
       </section>
-    </>
+
+      <section
+        aria-labelledby="routing-heading"
+        className="rounded-3xl bg-ink px-6 py-16 text-surface sm:px-12 lg:py-20"
+      >
+        <div className="mx-auto grid max-w-5xl items-center gap-12 md:grid-cols-[1fr_1fr] md:gap-16">
+          <Reveal>
+            <p className="af-eyebrow text-accent-soft">Accessible routing</p>
+            <ScrollSkew>
+              <h2
+                id="routing-heading"
+                className="af-display mt-4 text-4xl text-surface sm:text-5xl"
+              >
+                See the route as it is, then as it could be
+              </h2>
+            </ScrollSkew>
+            <ul className="mt-8 grid gap-3 text-base leading-relaxed text-surface/80">
+              {ROUTING_POINTS.map((point) => (
+                <li key={point} className="border-l-2 border-marker pl-4">
+                  {point}
+                </li>
+              ))}
+            </ul>
+          </Reveal>
+          <RouteCompare />
+        </div>
+      </section>
+
+      {/* A ledger, not a card grid: one ruled row per status, read top to bottom. */}
+      <section aria-labelledby="status-heading" className="pt-24 pb-16 lg:pt-28 lg:pb-20">
+        <div className="mx-auto max-w-5xl">
+          <Reveal>
+            <ScrollSkew>
+              <h2 id="status-heading" className="af-display max-w-3xl text-4xl sm:text-5xl">
+                What AccessForge does
+              </h2>
+            </ScrollSkew>
+          </Reveal>
+          <dl className="mt-12 border-t-2 border-ink">
+            {STATUS.map((group, index) => (
+              // Reveal renders the row's own <div>, so the list keeps valid dl > div > dt/dd nesting.
+              <Reveal
+                key={group.label}
+                delay={index * MOTION_STAGGER_S}
+                className="grid gap-4 border-b border-line py-8 md:grid-cols-[14rem_1fr] md:gap-10"
+              >
+                <dt className="flex items-baseline gap-4 pt-0.5">
+                  <span
+                    aria-hidden="true"
+                    className="font-display text-sm font-semibold text-muted tabular-nums"
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                  <StatusStamp>
+                    <Badge label={group.label} tone={group.tone} />
+                  </StatusStamp>
+                </dt>
+                <dd>
+                  <ul className="grid gap-x-10 gap-y-3 text-base leading-relaxed text-ink sm:grid-cols-2">
+                    {group.items.map((text, itemIndex) => (
+                      <li key={text} className="flex gap-3">
+                        {/* A shape as well as a colour; decorative, the badge text carries the meaning. */}
+                        <StatusMark tone={group.tone} index={itemIndex} />
+                        {text}
+                      </li>
+                    ))}
+                  </ul>
+                </dd>
+              </Reveal>
+            ))}
+          </dl>
+        </div>
+      </section>
+    </div>
   );
 }
