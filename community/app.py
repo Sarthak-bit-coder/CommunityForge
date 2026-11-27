@@ -50,7 +50,7 @@ mail = Mail(app)
 
 app.secret_key = os.environ.get('SECRET_KEY', 'supersecretkey')
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///reports.db')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('COMMUNITY_DATABASE_URL', 'sqlite:///reports.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 UPLOAD_FOLDER = 'static/uploads'
@@ -427,7 +427,11 @@ def attempt_login(email, password):
     """Check a password login with attempt limits. Returns (user, error, status)."""
     email = (email or '').strip().lower()
     keys = (f"email:{email}",)
-    wait = login_limiter.blocked(*keys) or ip_limiter.blocked(client_ip())
+    # The web app's proxy reaches us from loopback without the client's IP. Limiting that one
+    # address would let 20 bad guesses lock every member out, so loopback is limited per email only.
+    ip = client_ip()
+    ip_keys = () if ip in ('127.0.0.1', '::1', 'unknown') else (ip,)
+    wait = login_limiter.blocked(*keys) or ip_limiter.blocked(*ip_keys)
     if wait:
         return None, too_many(wait), 429
     user = User.query.filter(db.func.lower(User.email) == email).first()
@@ -435,7 +439,7 @@ def attempt_login(email, password):
         login_limiter.clear(*keys)
         return user, None, 200
     login_limiter.hit(*keys)
-    ip_limiter.hit(client_ip())
+    ip_limiter.hit(*ip_keys)
     if user and not user.password_hash:
         return None, ("This account doesn't have a password yet. Use \"Forgot password\" below to set one, "
                       "or sign in with Google using the same email."), 401

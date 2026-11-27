@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useMemo, useState, type FormEvent } from "react";
 import { INPUT_CLASS } from "@/components/report/ReportField";
 import { Badge } from "@/components/ui/Badge";
 import { communityRequest, timeAgo, type LostItem, type Session } from "@/lib/community-api";
-import { CommunityMap } from "./CommunityMap";
+import { CommunityMap, type MapPin } from "./CommunityMap";
 import { SignInPrompt } from "./SignInPrompt";
 import { useCommunity } from "./useCommunity";
 
@@ -14,6 +14,24 @@ export function LostItemDetail({ id }: { readonly id: string }) {
   const [message, setMessage] = useState("");
   const [result, setResult] = useState<{ ok: boolean; text: string } | null>(null);
   const [busy, setBusy] = useState(false);
+  // Stable pins: a new array would rebuild the map on every keystroke in the message box.
+  const spot = item.data;
+  const pins = useMemo<MapPin[]>(
+    () =>
+      spot && spot.lat !== null && spot.lng !== null
+        ? [
+            {
+              id: String(spot.id),
+              lat: spot.lat,
+              lng: spot.lng,
+              label: `Last seen spot, within about ${spot.radius_m} m`,
+              href: "#",
+              tone: spot.kind,
+            },
+          ]
+        : [],
+    [spot],
+  );
 
   if (item.error) return <p role="alert">{item.error}</p>;
   if (!item.data || !session.data) return <p role="status">Loading post…</p>;
@@ -63,20 +81,7 @@ export function LostItemDetail({ id }: { readonly id: string }) {
         />
       ) : null}
       <p className="text-lg whitespace-pre-line text-ink">{post.description}</p>
-      {post.lat !== null && post.lng !== null ? (
-        <CommunityMap
-          pins={[
-            {
-              id: String(post.id),
-              lat: post.lat,
-              lng: post.lng,
-              label: `Last seen spot, within about ${post.radius_m} m`,
-              href: "#",
-              tone: post.kind,
-            },
-          ]}
-        />
-      ) : null}
+      {pins.length ? <CommunityMap pins={pins} /> : null}
 
       {!open ? null : post.is_mine ? (
         <button

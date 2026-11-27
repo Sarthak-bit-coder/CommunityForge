@@ -4,7 +4,7 @@ import sys
 import tempfile
 
 DB_DIR = tempfile.mkdtemp()
-os.environ["DATABASE_URL"] = "sqlite:///" + os.path.join(DB_DIR, "test.db")
+os.environ["COMMUNITY_DATABASE_URL"] = "sqlite:///" + os.path.join(DB_DIR, "test.db")
 # Keep alerts on the console: no real email, SMS or Telegram during tests.
 for key in ("MAIL_USERNAME", "MAIL_PASSWORD", "TWILIO_ACCOUNT_SID", "TELEGRAM_BOT_TOKEN"):
     os.environ.pop(key, None)
@@ -131,3 +131,25 @@ def test_html_forms_still_work(client):
     client.get("/logout")
     assert client.post("/login", data={"email": "ana@example.com", "password": "bad"}).status_code == 200
     assert client.post("/login", data={"email": "ana@example.com", "password": "longpass1"}).status_code == 302
+
+
+def guess(client, email, password="wrong", ip=None):
+    extra = {"environ_base": {"REMOTE_ADDR": ip}} if ip else {}
+    return client.post("/api/login", json={"email": email, "password": password}, headers=FETCH, **extra)
+
+
+def test_proxy_loopback_failures_do_not_lock_everyone_out(client):
+    sign_up(client)
+    client.post("/api/logout", headers=FETCH)
+    for n in range(25):
+        guess(client, f"stranger{n}@example.com")
+    assert guess(client, "ana@example.com", "longpass1").status_code == 200
+
+
+def test_real_addresses_are_still_limited_per_ip(client):
+    sign_up(client)
+    client.post("/api/logout", headers=FETCH)
+    for n in range(20):
+        guess(client, f"stranger{n}@example.com", ip="203.0.113.7")
+    assert guess(client, "ana@example.com", "longpass1", ip="203.0.113.7").status_code == 429
+    assert guess(client, "ana@example.com", "longpass1", ip="198.51.100.2").status_code == 200
