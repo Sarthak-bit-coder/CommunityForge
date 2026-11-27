@@ -20,12 +20,12 @@ A route is usable only if every piece of it is. Repair lists that rank barriers 
 | Fremont network, destinations, population (OSM, Census, CDC PLACES) | Ingested for the pilot area; **not yet connected to the planner** |
 | Repair tracking: reviewers move verified barriers through repair planned → repair completed → resolved, each step in the append-only audit log; pilot dashboard counts repairs | Working. Statuses are reviewer records, not City records |
 | Real repair costs, photos, equity-targeted planning | Not built |
-| Deployment | **Not deployed.** Runs locally; see [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
-| Community participation and real-world outcomes | **None yet.** See [docs/DISCOVERY.md](docs/DISCOVERY.md) |
+| Deployment | **Not deployed.** Runs locally |
+| Community participation and real-world outcomes | **None yet.** |
 
 ## Quick start
 
-Full instructions: [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) §2.
+Needs Python with [uv](https://docs.astral.sh/uv/), Node.js, and PostgreSQL with PostGIS (see `services/api/.env.example`).
 
 ```sh
 cd services/api && uv sync --extra dev && uv run alembic upgrade head && uv run uvicorn accessforge_api.main:create_app --factory --port 8000
@@ -40,22 +40,6 @@ cd apps/web && npm install && npm run dev   # http://localhost:3000
 | `services/api` | FastAPI, SQLAlchemy, Alembic migrations, PostGIS |
 | `services/engine` | `accessforge_engine`: graph model, access metric, optimizers (pure Python, NetworkX) |
 | `pipelines/ingest` | Fremont pilot-area data ingestion (OSM, Census, CDC PLACES) |
-| `scripts/verify-deployment.sh` | Read-only smoke test of a running deployment |
-
-## Documents
-
-| For | Doc |
-|---|---|
-| Residents, reviewers, planners | [docs/USER_GUIDE.md](docs/USER_GUIDE.md) |
-| Running and deploying | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
-| Architecture | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
-| Optimization method and limits | [services/engine/README.md](services/engine/README.md), [docs/RESEARCH_HYPOTHESIS.md](docs/RESEARCH_HYPOTHESIS.md), [docs/engine/BENCHMARK_RESULTS.md](docs/engine/BENCHMARK_RESULTS.md) |
-| Privacy, pilot method, retention | [docs/METHODOLOGY_AND_PRIVACY.md](docs/METHODOLOGY_AND_PRIVACY.md) |
-| Accessibility statement | `/accessibility` in the running app |
-| Pilot launch checklist, outreach email, press pitch, impact template | [docs/LAUNCH.md](docs/LAUNCH.md) |
-| Demo script and outreach plan | [docs/DEMO.md](docs/DEMO.md) |
-| Pilot area, data sources, field audit | [docs/PILOT_AREA.md](docs/PILOT_AREA.md), [docs/DATA_CATALOG.md](docs/DATA_CATALOG.md), [docs/AUDIT_PROTOCOL.md](docs/AUDIT_PROTOCOL.md) |
-| Roadmap, conventions | [docs/ROADMAP.md](docs/ROADMAP.md), [AGENTS.md](AGENTS.md) |
 
 ## Checks
 

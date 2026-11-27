@@ -4,8 +4,6 @@ A community safety app for your neighborhood. Neighbors report incidents on a li
 
 Built with Flask, SQLite and Leaflet maps.
 
-> Combining this with another app? See [MERGING.md](MERGING.md) for the features, data model, settings and a merge checklist.
-
 ## Features
 
 | | |
@@ -76,25 +74,11 @@ Members turn on SMS or WhatsApp in **Account** settings and add their mobile num
 
 ## Putting the app online (ngrok)
 
-1. Install ngrok (`winget install Ngrok.Ngrok`) and connect your free account: `ngrok config add-authtoken <your token>` (get the token at <https://dashboard.ngrok.com/get-started/your-authtoken>).
-2. In `.env`, set `SITE_USER` / `SITE_PASSWORD` (the password visitors will type), `APP_DEBUG=0`, and `PUBLIC_BASE_URL` to your ngrok address.
-3. Start the app (`python app.py`), then in another terminal run:
+1. Install ngrok (`winget install Ngrok.Ngrok`) and run `ngrok config add-authtoken <your token>`.
+2. In `.env`, set `SITE_USER` / `SITE_PASSWORD` (8+ characters), `APP_DEBUG=0`, and `PUBLIC_BASE_URL` to your ngrok address.
+3. Start the app (`python app.py`), then run `powershell -ExecutionPolicy Bypass -File .\go_online.ps1`.
 
-   ```
-   powershell -ExecutionPolicy Bypass -File .\go_online.ps1
-   ```
-
-The site asks for the username and password. `/webhooks/...` stays open so Twilio can deliver WhatsApp messages, and the app checks Twilio's signature there. Free ngrok accounts keep the same address across restarts. The site is only reachable while your PC, the app and ngrok are running. Press Ctrl+C in the ngrok window (or run `Stop-Process -Name ngrok`) to go offline.
-
-### Start automatically with Windows
-
-`start_all.ps1` starts the app and the ngrok link in the background, hidden, skipping anything already running. App output goes to `logs\app.log`. To run it every time you sign in to Windows, put a launcher in your Startup folder (press Win+R and type `shell:startup` to open it). Create a file there called `Neighborhood Watch.vbs` containing one line, with your own project path:
-
-```
-CreateObject("WScript.Shell").Run "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File ""C:\path\to\Community_App\start_all.ps1""", 0, False
-```
-
-Stop everything with `powershell -ExecutionPolicy Bypass -File .\stop_all.ps1`. Delete the `.vbs` file to turn auto-start off. The news check, the Telegram bot and the public link all run as long as the app is running.
+Visitors must type the username and password. `/webhooks/...` stays open so Twilio can deliver WhatsApp messages, and the app checks Twilio's signature there.
 
 ## Free AI (no credits): Ollama
 

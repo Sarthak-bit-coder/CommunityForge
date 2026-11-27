@@ -1,6 +1,6 @@
 # AccessForge web (`apps/web`)
 
-Next.js (App Router) + TypeScript + Tailwind CSS frontend. See `../../docs/ARCHITECTURE.md` §2.1.
+Next.js (App Router) + TypeScript + Tailwind CSS frontend.
 
 ```bash
 npm install

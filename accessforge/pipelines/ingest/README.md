@@ -1,6 +1,6 @@
 # accessforge-ingest
 
-Loads one pilot area into PostGIS. Sources: the OSM pedestrian network, raised-kerb barriers, destinations, 2020 Census block population, and the CDC PLACES modeled disability share. See `docs/DATA_CATALOG.md` and `docs/PILOT_AREA.md`.
+Loads one pilot area into PostGIS. Sources: the OSM pedestrian network, raised-kerb barriers, destinations, 2020 Census block population, and the CDC PLACES modeled disability share.
 
 ```bash
 uv sync --extra dev
