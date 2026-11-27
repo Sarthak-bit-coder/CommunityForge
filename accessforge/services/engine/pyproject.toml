@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "accessforge-engine"
+version = "0.1.0"
+requires-python = ">=3.11"
+# NetworkX is the architecture-selected graph and shortest-path implementation.
+dependencies = ["networkx==3.6.1"]
+
+[project.optional-dependencies]
+# Test invariants, measure required coverage, and enforce repository Python checks.
+dev = ["pytest==9.0.2", "pytest-cov==7.0.0", "hypothesis==6.151.9", "ruff==0.15.1", "mypy==1.19.1", "types-networkx==3.6.1.20260210"]
+
+[tool.setuptools.packages.find]
+include = ["accessforge_engine*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=accessforge_engine --cov-report=term-missing --cov-fail-under=80"
+
+[tool.mypy]
+strict = true
+
+[tool.ruff]
+line-length = 88

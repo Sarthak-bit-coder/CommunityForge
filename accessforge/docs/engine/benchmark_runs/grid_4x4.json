@@ -1,0 +1,5248 @@
+{
+  "schema_version": 1,
+  "synthetic": true,
+  "engine_version": "0.1.0",
+  "environment": {
+    "python": "3.13.15",
+    "networkx": "3.6.1",
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "machine": "arm64",
+    "processor": "arm",
+    "logical_cpus": 8
+  },
+  "protocol": {
+    "case": "grid",
+    "configs": [
+      {
+        "width": 4,
+        "height": 4,
+        "barrier_count": 8,
+        "cost_min": 10,
+        "cost_max": 30,
+        "clustering": 0.0,
+        "edge_length_m": 25,
+        "threshold_m": 150
+      },
+      {
+        "width": 4,
+        "height": 4,
+        "barrier_count": 8,
+        "cost_min": 10,
+        "cost_max": 30,
+        "clustering": 1.0,
+        "edge_length_m": 25,
+        "threshold_m": 150
+      }
+    ],
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "budget_fractions": [
+      0.05,
+      0.1,
+      0.2,
+      0.5
+    ],
+    "methods": [
+      "B0",
+      "B1",
+      "B2",
+      "B3",
+      "exhaustive"
+    ],
+    "time_limit_s": 30
+  },
+  "rows": [
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.05,
+      "method": "B0",
+      "budget": 8.8,
+      "status": "ok",
+      "runtime_s": 0.0017809170531108975,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.05,
+      "method": "B1",
+      "budget": 8.8,
+      "status": "ok",
+      "runtime_s": 0.0010646249866113067,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.05,
+      "method": "B2",
+      "budget": 8.8,
+      "status": "ok",
+      "runtime_s": 0.001298417104408145,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.05,
+      "method": "B3",
+      "budget": 8.8,
+      "status": "ok",
+      "runtime_s": 0.00314325001090765,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.05,
+      "method": "exhaustive",
+      "budget": 8.8,
+      "status": "ok",
+      "runtime_s": 0.0039471660275012255,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.1,
+      "method": "B0",
+      "budget": 17.6,
+      "status": "ok",
+      "runtime_s": 0.0010459580225870013,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7954545454545454,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.1,
+      "method": "B1",
+      "budget": 17.6,
+      "status": "ok",
+      "runtime_s": 0.0011510839685797691,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7954545454545454,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.1,
+      "method": "B2",
+      "budget": 17.6,
+      "status": "ok",
+      "runtime_s": 0.001104207942262292,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7954545454545454,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.1,
+      "method": "B3",
+      "budget": 17.6,
+      "status": "ok",
+      "runtime_s": 0.005075542023405433,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.1,
+      "method": "exhaustive",
+      "budget": 17.6,
+      "status": "ok",
+      "runtime_s": 0.006019541993737221,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.2,
+      "method": "B0",
+      "budget": 35.2,
+      "status": "ok",
+      "runtime_s": 0.002144958940334618,
+      "error": null,
+      "selected_repair_ids": [
+        "r2",
+        "r6"
+      ],
+      "total_cost": 35.0,
+      "budget_usage": 0.9943181818181818,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.2,
+      "method": "B1",
+      "budget": 35.2,
+      "status": "ok",
+      "runtime_s": 0.0022049580002203584,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r6"
+      ],
+      "total_cost": 34.0,
+      "budget_usage": 0.9659090909090908,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.2,
+      "method": "B2",
+      "budget": 35.2,
+      "status": "ok",
+      "runtime_s": 0.0011815420584753156,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r6"
+      ],
+      "total_cost": 34.0,
+      "budget_usage": 0.9659090909090908,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.2,
+      "method": "B3",
+      "budget": 35.2,
+      "status": "ok",
+      "runtime_s": 0.015117208007723093,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.2,
+      "method": "exhaustive",
+      "budget": 35.2,
+      "status": "ok",
+      "runtime_s": 0.019841667031869292,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B0",
+      "budget": 88.0,
+      "status": "ok",
+      "runtime_s": 0.0010618750238791108,
+      "error": null,
+      "selected_repair_ids": [
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "total_cost": 81.0,
+      "budget_usage": 0.9204545454545454,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B1",
+      "budget": 88.0,
+      "status": "ok",
+      "runtime_s": 0.0010385409696027637,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r2",
+        "r5",
+        "r6"
+      ],
+      "total_cost": 78.0,
+      "budget_usage": 0.8863636363636364,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B2",
+      "budget": 88.0,
+      "status": "ok",
+      "runtime_s": 0.0011305419029667974,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r1",
+        "r2",
+        "r6"
+      ],
+      "total_cost": 68.0,
+      "budget_usage": 0.7727272727272727,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B3",
+      "budget": 88.0,
+      "status": "ok",
+      "runtime_s": 0.015012666000984609,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "exhaustive",
+      "budget": 88.0,
+      "status": "ok",
+      "runtime_s": 0.15452662506140769,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 944.0,
+      "accessibility_after": 944.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.05,
+      "method": "B0",
+      "budget": 8.950000000000001,
+      "status": "ok",
+      "runtime_s": 0.0010063339723274112,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 706.5,
+      "accessibility_after": 706.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.05,
+      "method": "B1",
+      "budget": 8.950000000000001,
+      "status": "ok",
+      "runtime_s": 0.0012997910380363464,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 706.5,
+      "accessibility_after": 706.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.05,
+      "method": "B2",
+      "budget": 8.950000000000001,
+      "status": "ok",
+      "runtime_s": 0.0014897090150043368,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 706.5,
+      "accessibility_after": 706.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.05,
+      "method": "B3",
+      "budget": 8.950000000000001,
+      "status": "ok",
+      "runtime_s": 0.0030343340476974845,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 706.5,
+      "accessibility_after": 706.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.05,
+      "method": "exhaustive",
+      "budget": 8.950000000000001,
+      "status": "ok",
+      "runtime_s": 0.0031735420925542712,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 706.5,
+      "accessibility_after": 706.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.1,
+      "method": "B0",
+      "budget": 17.900000000000002,
+      "status": "ok",
+      "runtime_s": 0.0009832499781623483,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7821229050279329,
+      "accessibility_before": 706.5,
+      "accessibility_after": 706.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.1,
+      "method": "B1",
+      "budget": 17.900000000000002,
+      "status": "ok",
+      "runtime_s": 0.0009678340284153819,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7821229050279329,
+      "accessibility_before": 706.5,
+      "accessibility_after": 706.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.1,
+      "method": "B2",
+      "budget": 17.900000000000002,
+      "status": "ok",
+      "runtime_s": 0.0010517919436097145,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7821229050279329,
+      "accessibility_before": 706.5,
+      "accessibility_after": 706.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.1,
+      "method": "B3",
+      "budget": 17.900000000000002,
+      "status": "ok",
+      "runtime_s": 0.014390834025107324,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 0.9497206703910613,
+      "accessibility_before": 706.5,
+      "accessibility_after": 792.0,
+      "delta_a": 85.5,
+      "gain_per_budget": 4.776536312849162,
+      "gain_per_spend": 5.029411764705882,
+      "delta_a_by_profile": {
+        "wheelchair": 85.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.1,
+      "method": "exhaustive",
+      "budget": 17.900000000000002,
+      "status": "ok",
+      "runtime_s": 0.01473075000103563,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 0.9497206703910613,
+      "accessibility_before": 706.5,
+      "accessibility_after": 792.0,
+      "delta_a": 85.5,
+      "gain_per_budget": 4.776536312849162,
+      "gain_per_spend": 5.029411764705882,
+      "delta_a_by_profile": {
+        "wheelchair": 85.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.2,
+      "method": "B0",
+      "budget": 35.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.0011792919831350446,
+      "error": null,
+      "selected_repair_ids": [
+        "r5",
+        "r6"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.7541899441340781,
+      "accessibility_before": 706.5,
+      "accessibility_after": 706.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.2,
+      "method": "B1",
+      "budget": 35.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.0009972499683499336,
+      "error": null,
+      "selected_repair_ids": [
+        "r4",
+        "r5"
+      ],
+      "total_cost": 31.0,
+      "budget_usage": 0.8659217877094971,
+      "accessibility_before": 706.5,
+      "accessibility_after": 792.0,
+      "delta_a": 85.5,
+      "gain_per_budget": 2.388268156424581,
+      "gain_per_spend": 2.7580645161290325,
+      "delta_a_by_profile": {
+        "wheelchair": 85.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.2,
+      "method": "B2",
+      "budget": 35.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.0010715000098571181,
+      "error": null,
+      "selected_repair_ids": [
+        "r4",
+        "r5"
+      ],
+      "total_cost": 31.0,
+      "budget_usage": 0.8659217877094971,
+      "accessibility_before": 706.5,
+      "accessibility_after": 792.0,
+      "delta_a": 85.5,
+      "gain_per_budget": 2.388268156424581,
+      "gain_per_spend": 2.7580645161290325,
+      "delta_a_by_profile": {
+        "wheelchair": 85.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.2,
+      "method": "B3",
+      "budget": 35.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.035432875039987266,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 0.47486033519553067,
+      "accessibility_before": 706.5,
+      "accessibility_after": 792.0,
+      "delta_a": 85.5,
+      "gain_per_budget": 2.388268156424581,
+      "gain_per_spend": 5.029411764705882,
+      "delta_a_by_profile": {
+        "wheelchair": 85.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.2,
+      "method": "exhaustive",
+      "budget": 35.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.061829666956327856,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 0.47486033519553067,
+      "accessibility_before": 706.5,
+      "accessibility_after": 792.0,
+      "delta_a": 85.5,
+      "gain_per_budget": 2.388268156424581,
+      "gain_per_spend": 5.029411764705882,
+      "delta_a_by_profile": {
+        "wheelchair": 85.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.5,
+      "method": "B0",
+      "budget": 89.5,
+      "status": "ok",
+      "runtime_s": 0.0019327920163050294,
+      "error": null,
+      "selected_repair_ids": [
+        "r1",
+        "r3",
+        "r5",
+        "r6"
+      ],
+      "total_cost": 85.0,
+      "budget_usage": 0.9497206703910615,
+      "accessibility_before": 706.5,
+      "accessibility_after": 778.0,
+      "delta_a": 71.5,
+      "gain_per_budget": 0.7988826815642458,
+      "gain_per_spend": 0.8411764705882353,
+      "delta_a_by_profile": {
+        "wheelchair": 71.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.16374269005847952
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.5,
+      "method": "B1",
+      "budget": 89.5,
+      "status": "ok",
+      "runtime_s": 0.0011235409183427691,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "total_cost": 74.0,
+      "budget_usage": 0.8268156424581006,
+      "accessibility_before": 706.5,
+      "accessibility_after": 792.0,
+      "delta_a": 85.5,
+      "gain_per_budget": 0.9553072625698324,
+      "gain_per_spend": 1.1554054054054055,
+      "delta_a_by_profile": {
+        "wheelchair": 85.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.5,
+      "method": "B2",
+      "budget": 89.5,
+      "status": "ok",
+      "runtime_s": 0.0012235409813001752,
+      "error": null,
+      "selected_repair_ids": [
+        "r4",
+        "r5",
+        "r6",
+        "r7"
+      ],
+      "total_cost": 63.0,
+      "budget_usage": 0.7039106145251397,
+      "accessibility_before": 706.5,
+      "accessibility_after": 792.0,
+      "delta_a": 85.5,
+      "gain_per_budget": 0.9553072625698324,
+      "gain_per_spend": 1.3571428571428572,
+      "delta_a_by_profile": {
+        "wheelchair": 85.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.5,
+      "method": "B3",
+      "budget": 89.5,
+      "status": "ok",
+      "runtime_s": 0.0683869170024991,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 0.18994413407821228,
+      "accessibility_before": 706.5,
+      "accessibility_after": 792.0,
+      "delta_a": 85.5,
+      "gain_per_budget": 0.9553072625698324,
+      "gain_per_spend": 5.029411764705882,
+      "delta_a_by_profile": {
+        "wheelchair": 85.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 1,
+      "budget_fraction": 0.5,
+      "method": "exhaustive",
+      "budget": 89.5,
+      "status": "ok",
+      "runtime_s": 0.5569036669330671,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 0.18994413407821228,
+      "accessibility_before": 706.5,
+      "accessibility_after": 792.0,
+      "delta_a": 85.5,
+      "gain_per_budget": 0.9553072625698324,
+      "gain_per_spend": 5.029411764705882,
+      "delta_a_by_profile": {
+        "wheelchair": 85.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.05,
+      "method": "B0",
+      "budget": 8.5,
+      "status": "ok",
+      "runtime_s": 0.0011082920245826244,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 510.5,
+      "accessibility_after": 510.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.05,
+      "method": "B1",
+      "budget": 8.5,
+      "status": "ok",
+      "runtime_s": 0.0010558749781921506,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 510.5,
+      "accessibility_after": 510.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.05,
+      "method": "B2",
+      "budget": 8.5,
+      "status": "ok",
+      "runtime_s": 0.0011310409754514694,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 510.5,
+      "accessibility_after": 510.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.05,
+      "method": "B3",
+      "budget": 8.5,
+      "status": "ok",
+      "runtime_s": 0.0032377499155700207,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 510.5,
+      "accessibility_after": 510.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.05,
+      "method": "exhaustive",
+      "budget": 8.5,
+      "status": "ok",
+      "runtime_s": 0.0033108340576291084,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 510.5,
+      "accessibility_after": 510.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.1,
+      "method": "B0",
+      "budget": 17.0,
+      "status": "ok",
+      "runtime_s": 0.0010733749950304627,
+      "error": null,
+      "selected_repair_ids": [
+        "r1"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 510.5,
+      "accessibility_after": 602.5,
+      "delta_a": 92.0,
+      "gain_per_budget": 5.411764705882353,
+      "gain_per_spend": 5.411764705882353,
+      "delta_a_by_profile": {
+        "wheelchair": 62.0,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.1,
+      "method": "B1",
+      "budget": 17.0,
+      "status": "ok",
+      "runtime_s": 0.0010490829590708017,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 510.5,
+      "accessibility_after": 510.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.1,
+      "method": "B2",
+      "budget": 17.0,
+      "status": "ok",
+      "runtime_s": 0.0014404170215129852,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 510.5,
+      "accessibility_after": 510.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.1,
+      "method": "B3",
+      "budget": 17.0,
+      "status": "ok",
+      "runtime_s": 0.01496166700962931,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 10.0,
+      "budget_usage": 0.5882352941176471,
+      "accessibility_before": 510.5,
+      "accessibility_after": 583.0,
+      "delta_a": 72.5,
+      "gain_per_budget": 4.264705882352941,
+      "gain_per_spend": 7.25,
+      "delta_a_by_profile": {
+        "wheelchair": 42.5,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.21195652173913043
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.1,
+      "method": "exhaustive",
+      "budget": 17.0,
+      "status": "ok",
+      "runtime_s": 0.015626334003172815,
+      "error": null,
+      "selected_repair_ids": [
+        "r1"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 510.5,
+      "accessibility_after": 602.5,
+      "delta_a": 92.0,
+      "gain_per_budget": 5.411764705882353,
+      "gain_per_spend": 5.411764705882353,
+      "delta_a_by_profile": {
+        "wheelchair": 62.0,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.2,
+      "method": "B0",
+      "budget": 34.0,
+      "status": "ok",
+      "runtime_s": 0.0010863749776035547,
+      "error": null,
+      "selected_repair_ids": [
+        "r7"
+      ],
+      "total_cost": 28.0,
+      "budget_usage": 0.8235294117647058,
+      "accessibility_before": 510.5,
+      "accessibility_after": 527.0,
+      "delta_a": 16.5,
+      "gain_per_budget": 0.4852941176470588,
+      "gain_per_spend": 0.5892857142857143,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 16.5,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.8436018957345972
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.2,
+      "method": "B1",
+      "budget": 34.0,
+      "status": "ok",
+      "runtime_s": 0.001178500009700656,
+      "error": null,
+      "selected_repair_ids": [
+        "r5",
+        "r6"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.7941176470588235,
+      "accessibility_before": 510.5,
+      "accessibility_after": 583.0,
+      "delta_a": 72.5,
+      "gain_per_budget": 2.1323529411764706,
+      "gain_per_spend": 2.685185185185185,
+      "delta_a_by_profile": {
+        "wheelchair": 42.5,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.3127962085308057
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.2,
+      "method": "B2",
+      "budget": 34.0,
+      "status": "ok",
+      "runtime_s": 0.001144499983638525,
+      "error": null,
+      "selected_repair_ids": [
+        "r5",
+        "r6"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.7941176470588235,
+      "accessibility_before": 510.5,
+      "accessibility_after": 583.0,
+      "delta_a": 72.5,
+      "gain_per_budget": 2.1323529411764706,
+      "gain_per_spend": 2.685185185185185,
+      "delta_a_by_profile": {
+        "wheelchair": 42.5,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.3127962085308057
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.2,
+      "method": "B3",
+      "budget": 34.0,
+      "status": "ok",
+      "runtime_s": 0.046162917045876384,
+      "error": null,
+      "selected_repair_ids": [
+        "r1",
+        "r5"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.7941176470588235,
+      "accessibility_before": 510.5,
+      "accessibility_after": 616.0,
+      "delta_a": 105.5,
+      "gain_per_budget": 3.1029411764705883,
+      "gain_per_spend": 3.9074074074074074,
+      "delta_a_by_profile": {
+        "wheelchair": 75.5,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.2,
+      "method": "exhaustive",
+      "budget": 34.0,
+      "status": "ok",
+      "runtime_s": 0.061248957994394004,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 25.0,
+      "budget_usage": 0.7352941176470589,
+      "accessibility_before": 510.5,
+      "accessibility_after": 616.0,
+      "delta_a": 105.5,
+      "gain_per_budget": 3.1029411764705883,
+      "gain_per_spend": 4.22,
+      "delta_a_by_profile": {
+        "wheelchair": 75.5,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.5,
+      "method": "B0",
+      "budget": 85.0,
+      "status": "ok",
+      "runtime_s": 0.0010762499878183007,
+      "error": null,
+      "selected_repair_ids": [
+        "r2",
+        "r3",
+        "r7"
+      ],
+      "total_cost": 81.0,
+      "budget_usage": 0.9529411764705882,
+      "accessibility_before": 510.5,
+      "accessibility_after": 567.5,
+      "delta_a": 57.0,
+      "gain_per_budget": 0.6705882352941176,
+      "gain_per_spend": 0.7037037037037037,
+      "delta_a_by_profile": {
+        "wheelchair": 27.0,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.4597156398104265
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.5,
+      "method": "B1",
+      "budget": 85.0,
+      "status": "ok",
+      "runtime_s": 0.0010758329881355166,
+      "error": null,
+      "selected_repair_ids": [
+        "r4",
+        "r5",
+        "r6",
+        "r7"
+      ],
+      "total_cost": 80.0,
+      "budget_usage": 0.9411764705882353,
+      "accessibility_before": 510.5,
+      "accessibility_after": 616.0,
+      "delta_a": 105.5,
+      "gain_per_budget": 1.2411764705882353,
+      "gain_per_spend": 1.31875,
+      "delta_a_by_profile": {
+        "wheelchair": 75.5,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.5,
+      "method": "B2",
+      "budget": 85.0,
+      "status": "ok",
+      "runtime_s": 0.0011494159698486328,
+      "error": null,
+      "selected_repair_ids": [
+        "r4",
+        "r5",
+        "r6",
+        "r7"
+      ],
+      "total_cost": 80.0,
+      "budget_usage": 0.9411764705882353,
+      "accessibility_before": 510.5,
+      "accessibility_after": 616.0,
+      "delta_a": 105.5,
+      "gain_per_budget": 1.2411764705882353,
+      "gain_per_spend": 1.31875,
+      "delta_a_by_profile": {
+        "wheelchair": 75.5,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.5,
+      "method": "B3",
+      "budget": 85.0,
+      "status": "ok",
+      "runtime_s": 0.07649287499953061,
+      "error": null,
+      "selected_repair_ids": [
+        "r1",
+        "r5"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.3176470588235294,
+      "accessibility_before": 510.5,
+      "accessibility_after": 616.0,
+      "delta_a": 105.5,
+      "gain_per_budget": 1.2411764705882353,
+      "gain_per_spend": 3.9074074074074074,
+      "delta_a_by_profile": {
+        "wheelchair": 75.5,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 2,
+      "budget_fraction": 0.5,
+      "method": "exhaustive",
+      "budget": 85.0,
+      "status": "ok",
+      "runtime_s": 0.4585356250172481,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 25.0,
+      "budget_usage": 0.29411764705882354,
+      "accessibility_before": 510.5,
+      "accessibility_after": 616.0,
+      "delta_a": 105.5,
+      "gain_per_budget": 1.2411764705882353,
+      "gain_per_spend": 4.22,
+      "delta_a_by_profile": {
+        "wheelchair": 75.5,
+        "low_vision": 23.25,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.05,
+      "method": "B0",
+      "budget": 9.1,
+      "status": "ok",
+      "runtime_s": 0.0010629590833559632,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.05,
+      "method": "B1",
+      "budget": 9.1,
+      "status": "ok",
+      "runtime_s": 0.0010212090564891696,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.05,
+      "method": "B2",
+      "budget": 9.1,
+      "status": "ok",
+      "runtime_s": 0.0014465830754488707,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.05,
+      "method": "B3",
+      "budget": 9.1,
+      "status": "ok",
+      "runtime_s": 0.003048917045816779,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.05,
+      "method": "exhaustive",
+      "budget": 9.1,
+      "status": "ok",
+      "runtime_s": 0.003333417000249028,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.1,
+      "method": "B0",
+      "budget": 18.2,
+      "status": "ok",
+      "runtime_s": 0.0010389169910922647,
+      "error": null,
+      "selected_repair_ids": [
+        "r2"
+      ],
+      "total_cost": 12.0,
+      "budget_usage": 0.6593406593406593,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.1,
+      "method": "B1",
+      "budget": 18.2,
+      "status": "ok",
+      "runtime_s": 0.0010190410539507866,
+      "error": null,
+      "selected_repair_ids": [
+        "r7"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 0.9340659340659341,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.1,
+      "method": "B2",
+      "budget": 18.2,
+      "status": "ok",
+      "runtime_s": 0.0010955410543829203,
+      "error": null,
+      "selected_repair_ids": [
+        "r7"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 0.9340659340659341,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.1,
+      "method": "B3",
+      "budget": 18.2,
+      "status": "ok",
+      "runtime_s": 0.006298625026829541,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.1,
+      "method": "exhaustive",
+      "budget": 18.2,
+      "status": "ok",
+      "runtime_s": 0.006314667058177292,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.2,
+      "method": "B0",
+      "budget": 36.4,
+      "status": "ok",
+      "runtime_s": 0.0010431250557303429,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r2"
+      ],
+      "total_cost": 26.0,
+      "budget_usage": 0.7142857142857143,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.2,
+      "method": "B1",
+      "budget": 36.4,
+      "status": "ok",
+      "runtime_s": 0.0010338749270886183,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r7"
+      ],
+      "total_cost": 31.0,
+      "budget_usage": 0.8516483516483517,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.2,
+      "method": "B2",
+      "budget": 36.4,
+      "status": "ok",
+      "runtime_s": 0.0010893750004470348,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r7"
+      ],
+      "total_cost": 31.0,
+      "budget_usage": 0.8516483516483517,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1310.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.2,
+      "method": "B3",
+      "budget": 36.4,
+      "status": "ok",
+      "runtime_s": 0.03003208397421986,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 25.0,
+      "budget_usage": 0.6868131868131868,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1376.0,
+      "delta_a": 65.25,
+      "gain_per_budget": 1.7925824175824177,
+      "gain_per_spend": 2.61,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 65.25,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.2,
+      "method": "exhaustive",
+      "budget": 36.4,
+      "status": "ok",
+      "runtime_s": 0.05213004199322313,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 25.0,
+      "budget_usage": 0.6868131868131868,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1376.0,
+      "delta_a": 65.25,
+      "gain_per_budget": 1.7925824175824177,
+      "gain_per_spend": 2.61,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 65.25,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.5,
+      "method": "B0",
+      "budget": 91.0,
+      "status": "ok",
+      "runtime_s": 0.001056874985806644,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r2",
+        "r3",
+        "r7"
+      ],
+      "total_cost": 72.0,
+      "budget_usage": 0.7912087912087912,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1359.25,
+      "delta_a": 48.5,
+      "gain_per_budget": 0.532967032967033,
+      "gain_per_spend": 0.6736111111111112,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 48.5,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.2567049808429119
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.5,
+      "method": "B1",
+      "budget": 91.0,
+      "status": "ok",
+      "runtime_s": 0.0010305000469088554,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r1",
+        "r5",
+        "r7"
+      ],
+      "total_cost": 85.0,
+      "budget_usage": 0.9340659340659341,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1376.0,
+      "delta_a": 65.25,
+      "gain_per_budget": 0.717032967032967,
+      "gain_per_spend": 0.7676470588235295,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 65.25,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.5,
+      "method": "B2",
+      "budget": 91.0,
+      "status": "ok",
+      "runtime_s": 0.0011109999613836408,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r1",
+        "r5",
+        "r7"
+      ],
+      "total_cost": 85.0,
+      "budget_usage": 0.9340659340659341,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1376.0,
+      "delta_a": 65.25,
+      "gain_per_budget": 0.717032967032967,
+      "gain_per_spend": 0.7676470588235295,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 65.25,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.5,
+      "method": "B3",
+      "budget": 91.0,
+      "status": "ok",
+      "runtime_s": 0.05673850001767278,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 25.0,
+      "budget_usage": 0.27472527472527475,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1376.0,
+      "delta_a": 65.25,
+      "gain_per_budget": 0.717032967032967,
+      "gain_per_spend": 2.61,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 65.25,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 3,
+      "budget_fraction": 0.5,
+      "method": "exhaustive",
+      "budget": 91.0,
+      "status": "ok",
+      "runtime_s": 0.4408280421048403,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 25.0,
+      "budget_usage": 0.27472527472527475,
+      "accessibility_before": 1310.75,
+      "accessibility_after": 1376.0,
+      "delta_a": 65.25,
+      "gain_per_budget": 0.717032967032967,
+      "gain_per_spend": 2.61,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 65.25,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.05,
+      "method": "B0",
+      "budget": 8.700000000000001,
+      "status": "ok",
+      "runtime_s": 0.0009943749755620956,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.05,
+      "method": "B1",
+      "budget": 8.700000000000001,
+      "status": "ok",
+      "runtime_s": 0.0009541250765323639,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.05,
+      "method": "B2",
+      "budget": 8.700000000000001,
+      "status": "ok",
+      "runtime_s": 0.001035165973007679,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.05,
+      "method": "B3",
+      "budget": 8.700000000000001,
+      "status": "ok",
+      "runtime_s": 0.0028169580036774278,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.05,
+      "method": "exhaustive",
+      "budget": 8.700000000000001,
+      "status": "ok",
+      "runtime_s": 0.003173790988512337,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.1,
+      "method": "B0",
+      "budget": 17.400000000000002,
+      "status": "ok",
+      "runtime_s": 0.0009627090767025948,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 12.0,
+      "budget_usage": 0.689655172413793,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.1,
+      "method": "B1",
+      "budget": 17.400000000000002,
+      "status": "ok",
+      "runtime_s": 0.0009580830810591578,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 12.0,
+      "budget_usage": 0.689655172413793,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.1,
+      "method": "B2",
+      "budget": 17.400000000000002,
+      "status": "ok",
+      "runtime_s": 0.0011081249685958028,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 12.0,
+      "budget_usage": 0.689655172413793,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.1,
+      "method": "B3",
+      "budget": 17.400000000000002,
+      "status": "ok",
+      "runtime_s": 0.003842207952402532,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.1,
+      "method": "exhaustive",
+      "budget": 17.400000000000002,
+      "status": "ok",
+      "runtime_s": 0.004239541944116354,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.2,
+      "method": "B0",
+      "budget": 34.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.0009831669740378857,
+      "error": null,
+      "selected_repair_ids": [
+        "r3",
+        "r4"
+      ],
+      "total_cost": 32.0,
+      "budget_usage": 0.9195402298850573,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.2,
+      "method": "B1",
+      "budget": 34.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.0009962079348042607,
+      "error": null,
+      "selected_repair_ids": [
+        "r7"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.7758620689655171,
+      "accessibility_before": 794.5,
+      "accessibility_after": 884.0,
+      "delta_a": 89.5,
+      "gain_per_budget": 2.5718390804597697,
+      "gain_per_spend": 3.314814814814815,
+      "delta_a_by_profile": {
+        "wheelchair": 89.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.2,
+      "method": "B2",
+      "budget": 34.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.001060166978277266,
+      "error": null,
+      "selected_repair_ids": [
+        "r2",
+        "r4"
+      ],
+      "total_cost": 34.0,
+      "budget_usage": 0.9770114942528735,
+      "accessibility_before": 794.5,
+      "accessibility_after": 864.5,
+      "delta_a": 70.0,
+      "gain_per_budget": 2.011494252873563,
+      "gain_per_spend": 2.0588235294117645,
+      "delta_a_by_profile": {
+        "wheelchair": 70.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.21787709497206703
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.2,
+      "method": "B3",
+      "budget": 34.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.034356749965809286,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 23.0,
+      "budget_usage": 0.660919540229885,
+      "accessibility_before": 794.5,
+      "accessibility_after": 884.0,
+      "delta_a": 89.5,
+      "gain_per_budget": 2.5718390804597697,
+      "gain_per_spend": 3.891304347826087,
+      "delta_a_by_profile": {
+        "wheelchair": 89.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.2,
+      "method": "exhaustive",
+      "budget": 34.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.05675341701135039,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 23.0,
+      "budget_usage": 0.660919540229885,
+      "accessibility_before": 794.5,
+      "accessibility_after": 884.0,
+      "delta_a": 89.5,
+      "gain_per_budget": 2.5718390804597697,
+      "gain_per_spend": 3.891304347826087,
+      "delta_a_by_profile": {
+        "wheelchair": 89.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.5,
+      "method": "B0",
+      "budget": 87.0,
+      "status": "ok",
+      "runtime_s": 0.0010075409663841128,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "total_cost": 80.0,
+      "budget_usage": 0.9195402298850575,
+      "accessibility_before": 794.5,
+      "accessibility_after": 794.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.5,
+      "method": "B1",
+      "budget": 87.0,
+      "status": "ok",
+      "runtime_s": 0.0010073750745505095,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r4",
+        "r6",
+        "r7"
+      ],
+      "total_cost": 85.0,
+      "budget_usage": 0.9770114942528736,
+      "accessibility_before": 794.5,
+      "accessibility_after": 884.0,
+      "delta_a": 89.5,
+      "gain_per_budget": 1.028735632183908,
+      "gain_per_spend": 1.0529411764705883,
+      "delta_a_by_profile": {
+        "wheelchair": 89.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.5,
+      "method": "B2",
+      "budget": 87.0,
+      "status": "ok",
+      "runtime_s": 0.0011019170051440597,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r4",
+        "r6",
+        "r7"
+      ],
+      "total_cost": 85.0,
+      "budget_usage": 0.9770114942528736,
+      "accessibility_before": 794.5,
+      "accessibility_after": 884.0,
+      "delta_a": 89.5,
+      "gain_per_budget": 1.028735632183908,
+      "gain_per_spend": 1.0529411764705883,
+      "delta_a_by_profile": {
+        "wheelchair": 89.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.5,
+      "method": "B3",
+      "budget": 87.0,
+      "status": "ok",
+      "runtime_s": 0.051061208941973746,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 23.0,
+      "budget_usage": 0.26436781609195403,
+      "accessibility_before": 794.5,
+      "accessibility_after": 884.0,
+      "delta_a": 89.5,
+      "gain_per_budget": 1.028735632183908,
+      "gain_per_spend": 3.891304347826087,
+      "delta_a_by_profile": {
+        "wheelchair": 89.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c0",
+      "seed": 4,
+      "budget_fraction": 0.5,
+      "method": "exhaustive",
+      "budget": 87.0,
+      "status": "ok",
+      "runtime_s": 0.4786547910189256,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 23.0,
+      "budget_usage": 0.26436781609195403,
+      "accessibility_before": 794.5,
+      "accessibility_after": 884.0,
+      "delta_a": 89.5,
+      "gain_per_budget": 1.028735632183908,
+      "gain_per_spend": 3.891304347826087,
+      "delta_a_by_profile": {
+        "wheelchair": 89.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.05,
+      "method": "B0",
+      "budget": 8.8,
+      "status": "ok",
+      "runtime_s": 0.001085125026293099,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.05,
+      "method": "B1",
+      "budget": 8.8,
+      "status": "ok",
+      "runtime_s": 0.0010440419428050518,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.05,
+      "method": "B2",
+      "budget": 8.8,
+      "status": "ok",
+      "runtime_s": 0.0011235419660806656,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.05,
+      "method": "B3",
+      "budget": 8.8,
+      "status": "ok",
+      "runtime_s": 0.0030637920135632157,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.05,
+      "method": "exhaustive",
+      "budget": 8.8,
+      "status": "ok",
+      "runtime_s": 0.003544042003341019,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.1,
+      "method": "B0",
+      "budget": 17.6,
+      "status": "ok",
+      "runtime_s": 0.0010672910138964653,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7954545454545454,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.1,
+      "method": "B1",
+      "budget": 17.6,
+      "status": "ok",
+      "runtime_s": 0.0011568330228328705,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7954545454545454,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.1,
+      "method": "B2",
+      "budget": 17.6,
+      "status": "ok",
+      "runtime_s": 0.0011107500176876783,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7954545454545454,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.1,
+      "method": "B3",
+      "budget": 17.6,
+      "status": "ok",
+      "runtime_s": 0.015750624937936664,
+      "error": null,
+      "selected_repair_ids": [
+        "r1"
+      ],
+      "total_cost": 13.0,
+      "budget_usage": 0.7386363636363635,
+      "accessibility_before": 917.5,
+      "accessibility_after": 944.0,
+      "delta_a": 26.5,
+      "gain_per_budget": 1.5056818181818181,
+      "gain_per_spend": 2.0384615384615383,
+      "delta_a_by_profile": {
+        "wheelchair": 26.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.1,
+      "method": "exhaustive",
+      "budget": 17.6,
+      "status": "ok",
+      "runtime_s": 0.01634654204826802,
+      "error": null,
+      "selected_repair_ids": [
+        "r1"
+      ],
+      "total_cost": 13.0,
+      "budget_usage": 0.7386363636363635,
+      "accessibility_before": 917.5,
+      "accessibility_after": 944.0,
+      "delta_a": 26.5,
+      "gain_per_budget": 1.5056818181818181,
+      "gain_per_spend": 2.0384615384615383,
+      "delta_a_by_profile": {
+        "wheelchair": 26.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.2,
+      "method": "B0",
+      "budget": 35.2,
+      "status": "ok",
+      "runtime_s": 0.0010564579861238599,
+      "error": null,
+      "selected_repair_ids": [
+        "r2",
+        "r6"
+      ],
+      "total_cost": 35.0,
+      "budget_usage": 0.9943181818181818,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.2,
+      "method": "B1",
+      "budget": 35.2,
+      "status": "ok",
+      "runtime_s": 0.0012600409099832177,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r6"
+      ],
+      "total_cost": 34.0,
+      "budget_usage": 0.9659090909090908,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.2,
+      "method": "B2",
+      "budget": 35.2,
+      "status": "ok",
+      "runtime_s": 0.0011220419546589255,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r6"
+      ],
+      "total_cost": 34.0,
+      "budget_usage": 0.9659090909090908,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.2,
+      "method": "B3",
+      "budget": 35.2,
+      "status": "ok",
+      "runtime_s": 0.04114674997981638,
+      "error": null,
+      "selected_repair_ids": [
+        "r1"
+      ],
+      "total_cost": 13.0,
+      "budget_usage": 0.36931818181818177,
+      "accessibility_before": 917.5,
+      "accessibility_after": 944.0,
+      "delta_a": 26.5,
+      "gain_per_budget": 0.7528409090909091,
+      "gain_per_spend": 2.0384615384615383,
+      "delta_a_by_profile": {
+        "wheelchair": 26.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.2,
+      "method": "exhaustive",
+      "budget": 35.2,
+      "status": "ok",
+      "runtime_s": 0.061071124975569546,
+      "error": null,
+      "selected_repair_ids": [
+        "r1"
+      ],
+      "total_cost": 13.0,
+      "budget_usage": 0.36931818181818177,
+      "accessibility_before": 917.5,
+      "accessibility_after": 944.0,
+      "delta_a": 26.5,
+      "gain_per_budget": 0.7528409090909091,
+      "gain_per_spend": 2.0384615384615383,
+      "delta_a_by_profile": {
+        "wheelchair": 26.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B0",
+      "budget": 88.0,
+      "status": "ok",
+      "runtime_s": 0.0010621249675750732,
+      "error": null,
+      "selected_repair_ids": [
+        "r2",
+        "r3",
+        "r4"
+      ],
+      "total_cost": 81.0,
+      "budget_usage": 0.9204545454545454,
+      "accessibility_before": 917.5,
+      "accessibility_after": 917.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B1",
+      "budget": 88.0,
+      "status": "ok",
+      "runtime_s": 0.0010416670702397823,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r2",
+        "r5",
+        "r6"
+      ],
+      "total_cost": 78.0,
+      "budget_usage": 0.8863636363636364,
+      "accessibility_before": 917.5,
+      "accessibility_after": 944.0,
+      "delta_a": 26.5,
+      "gain_per_budget": 0.30113636363636365,
+      "gain_per_spend": 0.33974358974358976,
+      "delta_a_by_profile": {
+        "wheelchair": 26.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B2",
+      "budget": 88.0,
+      "status": "ok",
+      "runtime_s": 0.0011131250066682696,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r2",
+        "r5",
+        "r6"
+      ],
+      "total_cost": 78.0,
+      "budget_usage": 0.8863636363636364,
+      "accessibility_before": 917.5,
+      "accessibility_after": 944.0,
+      "delta_a": 26.5,
+      "gain_per_budget": 0.30113636363636365,
+      "gain_per_spend": 0.33974358974358976,
+      "delta_a_by_profile": {
+        "wheelchair": 26.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "B3",
+      "budget": 88.0,
+      "status": "ok",
+      "runtime_s": 0.053052041912451386,
+      "error": null,
+      "selected_repair_ids": [
+        "r1"
+      ],
+      "total_cost": 13.0,
+      "budget_usage": 0.14772727272727273,
+      "accessibility_before": 917.5,
+      "accessibility_after": 944.0,
+      "delta_a": 26.5,
+      "gain_per_budget": 0.30113636363636365,
+      "gain_per_spend": 2.0384615384615383,
+      "delta_a_by_profile": {
+        "wheelchair": 26.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 0,
+      "budget_fraction": 0.5,
+      "method": "exhaustive",
+      "budget": 88.0,
+      "status": "ok",
+      "runtime_s": 0.4455662079853937,
+      "error": null,
+      "selected_repair_ids": [
+        "r1"
+      ],
+      "total_cost": 13.0,
+      "budget_usage": 0.14772727272727273,
+      "accessibility_before": 917.5,
+      "accessibility_after": 944.0,
+      "delta_a": 26.5,
+      "gain_per_budget": 0.30113636363636365,
+      "gain_per_spend": 2.0384615384615383,
+      "delta_a_by_profile": {
+        "wheelchair": 26.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.05,
+      "method": "B0",
+      "budget": 8.950000000000001,
+      "status": "ok",
+      "runtime_s": 0.00104674999602139,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.05,
+      "method": "B1",
+      "budget": 8.950000000000001,
+      "status": "ok",
+      "runtime_s": 0.000998999923467636,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.05,
+      "method": "B2",
+      "budget": 8.950000000000001,
+      "status": "ok",
+      "runtime_s": 0.001084374962374568,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.05,
+      "method": "B3",
+      "budget": 8.950000000000001,
+      "status": "ok",
+      "runtime_s": 0.0029973750934004784,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.05,
+      "method": "exhaustive",
+      "budget": 8.950000000000001,
+      "status": "ok",
+      "runtime_s": 0.0033407079754397273,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.1,
+      "method": "B0",
+      "budget": 17.900000000000002,
+      "status": "ok",
+      "runtime_s": 0.001006250036880374,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7821229050279329,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.1,
+      "method": "B1",
+      "budget": 17.900000000000002,
+      "status": "ok",
+      "runtime_s": 0.0010129170259460807,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7821229050279329,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.1,
+      "method": "B2",
+      "budget": 17.900000000000002,
+      "status": "ok",
+      "runtime_s": 0.0010607920121401548,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 14.0,
+      "budget_usage": 0.7821229050279329,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.1,
+      "method": "B3",
+      "budget": 17.900000000000002,
+      "status": "ok",
+      "runtime_s": 0.0066382919903844595,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.1,
+      "method": "exhaustive",
+      "budget": 17.900000000000002,
+      "status": "ok",
+      "runtime_s": 0.006366334040649235,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.2,
+      "method": "B0",
+      "budget": 35.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.0010153750190511346,
+      "error": null,
+      "selected_repair_ids": [
+        "r5",
+        "r6"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.7541899441340781,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.2,
+      "method": "B1",
+      "budget": 35.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.001040708040818572,
+      "error": null,
+      "selected_repair_ids": [
+        "r4",
+        "r5"
+      ],
+      "total_cost": 31.0,
+      "budget_usage": 0.8659217877094971,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.2,
+      "method": "B2",
+      "budget": 35.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.001110500073991716,
+      "error": null,
+      "selected_repair_ids": [
+        "r4",
+        "r5"
+      ],
+      "total_cost": 31.0,
+      "budget_usage": 0.8659217877094971,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.2,
+      "method": "B3",
+      "budget": 35.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.03010212501976639,
+      "error": null,
+      "selected_repair_ids": [
+        "r2"
+      ],
+      "total_cost": 28.0,
+      "budget_usage": 0.7821229050279329,
+      "accessibility_before": 750.0,
+      "accessibility_after": 792.0,
+      "delta_a": 42.0,
+      "gain_per_budget": 1.1731843575418992,
+      "gain_per_spend": 1.5,
+      "delta_a_by_profile": {
+        "wheelchair": 42.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.2,
+      "method": "exhaustive",
+      "budget": 35.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.06479133293032646,
+      "error": null,
+      "selected_repair_ids": [
+        "r2"
+      ],
+      "total_cost": 28.0,
+      "budget_usage": 0.7821229050279329,
+      "accessibility_before": 750.0,
+      "accessibility_after": 792.0,
+      "delta_a": 42.0,
+      "gain_per_budget": 1.1731843575418992,
+      "gain_per_spend": 1.5,
+      "delta_a_by_profile": {
+        "wheelchair": 42.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.5,
+      "method": "B0",
+      "budget": 89.5,
+      "status": "ok",
+      "runtime_s": 0.0011613329406827688,
+      "error": null,
+      "selected_repair_ids": [
+        "r1",
+        "r3",
+        "r5",
+        "r6"
+      ],
+      "total_cost": 85.0,
+      "budget_usage": 0.9497206703910615,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.5,
+      "method": "B1",
+      "budget": 89.5,
+      "status": "ok",
+      "runtime_s": 0.0011531250784173608,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r4",
+        "r5",
+        "r6"
+      ],
+      "total_cost": 74.0,
+      "budget_usage": 0.8268156424581006,
+      "accessibility_before": 750.0,
+      "accessibility_after": 792.0,
+      "delta_a": 42.0,
+      "gain_per_budget": 0.4692737430167598,
+      "gain_per_spend": 0.5675675675675675,
+      "delta_a_by_profile": {
+        "wheelchair": 42.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.5,
+      "method": "B2",
+      "budget": 89.5,
+      "status": "ok",
+      "runtime_s": 0.0012507090577855706,
+      "error": null,
+      "selected_repair_ids": [
+        "r4",
+        "r5",
+        "r6",
+        "r7"
+      ],
+      "total_cost": 63.0,
+      "budget_usage": 0.7039106145251397,
+      "accessibility_before": 750.0,
+      "accessibility_after": 750.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.5,
+      "method": "B3",
+      "budget": 89.5,
+      "status": "ok",
+      "runtime_s": 0.05470712506212294,
+      "error": null,
+      "selected_repair_ids": [
+        "r2"
+      ],
+      "total_cost": 28.0,
+      "budget_usage": 0.3128491620111732,
+      "accessibility_before": 750.0,
+      "accessibility_after": 792.0,
+      "delta_a": 42.0,
+      "gain_per_budget": 0.4692737430167598,
+      "gain_per_spend": 1.5,
+      "delta_a_by_profile": {
+        "wheelchair": 42.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 1,
+      "budget_fraction": 0.5,
+      "method": "exhaustive",
+      "budget": 89.5,
+      "status": "ok",
+      "runtime_s": 0.4264703330118209,
+      "error": null,
+      "selected_repair_ids": [
+        "r2"
+      ],
+      "total_cost": 28.0,
+      "budget_usage": 0.3128491620111732,
+      "accessibility_before": 750.0,
+      "accessibility_after": 792.0,
+      "delta_a": 42.0,
+      "gain_per_budget": 0.4692737430167598,
+      "gain_per_spend": 1.5,
+      "delta_a_by_profile": {
+        "wheelchair": 42.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.05,
+      "method": "B0",
+      "budget": 8.5,
+      "status": "ok",
+      "runtime_s": 0.0010804999619722366,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 496.5,
+      "accessibility_after": 496.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.05,
+      "method": "B1",
+      "budget": 8.5,
+      "status": "ok",
+      "runtime_s": 0.0010846660006791353,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 496.5,
+      "accessibility_after": 496.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.05,
+      "method": "B2",
+      "budget": 8.5,
+      "status": "ok",
+      "runtime_s": 0.001131500001065433,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 496.5,
+      "accessibility_after": 496.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.05,
+      "method": "B3",
+      "budget": 8.5,
+      "status": "ok",
+      "runtime_s": 0.003091749968007207,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 496.5,
+      "accessibility_after": 496.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.05,
+      "method": "exhaustive",
+      "budget": 8.5,
+      "status": "ok",
+      "runtime_s": 0.0032815419835969806,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 496.5,
+      "accessibility_after": 496.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.1,
+      "method": "B0",
+      "budget": 17.0,
+      "status": "ok",
+      "runtime_s": 0.0010570409940555692,
+      "error": null,
+      "selected_repair_ids": [
+        "r1"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 496.5,
+      "accessibility_after": 527.0,
+      "delta_a": 30.5,
+      "gain_per_budget": 1.7941176470588236,
+      "gain_per_spend": 1.7941176470588236,
+      "delta_a_by_profile": {
+        "wheelchair": 30.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.45535714285714285
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.1,
+      "method": "B1",
+      "budget": 17.0,
+      "status": "ok",
+      "runtime_s": 0.0010462920181453228,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 496.5,
+      "accessibility_after": 545.0,
+      "delta_a": 48.5,
+      "gain_per_budget": 2.8529411764705883,
+      "gain_per_spend": 2.8529411764705883,
+      "delta_a_by_profile": {
+        "wheelchair": 48.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.13392857142857142
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.1,
+      "method": "B2",
+      "budget": 17.0,
+      "status": "ok",
+      "runtime_s": 0.001118707936257124,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 1.0,
+      "accessibility_before": 496.5,
+      "accessibility_after": 545.0,
+      "delta_a": 48.5,
+      "gain_per_budget": 2.8529411764705883,
+      "gain_per_spend": 2.8529411764705883,
+      "delta_a_by_profile": {
+        "wheelchair": 48.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.13392857142857142
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.1,
+      "method": "B3",
+      "budget": 17.0,
+      "status": "ok",
+      "runtime_s": 0.01486308395396918,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 10.0,
+      "budget_usage": 0.5882352941176471,
+      "accessibility_before": 496.5,
+      "accessibility_after": 552.5,
+      "delta_a": 56.0,
+      "gain_per_budget": 3.2941176470588234,
+      "gain_per_spend": 5.6,
+      "delta_a_by_profile": {
+        "wheelchair": 42.5,
+        "low_vision": 6.75,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.1,
+      "method": "exhaustive",
+      "budget": 17.0,
+      "status": "ok",
+      "runtime_s": 0.015238333027809858,
+      "error": null,
+      "selected_repair_ids": [
+        "r5"
+      ],
+      "total_cost": 10.0,
+      "budget_usage": 0.5882352941176471,
+      "accessibility_before": 496.5,
+      "accessibility_after": 552.5,
+      "delta_a": 56.0,
+      "gain_per_budget": 3.2941176470588234,
+      "gain_per_spend": 5.6,
+      "delta_a_by_profile": {
+        "wheelchair": 42.5,
+        "low_vision": 6.75,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.2,
+      "method": "B0",
+      "budget": 34.0,
+      "status": "ok",
+      "runtime_s": 0.001077291090041399,
+      "error": null,
+      "selected_repair_ids": [
+        "r7"
+      ],
+      "total_cost": 28.0,
+      "budget_usage": 0.8235294117647058,
+      "accessibility_before": 496.5,
+      "accessibility_after": 496.5,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.2,
+      "method": "B1",
+      "budget": 34.0,
+      "status": "ok",
+      "runtime_s": 0.0010673330398276448,
+      "error": null,
+      "selected_repair_ids": [
+        "r5",
+        "r6"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.7941176470588235,
+      "accessibility_before": 496.5,
+      "accessibility_after": 616.0,
+      "delta_a": 119.5,
+      "gain_per_budget": 3.514705882352941,
+      "gain_per_spend": 4.425925925925926,
+      "delta_a_by_profile": {
+        "wheelchair": 106.0,
+        "low_vision": 6.75,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.2,
+      "method": "B2",
+      "budget": 34.0,
+      "status": "ok",
+      "runtime_s": 0.0011446670396253467,
+      "error": null,
+      "selected_repair_ids": [
+        "r5",
+        "r6"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.7941176470588235,
+      "accessibility_before": 496.5,
+      "accessibility_after": 616.0,
+      "delta_a": 119.5,
+      "gain_per_budget": 3.514705882352941,
+      "gain_per_spend": 4.425925925925926,
+      "delta_a_by_profile": {
+        "wheelchair": 106.0,
+        "low_vision": 6.75,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.2,
+      "method": "B3",
+      "budget": 34.0,
+      "status": "ok",
+      "runtime_s": 0.045596416923217475,
+      "error": null,
+      "selected_repair_ids": [
+        "r5",
+        "r6"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.7941176470588235,
+      "accessibility_before": 496.5,
+      "accessibility_after": 616.0,
+      "delta_a": 119.5,
+      "gain_per_budget": 3.514705882352941,
+      "gain_per_spend": 4.425925925925926,
+      "delta_a_by_profile": {
+        "wheelchair": 106.0,
+        "low_vision": 6.75,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.2,
+      "method": "exhaustive",
+      "budget": 34.0,
+      "status": "ok",
+      "runtime_s": 0.06320945790503174,
+      "error": null,
+      "selected_repair_ids": [
+        "r5",
+        "r6"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.7941176470588235,
+      "accessibility_before": 496.5,
+      "accessibility_after": 616.0,
+      "delta_a": 119.5,
+      "gain_per_budget": 3.514705882352941,
+      "gain_per_spend": 4.425925925925926,
+      "delta_a_by_profile": {
+        "wheelchair": 106.0,
+        "low_vision": 6.75,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.5,
+      "method": "B0",
+      "budget": 85.0,
+      "status": "ok",
+      "runtime_s": 0.0010497079929336905,
+      "error": null,
+      "selected_repair_ids": [
+        "r2",
+        "r3",
+        "r7"
+      ],
+      "total_cost": 81.0,
+      "budget_usage": 0.9529411764705882,
+      "accessibility_before": 496.5,
+      "accessibility_after": 569.5,
+      "delta_a": 73.0,
+      "gain_per_budget": 0.8588235294117647,
+      "gain_per_spend": 0.9012345679012346,
+      "delta_a_by_profile": {
+        "wheelchair": 59.5,
+        "low_vision": 6.75,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.3891213389121339
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.5,
+      "method": "B1",
+      "budget": 85.0,
+      "status": "ok",
+      "runtime_s": 0.0010443750070407987,
+      "error": null,
+      "selected_repair_ids": [
+        "r4",
+        "r5",
+        "r6",
+        "r7"
+      ],
+      "total_cost": 80.0,
+      "budget_usage": 0.9411764705882353,
+      "accessibility_before": 496.5,
+      "accessibility_after": 616.0,
+      "delta_a": 119.5,
+      "gain_per_budget": 1.4058823529411764,
+      "gain_per_spend": 1.49375,
+      "delta_a_by_profile": {
+        "wheelchair": 106.0,
+        "low_vision": 6.75,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.5,
+      "method": "B2",
+      "budget": 85.0,
+      "status": "ok",
+      "runtime_s": 0.0011315830051898956,
+      "error": null,
+      "selected_repair_ids": [
+        "r4",
+        "r5",
+        "r6",
+        "r7"
+      ],
+      "total_cost": 80.0,
+      "budget_usage": 0.9411764705882353,
+      "accessibility_before": 496.5,
+      "accessibility_after": 616.0,
+      "delta_a": 119.5,
+      "gain_per_budget": 1.4058823529411764,
+      "gain_per_spend": 1.49375,
+      "delta_a_by_profile": {
+        "wheelchair": 106.0,
+        "low_vision": 6.75,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.5,
+      "method": "B3",
+      "budget": 85.0,
+      "status": "ok",
+      "runtime_s": 0.07714008307084441,
+      "error": null,
+      "selected_repair_ids": [
+        "r5",
+        "r6"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.3176470588235294,
+      "accessibility_before": 496.5,
+      "accessibility_after": 616.0,
+      "delta_a": 119.5,
+      "gain_per_budget": 1.4058823529411764,
+      "gain_per_spend": 4.425925925925926,
+      "delta_a_by_profile": {
+        "wheelchair": 106.0,
+        "low_vision": 6.75,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 2,
+      "budget_fraction": 0.5,
+      "method": "exhaustive",
+      "budget": 85.0,
+      "status": "ok",
+      "runtime_s": 0.47060287499334663,
+      "error": null,
+      "selected_repair_ids": [
+        "r5",
+        "r6"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.3176470588235294,
+      "accessibility_before": 496.5,
+      "accessibility_after": 616.0,
+      "delta_a": 119.5,
+      "gain_per_budget": 1.4058823529411764,
+      "gain_per_spend": 4.425925925925926,
+      "delta_a_by_profile": {
+        "wheelchair": 106.0,
+        "low_vision": 6.75,
+        "pedestrian": 6.75
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.05,
+      "method": "B0",
+      "budget": 9.1,
+      "status": "ok",
+      "runtime_s": 0.0014000420924276114,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.05,
+      "method": "B1",
+      "budget": 9.1,
+      "status": "ok",
+      "runtime_s": 0.0014392499579116702,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.05,
+      "method": "B2",
+      "budget": 9.1,
+      "status": "ok",
+      "runtime_s": 0.0014623330207541585,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.05,
+      "method": "B3",
+      "budget": 9.1,
+      "status": "ok",
+      "runtime_s": 0.00424608401954174,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.05,
+      "method": "exhaustive",
+      "budget": 9.1,
+      "status": "ok",
+      "runtime_s": 0.00430829101242125,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.1,
+      "method": "B0",
+      "budget": 18.2,
+      "status": "ok",
+      "runtime_s": 0.0014006249839439988,
+      "error": null,
+      "selected_repair_ids": [
+        "r2"
+      ],
+      "total_cost": 12.0,
+      "budget_usage": 0.6593406593406593,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.1,
+      "method": "B1",
+      "budget": 18.2,
+      "status": "ok",
+      "runtime_s": 0.0013572920579463243,
+      "error": null,
+      "selected_repair_ids": [
+        "r7"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 0.9340659340659341,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.1,
+      "method": "B2",
+      "budget": 18.2,
+      "status": "ok",
+      "runtime_s": 0.0014473750488832593,
+      "error": null,
+      "selected_repair_ids": [
+        "r7"
+      ],
+      "total_cost": 17.0,
+      "budget_usage": 0.9340659340659341,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.1,
+      "method": "B3",
+      "budget": 18.2,
+      "status": "ok",
+      "runtime_s": 0.008242124924436212,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.1,
+      "method": "exhaustive",
+      "budget": 18.2,
+      "status": "ok",
+      "runtime_s": 0.008509250008501112,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.2,
+      "method": "B0",
+      "budget": 36.4,
+      "status": "ok",
+      "runtime_s": 0.00118041702080518,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r2"
+      ],
+      "total_cost": 26.0,
+      "budget_usage": 0.7142857142857143,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.2,
+      "method": "B1",
+      "budget": 36.4,
+      "status": "ok",
+      "runtime_s": 0.001157541060820222,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r7"
+      ],
+      "total_cost": 31.0,
+      "budget_usage": 0.8516483516483517,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.2,
+      "method": "B2",
+      "budget": 36.4,
+      "status": "ok",
+      "runtime_s": 0.0012322089169174433,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r7"
+      ],
+      "total_cost": 31.0,
+      "budget_usage": 0.8516483516483517,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.2,
+      "method": "B3",
+      "budget": 36.4,
+      "status": "ok",
+      "runtime_s": 0.03437329106964171,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 28.0,
+      "budget_usage": 0.7692307692307693,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1376.0,
+      "delta_a": 24.25,
+      "gain_per_budget": 0.6662087912087913,
+      "gain_per_spend": 0.8660714285714286,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 24.25,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.2,
+      "method": "exhaustive",
+      "budget": 36.4,
+      "status": "ok",
+      "runtime_s": 0.06479408405721188,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 28.0,
+      "budget_usage": 0.7692307692307693,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1376.0,
+      "delta_a": 24.25,
+      "gain_per_budget": 0.6662087912087913,
+      "gain_per_spend": 0.8660714285714286,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 24.25,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.5,
+      "method": "B0",
+      "budget": 91.0,
+      "status": "ok",
+      "runtime_s": 0.0012118339072912931,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r2",
+        "r3",
+        "r7"
+      ],
+      "total_cost": 72.0,
+      "budget_usage": 0.7912087912087912,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1376.0,
+      "delta_a": 24.25,
+      "gain_per_budget": 0.2664835164835165,
+      "gain_per_spend": 0.3368055555555556,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 24.25,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.5,
+      "method": "B1",
+      "budget": 91.0,
+      "status": "ok",
+      "runtime_s": 0.0012238749768584967,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r1",
+        "r5",
+        "r7"
+      ],
+      "total_cost": 85.0,
+      "budget_usage": 0.9340659340659341,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.5,
+      "method": "B2",
+      "budget": 91.0,
+      "status": "ok",
+      "runtime_s": 0.001290624961256981,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r1",
+        "r5",
+        "r7"
+      ],
+      "total_cost": 85.0,
+      "budget_usage": 0.9340659340659341,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1351.75,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 1.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.5,
+      "method": "B3",
+      "budget": 91.0,
+      "status": "ok",
+      "runtime_s": 0.06737691699527204,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 28.0,
+      "budget_usage": 0.3076923076923077,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1376.0,
+      "delta_a": 24.25,
+      "gain_per_budget": 0.2664835164835165,
+      "gain_per_spend": 0.8660714285714286,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 24.25,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 3,
+      "budget_fraction": 0.5,
+      "method": "exhaustive",
+      "budget": 91.0,
+      "status": "ok",
+      "runtime_s": 0.4807725000428036,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 28.0,
+      "budget_usage": 0.3076923076923077,
+      "accessibility_before": 1351.75,
+      "accessibility_after": 1376.0,
+      "delta_a": 24.25,
+      "gain_per_budget": 0.2664835164835165,
+      "gain_per_spend": 0.8660714285714286,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 24.25,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.05,
+      "method": "B0",
+      "budget": 8.700000000000001,
+      "status": "ok",
+      "runtime_s": 0.0010550420265644789,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 822.0,
+      "accessibility_after": 822.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.05,
+      "method": "B1",
+      "budget": 8.700000000000001,
+      "status": "ok",
+      "runtime_s": 0.0010628749150782824,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 822.0,
+      "accessibility_after": 822.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.05,
+      "method": "B2",
+      "budget": 8.700000000000001,
+      "status": "ok",
+      "runtime_s": 0.0012140839826315641,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 822.0,
+      "accessibility_after": 822.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.05,
+      "method": "B3",
+      "budget": 8.700000000000001,
+      "status": "ok",
+      "runtime_s": 0.0030319580109789968,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 822.0,
+      "accessibility_after": 822.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.05,
+      "method": "exhaustive",
+      "budget": 8.700000000000001,
+      "status": "ok",
+      "runtime_s": 0.0032043339451774955,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 822.0,
+      "accessibility_after": 822.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.1,
+      "method": "B0",
+      "budget": 17.400000000000002,
+      "status": "ok",
+      "runtime_s": 0.001022542011924088,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 12.0,
+      "budget_usage": 0.689655172413793,
+      "accessibility_before": 822.0,
+      "accessibility_after": 822.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.1,
+      "method": "B1",
+      "budget": 17.400000000000002,
+      "status": "ok",
+      "runtime_s": 0.0010125830303877592,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 12.0,
+      "budget_usage": 0.689655172413793,
+      "accessibility_before": 822.0,
+      "accessibility_after": 822.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.1,
+      "method": "B2",
+      "budget": 17.400000000000002,
+      "status": "ok",
+      "runtime_s": 0.0010845419019460678,
+      "error": null,
+      "selected_repair_ids": [
+        "r4"
+      ],
+      "total_cost": 12.0,
+      "budget_usage": 0.689655172413793,
+      "accessibility_before": 822.0,
+      "accessibility_after": 822.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.1,
+      "method": "B3",
+      "budget": 17.400000000000002,
+      "status": "ok",
+      "runtime_s": 0.003990707919001579,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 822.0,
+      "accessibility_after": 822.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.1,
+      "method": "exhaustive",
+      "budget": 17.400000000000002,
+      "status": "ok",
+      "runtime_s": 0.004312124918214977,
+      "error": null,
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "budget_usage": 0.0,
+      "accessibility_before": 822.0,
+      "accessibility_after": 822.0,
+      "delta_a": 0.0,
+      "gain_per_budget": 0.0,
+      "gain_per_spend": null,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": null
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.2,
+      "method": "B0",
+      "budget": 34.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.001029290957376361,
+      "error": null,
+      "selected_repair_ids": [
+        "r3",
+        "r4"
+      ],
+      "total_cost": 32.0,
+      "budget_usage": 0.9195402298850573,
+      "accessibility_before": 822.0,
+      "accessibility_after": 853.0,
+      "delta_a": 31.0,
+      "gain_per_budget": 0.8908045977011493,
+      "gain_per_spend": 0.96875,
+      "delta_a_by_profile": {
+        "wheelchair": 31.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.3333333333333333
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.2,
+      "method": "B1",
+      "budget": 34.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.0010157909709960222,
+      "error": null,
+      "selected_repair_ids": [
+        "r7"
+      ],
+      "total_cost": 27.0,
+      "budget_usage": 0.7758620689655171,
+      "accessibility_before": 822.0,
+      "accessibility_after": 868.5,
+      "delta_a": 46.5,
+      "gain_per_budget": 1.336206896551724,
+      "gain_per_spend": 1.7222222222222223,
+      "delta_a_by_profile": {
+        "wheelchair": 46.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.2,
+      "method": "B2",
+      "budget": 34.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.001084917108528316,
+      "error": null,
+      "selected_repair_ids": [
+        "r6"
+      ],
+      "total_cost": 23.0,
+      "budget_usage": 0.660919540229885,
+      "accessibility_before": 822.0,
+      "accessibility_after": 837.5,
+      "delta_a": 15.5,
+      "gain_per_budget": 0.44540229885057464,
+      "gain_per_spend": 0.6739130434782609,
+      "delta_a_by_profile": {
+        "wheelchair": 15.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.6666666666666666
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.2,
+      "method": "B3",
+      "budget": 34.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.038808333105407655,
+      "error": null,
+      "selected_repair_ids": [
+        "r2"
+      ],
+      "total_cost": 22.0,
+      "budget_usage": 0.6321839080459769,
+      "accessibility_before": 822.0,
+      "accessibility_after": 868.5,
+      "delta_a": 46.5,
+      "gain_per_budget": 1.336206896551724,
+      "gain_per_spend": 2.1136363636363638,
+      "delta_a_by_profile": {
+        "wheelchair": 46.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.2,
+      "method": "exhaustive",
+      "budget": 34.800000000000004,
+      "status": "ok",
+      "runtime_s": 0.05863837501965463,
+      "error": null,
+      "selected_repair_ids": [
+        "r2"
+      ],
+      "total_cost": 22.0,
+      "budget_usage": 0.6321839080459769,
+      "accessibility_before": 822.0,
+      "accessibility_after": 868.5,
+      "delta_a": 46.5,
+      "gain_per_budget": 1.336206896551724,
+      "gain_per_spend": 2.1136363636363638,
+      "delta_a_by_profile": {
+        "wheelchair": 46.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.5,
+      "method": "B0",
+      "budget": 87.0,
+      "status": "ok",
+      "runtime_s": 0.0010592499747872353,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r3",
+        "r4",
+        "r5"
+      ],
+      "total_cost": 80.0,
+      "budget_usage": 0.9195402298850575,
+      "accessibility_before": 822.0,
+      "accessibility_after": 853.0,
+      "delta_a": 31.0,
+      "gain_per_budget": 0.3563218390804598,
+      "gain_per_spend": 0.3875,
+      "delta_a_by_profile": {
+        "wheelchair": 31.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.5
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.5,
+      "method": "B1",
+      "budget": 87.0,
+      "status": "ok",
+      "runtime_s": 0.0010435839649289846,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r4",
+        "r6",
+        "r7"
+      ],
+      "total_cost": 85.0,
+      "budget_usage": 0.9770114942528736,
+      "accessibility_before": 822.0,
+      "accessibility_after": 868.5,
+      "delta_a": 46.5,
+      "gain_per_budget": 0.5344827586206896,
+      "gain_per_spend": 0.5470588235294118,
+      "delta_a_by_profile": {
+        "wheelchair": 46.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.25
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.5,
+      "method": "B2",
+      "budget": 87.0,
+      "status": "ok",
+      "runtime_s": 0.001130750053562224,
+      "error": null,
+      "selected_repair_ids": [
+        "r0",
+        "r4",
+        "r6",
+        "r7"
+      ],
+      "total_cost": 85.0,
+      "budget_usage": 0.9770114942528736,
+      "accessibility_before": 822.0,
+      "accessibility_after": 868.5,
+      "delta_a": 46.5,
+      "gain_per_budget": 0.5344827586206896,
+      "gain_per_spend": 0.5470588235294118,
+      "delta_a_by_profile": {
+        "wheelchair": 46.5,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.25
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.5,
+      "method": "B3",
+      "budget": 87.0,
+      "status": "ok",
+      "runtime_s": 0.07181683299131691,
+      "error": null,
+      "selected_repair_ids": [
+        "r2",
+        "r3"
+      ],
+      "total_cost": 42.0,
+      "budget_usage": 0.4827586206896552,
+      "accessibility_before": 822.0,
+      "accessibility_after": 884.0,
+      "delta_a": 62.0,
+      "gain_per_budget": 0.7126436781609196,
+      "gain_per_spend": 1.4761904761904763,
+      "delta_a_by_profile": {
+        "wheelchair": 62.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    },
+    {
+      "case": "grid_4x4_c1",
+      "seed": 4,
+      "budget_fraction": 0.5,
+      "method": "exhaustive",
+      "budget": 87.0,
+      "status": "ok",
+      "runtime_s": 0.4321177499368787,
+      "error": null,
+      "selected_repair_ids": [
+        "r2",
+        "r3"
+      ],
+      "total_cost": 42.0,
+      "budget_usage": 0.4827586206896552,
+      "accessibility_before": 822.0,
+      "accessibility_after": 884.0,
+      "delta_a": 62.0,
+      "gain_per_budget": 0.7126436781609196,
+      "gain_per_spend": 1.4761904761904763,
+      "delta_a_by_profile": {
+        "wheelchair": 62.0,
+        "low_vision": 0.0,
+        "pedestrian": 0.0
+      },
+      "optimality_gap": 0.0
+    }
+  ]
+}

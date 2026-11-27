@@ -1,0 +1,183 @@
+{
+  "dataset": "corridor",
+  "synthetic": true,
+  "budget": 20.0,
+  "total_repair_cost": 20.0,
+  "accessibility_before": 10.0,
+  "cost_perturbation_fraction": 0.3,
+  "engine_version": "0.1.0",
+  "network": {
+    "nodes": [
+      {
+        "id": "a",
+        "x_m": 0.0,
+        "y_m": 0.0
+      },
+      {
+        "id": "b",
+        "x_m": 25.0,
+        "y_m": 0.0
+      },
+      {
+        "id": "c",
+        "x_m": 50.0,
+        "y_m": 0.0
+      }
+    ],
+    "edges": [
+      {
+        "id": "e0",
+        "u": "a",
+        "v": "b",
+        "length_m": 25.0
+      },
+      {
+        "id": "e1",
+        "u": "b",
+        "v": "c",
+        "length_m": 25.0
+      }
+    ],
+    "barriers": [
+      {
+        "id": "b0",
+        "edge_id": "e0",
+        "node_id": null,
+        "type": "step",
+        "severity": 3
+      },
+      {
+        "id": "b1",
+        "edge_id": "e1",
+        "node_id": null,
+        "type": "step",
+        "severity": 3
+      }
+    ],
+    "repairs": [
+      {
+        "id": "r0",
+        "barrier_ids": ["b0"],
+        "cost": 10.0
+      },
+      {
+        "id": "r1",
+        "barrier_ids": ["b1"],
+        "cost": 10.0
+      }
+    ],
+    "origins": [
+      {
+        "id": "home",
+        "node_id": "a",
+        "weight": 10.0,
+        "group": "corridor"
+      }
+    ],
+    "destinations": [
+      {
+        "id": "clinic",
+        "node_id": "c",
+        "category": "health",
+        "weight": 2.0
+      }
+    ],
+    "profiles": [
+      {
+        "id": "wheelchair",
+        "weight": 0.5,
+        "impassable_types": ["step"],
+        "threshold_m": 100.0
+      },
+      {
+        "id": "pedestrian",
+        "weight": 0.5,
+        "impassable_types": [],
+        "threshold_m": 100.0
+      }
+    ]
+  },
+  "plans": [
+    {
+      "method": "exhaustive",
+      "selected_repair_ids": ["r0", "r1"],
+      "total_cost": 20.0,
+      "accessibility_after": 20.0,
+      "delta_a": 10.0,
+      "delta_a_by_profile": {
+        "wheelchair": 10.0,
+        "pedestrian": 0.0
+      },
+      "delta_a_by_group": {
+        "corridor": 10.0
+      },
+      "optimality_proven": true,
+      "explanations": [
+        {
+          "repair_id": "r0",
+          "marginal_delta_a": 10.0,
+          "profiles_benefiting": ["wheelchair"],
+          "destination_categories": ["health"],
+          "complementary_repair_ids": ["r1"],
+          "stable_under_cost_perturbation": false
+        },
+        {
+          "repair_id": "r1",
+          "marginal_delta_a": 10.0,
+          "profiles_benefiting": ["wheelchair"],
+          "destination_categories": ["health"],
+          "complementary_repair_ids": ["r0"],
+          "stable_under_cost_perturbation": false
+        }
+      ]
+    },
+    {
+      "method": "B3",
+      "selected_repair_ids": [],
+      "total_cost": 0.0,
+      "accessibility_after": 10.0,
+      "delta_a": 0.0,
+      "delta_a_by_profile": {
+        "wheelchair": 0.0,
+        "pedestrian": 0.0
+      },
+      "delta_a_by_group": {
+        "corridor": 0.0
+      },
+      "optimality_proven": false,
+      "explanations": []
+    },
+    {
+      "method": "B1",
+      "selected_repair_ids": ["r0", "r1"],
+      "total_cost": 20.0,
+      "accessibility_after": 20.0,
+      "delta_a": 10.0,
+      "delta_a_by_profile": {
+        "wheelchair": 10.0,
+        "pedestrian": 0.0
+      },
+      "delta_a_by_group": {
+        "corridor": 10.0
+      },
+      "optimality_proven": false,
+      "explanations": []
+    },
+    {
+      "method": "B2",
+      "selected_repair_ids": ["r0", "r1"],
+      "total_cost": 20.0,
+      "accessibility_after": 20.0,
+      "delta_a": 10.0,
+      "delta_a_by_profile": {
+        "wheelchair": 10.0,
+        "pedestrian": 0.0
+      },
+      "delta_a_by_group": {
+        "corridor": 10.0
+      },
+      "optimality_proven": false,
+      "explanations": []
+    }
+  ]
+}
