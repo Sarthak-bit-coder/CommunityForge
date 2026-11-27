@@ -1,29 +1,45 @@
 # CommunityForge
 
-Two community tools in one repo, side by side. Each folder runs on its own.
+One web app for a neighborhood: sidewalk accessibility barriers and repair planning, plus incident alerts and lost & found. The AccessForge web UI is the front end for both.
 
-| Folder | What it does | Stack |
+| Part | What it does | Stack |
 |---|---|---|
-| [`accessforge/`](accessforge/) | Map sidewalk accessibility barriers, have reviewers verify them, and pick the set of repairs that reconnects the most routes within a budget. | Next.js, FastAPI, PostGIS, NetworkX |
-| [`community/`](community/) | Neighborhood safety app: incident map, lost & found, local news, and alerts by email, SMS, WhatsApp and Telegram. | Flask, SQLite, Leaflet |
+| [`accessforge/apps/web`](accessforge/apps/web) | The web app. Barriers, repair planner and route analysis, plus the Neighborhood pages: incidents map, lost & found, updates, alerts and account. | Next.js, MapLibre |
+| [`accessforge/services/api`](accessforge/services/api) | Barrier reports, reviewer verification, repair planning, routing. | FastAPI, PostGIS, NetworkX |
+| [`community/`](community/) | Neighbor reports, lost & found, local news, and alerts by email, SMS, WhatsApp and Telegram. Also runs the bots, the news poller and the admin dashboard. | Flask, SQLite |
+
+The web app proxies `/api/*` to FastAPI and `/api/community/*` to Flask, so the browser only talks to one site.
 
 ## Run
 
-**AccessForge** (needs Python with uv, Node.js, PostgreSQL + PostGIS):
+Start all three (needs Node.js, Python with [uv](https://docs.astral.sh/uv/), and PostgreSQL + PostGIS):
 
 ```sh
-cd accessforge/services/api && uv sync --extra dev && uv run alembic upgrade head && uv run uvicorn accessforge_api.main:create_app --factory --port 8000
-cd accessforge/apps/web && npm install && npm run dev   # http://localhost:3000
-```
-
-**Community** (needs Python):
-
-```sh
+# 1. Community service: http://localhost:5000
 cd community
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 cp .env.example .env
-python app.py   # http://localhost:5000
+python app.py
+
+# 2. AccessForge API: http://localhost:8000
+cd accessforge/services/api && uv sync --extra dev && uv run alembic upgrade head && uv run uvicorn accessforge_api.main:create_app --factory --port 8000
+
+# 3. Web app: http://localhost:3000 (open this one)
+cd accessforge/apps/web && npm install && npm run dev
+```
+
+`API_BASE_URL` and `COMMUNITY_API_BASE_URL` in `accessforge/apps/web/.env` point the web app at the two services; they are read when Next starts or builds.
+
+Twilio's WhatsApp webhook and Google sign-in talk to the community service directly (port 5000 or its ngrok address), not through the web app. The admin dashboard is still the Flask page at `http://localhost:5000/admin`.
+
+## Tests
+
+```sh
+cd community && pip install pytest && python -m pytest tests
+cd accessforge/apps/web && npm run check && npm run build
+cd accessforge/services/engine && uv run pytest
+cd accessforge/services/api && uv run pytest
 ```
 
 Details are in each folder's README.

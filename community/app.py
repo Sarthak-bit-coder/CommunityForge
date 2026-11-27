@@ -50,7 +50,7 @@ mail = Mail(app)
 
 app.secret_key = os.environ.get('SECRET_KEY', 'supersecretkey')
 app.config['SESSION_TYPE'] = 'filesystem'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///reports.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///reports.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 UPLOAD_FOLDER = 'static/uploads'
@@ -423,29 +423,36 @@ def too_many(minutes):
     return f"Too many attempts. Please wait {minutes} minute{'s' if minutes != 1 else ''} and try again."
 
 
+def attempt_login(email, password):
+    """Check a password login with attempt limits. Returns (user, error, status)."""
+    email = (email or '').strip().lower()
+    keys = (f"email:{email}",)
+    wait = login_limiter.blocked(*keys) or ip_limiter.blocked(client_ip())
+    if wait:
+        return None, too_many(wait), 429
+    user = User.query.filter(db.func.lower(User.email) == email).first()
+    if user and user.check_password(password or ''):
+        login_limiter.clear(*keys)
+        return user, None, 200
+    login_limiter.hit(*keys)
+    ip_limiter.hit(client_ip())
+    if user and not user.password_hash:
+        return None, ("This account doesn't have a password yet. Use \"Forgot password\" below to set one, "
+                      "or sign in with Google using the same email."), 401
+    return None, "That email and password don't match.", 401
+
+
 @app.route('/login', methods=['GET', 'POST'])
 def login_page():
     error = None
     if request.method == 'POST':
-        email = (request.form.get('email') or '').strip().lower()
-        password = request.form.get('password') or ''
-        keys = (f"email:{email}",)
-        wait = login_limiter.blocked(*keys) or ip_limiter.blocked(client_ip())
-        if wait:
-            return render_template('login.html', error=too_many(wait)), 429
-        user = User.query.filter(db.func.lower(User.email) == email).first()
-        if user and user.check_password(password):
-            login_limiter.clear(*keys)
+        user, error, status = attempt_login(request.form.get('email'), request.form.get('password'))
+        if user:
             nxt = safe_next(url_for('reports_page'))
             log_in(user)
             return redirect(nxt)
-        login_limiter.hit(*keys)
-        ip_limiter.hit(client_ip())
-        if user and not user.password_hash:
-            error = ("This account doesn't have a password yet. Use \"Forgot password\" below to set one, "
-                     "or sign in with Google using the same email.")
-        else:
-            error = "That email and password don't match."
+        if status == 429:
+            return render_template('login.html', error=error), 429
     return render_template('login.html', error=error)
 
 
@@ -540,7 +547,7 @@ def password_error(password, confirm):
 
 def read_prefs(form):
     """Validate the phone + channel fields shared by signup and account pages."""
-    phone_raw = (form.get('phone') or '').strip()
+    phone_raw = str(form.get('phone') or '').strip()
     phone = notifications.normalize_phone(phone_raw) if phone_raw else None
     prefs = {"notify_email": bool(form.get('notify_email')),
              "notify_sms": bool(form.get('notify_sms')),
@@ -552,36 +559,62 @@ def read_prefs(form):
     return phone, prefs, None
 
 
+def create_user(form):
+    """Validate a signup form (HTML form or JSON) and save the member. Returns (user, error)."""
+    name = str(form.get('name') or '').strip()
+    email = str(form.get('email') or '').strip().lower()
+    zip_code = str(form.get('zip') or '').strip()
+    password = str(form.get('password') or '')
+    phone, prefs, error = read_prefs(form)
+
+    if not error and (not name or not email or not zip_code):
+        error = "Please fill in your name, email and ZIP code."
+    elif not error and not EMAIL_REGEX.match(email):
+        error = "That email doesn't look right."
+    elif not error and User.query.filter(db.func.lower(User.email) == email).first():
+        error = "An account with that email already exists. Try logging in."
+    if not error:
+        error = password_error(password, str(form.get('confirm') or ''))
+    if error:
+        return None, error
+    user = User(name=name, email=email, zip=zip_code, phone=phone, **prefs)
+    user.set_password(password)
+    db.session.add(user)
+    db.session.commit()
+    return user, None
+
+
 @app.route('/signup', methods=['GET', 'POST'])
 def signup_page():
     error = None
     form = {"notify_email": "on"}
     if request.method == 'POST':
         form = request.form
-        name = (form.get('name') or '').strip()
-        email = (form.get('email') or '').strip().lower()
-        zip_code = (form.get('zip') or '').strip()
-        password = form.get('password') or ''
-        phone, prefs, error = read_prefs(form)
-
-        if not error and (not name or not email or not zip_code):
-            error = "Please fill in your name, email and ZIP code."
-        elif not error and not EMAIL_REGEX.match(email):
-            error = "That email doesn't look right."
-        elif not error and User.query.filter(db.func.lower(User.email) == email).first():
-            error = "An account with that email already exists. Try logging in."
-        if not error:
-            error = password_error(password, form.get('confirm') or '')
-        if not error:
-            user = User(name=name, email=email, zip=zip_code, phone=phone, **prefs)
-            user.set_password(password)
-            db.session.add(user)
-            db.session.commit()
+        user, error = create_user(form)
+        if user:
             nxt = safe_next(url_for('home'))
             log_in(user)
-            flash("Welcome! You'll get alerts for ZIP " + zip_code + ".", "success")
+            flash("Welcome! You'll get alerts for ZIP " + user.zip + ".", "success")
             return redirect(nxt)
     return render_template('signup.html', error=error, form=form)
+
+
+def update_account(user, form):
+    """Save name, ZIP, phone and alert channels. Returns an error message or None."""
+    name = str(form.get('name') or '').strip()
+    zip_code = str(form.get('zip') or '').strip()
+    phone, prefs, error = read_prefs(form)
+    if not error and (not name or not zip_code):
+        error = "Name and ZIP code are required."
+    if error:
+        return error
+    user.name, user.zip, user.phone = name, zip_code, phone
+    for k, v in prefs.items():
+        setattr(user, k, v)
+    if user.telegram_chat_id:
+        user.notify_telegram = bool(form.get('notify_telegram'))
+    db.session.commit()
+    return None
 
 
 @app.route('/account', methods=['GET', 'POST'])
@@ -590,18 +623,8 @@ def account_page():
     user = current_user()
     error = None
     if request.method == 'POST':
-        name = (request.form.get('name') or '').strip()
-        zip_code = (request.form.get('zip') or '').strip()
-        phone, prefs, error = read_prefs(request.form)
-        if not error and (not name or not zip_code):
-            error = "Name and ZIP code are required."
+        error = update_account(user, request.form)
         if not error:
-            user.name, user.zip, user.phone = name, zip_code, phone
-            for k, v in prefs.items():
-                setattr(user, k, v)
-            if user.telegram_chat_id:
-                user.notify_telegram = bool(request.form.get('notify_telegram'))
-            db.session.commit()
             flash("Your settings were saved.", "success")
             return redirect(url_for('account_page'))
     return render_template('account.html', user=user, error=error,
@@ -837,31 +860,52 @@ def lost_found_new():
     form = {"kind": request.args.get('kind', 'lost'), "zip": user.zip or '', "radius_m": "300"}
     if request.method == 'POST':
         form = request.form
-        kind = form.get('kind')
-        title = (form.get('title') or '').strip()
-        category = form.get('category')
-        description = (form.get('description') or '').strip()
-        zip_code = (form.get('zip') or '').strip()
-        if kind not in ('lost', 'found') or not title or not description or not zip_code \
-                or category not in ITEM_CATEGORIES:
-            error = "Please fill in every required field."
-        else:
-            radius = int(form.get('radius_m') or 300)
-            item = create_lost_item(
-                user, kind, title, category, description, zip_code,
-                place=(form.get('place') or '').strip() or None, seen_on=form.get("seen_on") or None,
-                image_url=save_upload(request.files.get('image')),
-                lat=to_float(form.get('lat')), lng=to_float(form.get('lng')),
-                radius_m=radius if radius in (100, 300, 1000) else 300)
+        item, error = lost_item_from_form(user, form, request.files.get('image'))
+        if item:
             flash("Your post is live. Neighbors have been notified.", "success")
             return redirect(url_for('lost_found_detail', id=item.id))
     return render_template('lost_found_new.html', form=form, error=error, categories=ITEM_CATEGORIES)
+
+
+def lost_item_from_form(user, form, image):
+    """Validate a lost/found post form and save it. Returns (item, error)."""
+    kind = form.get('kind')
+    title = (form.get('title') or '').strip()
+    category = form.get('category')
+    description = (form.get('description') or '').strip()
+    zip_code = (form.get('zip') or '').strip()
+    if kind not in ('lost', 'found') or not title or not description or not zip_code \
+            or category not in ITEM_CATEGORIES:
+        return None, "Please fill in every required field."
+    try:
+        radius = int(form.get('radius_m') or 300)
+    except ValueError:
+        radius = 300
+    item = create_lost_item(
+        user, kind, title, category, description, zip_code,
+        place=(form.get('place') or '').strip() or None, seen_on=form.get("seen_on") or None,
+        image_url=save_upload(image),
+        lat=to_float(form.get('lat')), lng=to_float(form.get('lng')),
+        radius_m=radius if radius in (100, 300, 1000) else 300)
+    return item, None
 
 
 @app.route('/lost-found/<int:id>')
 def lost_found_detail(id):
     item = db.session.get(LostItem, id) or abort(404)
     return render_template('lost_found_detail.html', item=item)
+
+
+def contact_poster(item, user, message):
+    """Send the poster the neighbor's message and contact details."""
+    contact = f"{user.name} — {user.email}" + (f", {user.phone}" if user.phone else "")
+    if item.kind == 'lost':
+        title = f"Good news! Someone may have found your {item.title.lower()}"
+    else:
+        title = f"Someone says the {item.title.lower()} you found is theirs"
+    notify([item.user], title,
+           (f'"{message}"\n\n' if message else '') + f"Contact them: {contact}",
+           link=f"/lost-found/{item.id}", kind='contact')
 
 
 @app.route('/lost-found/<int:id>/contact', methods=['POST'])
@@ -871,15 +915,7 @@ def lost_found_contact(id):
     user = current_user()
     if item.user_id == user.id or item.status != 'open':
         abort(400)
-    message = (request.form.get('message') or '').strip()
-    contact = f"{user.name} — {user.email}" + (f", {user.phone}" if user.phone else "")
-    if item.kind == 'lost':
-        title = f"Good news! Someone may have found your {item.title.lower()}"
-    else:
-        title = f"Someone says the {item.title.lower()} you found is theirs"
-    notify([item.user], title,
-           (f'"{message}"\n\n' if message else '') + f"Contact them: {contact}",
-           link=url_for('lost_found_detail', id=item.id), kind='contact')
+    contact_poster(item, user, (request.form.get('message') or '').strip())
     flash(f"We've sent your message and contact details to {item.user.first_name}.", "success")
     return redirect(url_for('lost_found_detail', id=item.id))
 
@@ -1417,6 +1453,211 @@ def admin_login():
 def admin_logout():
     session.pop('admin', None)
     return jsonify({"message": "Logged out"}), 200
+
+
+# ---------------------------------------------------------------- JSON API for the web app
+# accessforge/apps/web proxies /api/community/* to /api/*, so the session cookie stays same-origin.
+# Every write needs "X-Requested-With: fetch". Browsers only send a custom header cross-site after a
+# CORS preflight, and CORS(app) never allows credentials, so other sites can't use a member's cookie.
+
+def json_write(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        if request.headers.get('X-Requested-With') != 'fetch':
+            return jsonify({"error": "Missing X-Requested-With header."}), 400
+        return view(*args, **kwargs)
+    return wrapped
+
+
+def api_member(view):
+    @wraps(view)
+    def wrapped(*args, **kwargs):
+        if not current_user():
+            return jsonify({"error": "Please sign in first."}), 401
+        return view(*args, **kwargs)
+    return wrapped
+
+
+def json_body():
+    data = request.get_json(silent=True)
+    return data if isinstance(data, dict) else {}
+
+
+def user_json(user):
+    return {"name": user.name, "email": user.email, "zip": user.zip, "phone": user.phone,
+            "notify_email": bool(user.notify_email), "notify_sms": bool(user.notify_sms),
+            "notify_whatsapp": bool(user.notify_whatsapp), "notify_telegram": bool(user.notify_telegram),
+            "telegram_connected": bool(user.telegram_chat_id), "has_password": bool(user.password_hash)}
+
+
+def item_json(item, viewer=None):
+    # Posters are shown by first name only; contact details go out through contact_poster().
+    return {"id": item.id, "kind": item.kind, "title": item.title, "category": item.category,
+            "description": item.description, "zip": item.zip, "place": item.place,
+            "seen_on": item.seen_on, "image_url": item.image_url, "lat": item.lat, "lng": item.lng,
+            "radius_m": item.radius_m or 300, "status": item.status, "created_at": iso(item.created_at),
+            "poster": "A neighbor" if item.user.email == BOT_EMAIL else item.user.first_name,
+            "is_mine": bool(viewer and viewer.id == item.user_id)}
+
+
+@app.route('/api/me')
+def api_me():
+    user = current_user()
+    unread = Notification.query.filter_by(user_id=user.id, read=False).count() if user else 0
+    return jsonify({"user": user_json(user) if user else None, "unread": unread,
+                    "channels": notifications.channel_status(app),
+                    "google_enabled": google_configured(),
+                    "categories": CATEGORY_LABELS, "item_categories": ITEM_CATEGORIES})
+
+
+@app.route('/api/signup', methods=['POST'])
+@json_write
+def api_signup():
+    user, error = create_user(json_body())
+    if error:
+        return jsonify({"error": error}), 400
+    log_in(user)
+    return jsonify({"user": user_json(user)}), 201
+
+
+@app.route('/api/login', methods=['POST'])
+@json_write
+def api_login():
+    data = json_body()
+    user, error, status = attempt_login(str(data.get('email') or ''), str(data.get('password') or ''))
+    if not user:
+        return jsonify({"error": error}), status
+    log_in(user)
+    return jsonify({"user": user_json(user)})
+
+
+@app.route('/api/logout', methods=['POST'])
+@json_write
+def api_logout():
+    session.pop('user_email', None)
+    session.pop('email', None)
+    return jsonify({"message": "Signed out."})
+
+
+@app.route('/api/account', methods=['PUT'])
+@json_write
+@api_member
+def api_account():
+    user = current_user()
+    error = update_account(user, json_body())
+    if error:
+        return jsonify({"error": error}), 400
+    return jsonify({"user": user_json(user)})
+
+
+@app.route('/api/account/telegram', methods=['POST'])
+@json_write
+@api_member
+def api_account_telegram():
+    """connect: returns the bot link with a one-time code. disconnect: forgets the chat."""
+    user = current_user()
+    if json_body().get('action') == 'disconnect':
+        user.telegram_chat_id, user.notify_telegram, user.telegram_link_code = None, False, None
+        db.session.commit()
+        return jsonify({"user": user_json(user)})
+    name = telegram_bot.bot_username() if telegram_bot.configured() else None
+    if not name:
+        return jsonify({"error": "The Telegram bot isn't set up on this server yet."}), 503
+    user.telegram_link_code = secrets.token_urlsafe(16)
+    db.session.commit()
+    return jsonify({"url": f"https://t.me/{name}?start={user.telegram_link_code}"})
+
+
+@app.route('/api/account/test', methods=['POST'])
+@json_write
+@api_member
+def api_account_test():
+    notify([current_user()], "Test notification",
+           "If you can read this, your Neighborhood Watch alerts are working.",
+           link="/notifications", kind='info')
+    return jsonify({"message": "Test notification sent to your enabled channels."})
+
+
+@app.route('/api/notifications')
+@api_member
+def api_notifications():
+    user = current_user()
+    items = (Notification.query.filter_by(user_id=user.id)
+             .order_by(Notification.created_at.desc()).limit(100).all())
+    data = [{"id": n.id, "kind": n.kind, "title": n.title, "body": n.body, "link": n.link,
+             "read": bool(n.read), "created_at": iso(n.created_at)} for n in items]
+    # Same as the HTML inbox: opening it marks everything read.
+    Notification.query.filter_by(user_id=user.id, read=False).update({"read": True})
+    db.session.commit()
+    return jsonify(data)
+
+
+@app.route('/api/lost-found')
+def api_lost_found():
+    q = LostItem.query
+    kind = request.args.get('kind')
+    zip_code = (request.args.get('zip') or '').strip()
+    if kind in ('lost', 'found'):
+        q = q.filter_by(kind=kind)
+    if zip_code:
+        q = q.filter_by(zip=zip_code)
+    if request.args.get('closed') != '1':
+        q = q.filter_by(status='open')
+    viewer = current_user()
+    return jsonify([item_json(i, viewer) for i in q.order_by(LostItem.created_at.desc()).limit(200)])
+
+
+@app.route('/api/lost-found', methods=['POST'])
+@json_write
+@api_member
+def api_lost_found_create():
+    item, error = lost_item_from_form(current_user(), request.form, request.files.get('image'))
+    if error:
+        return jsonify({"error": error}), 400
+    return jsonify(item_json(item, current_user())), 201
+
+
+@app.route('/api/lost-found/<int:id>')
+def api_lost_found_item(id):
+    item = db.session.get(LostItem, id)
+    if not item:
+        return jsonify({"error": "Post not found."}), 404
+    return jsonify(item_json(item, current_user()))
+
+
+@app.route('/api/lost-found/<int:id>/contact', methods=['POST'])
+@json_write
+@api_member
+def api_lost_found_contact(id):
+    item = db.session.get(LostItem, id)
+    if not item:
+        return jsonify({"error": "Post not found."}), 404
+    user = current_user()
+    if item.user_id == user.id or item.status != 'open':
+        return jsonify({"error": "You can't contact this poster."}), 400
+    contact_poster(item, user, str(json_body().get('message') or '').strip()[:1000])
+    return jsonify({"message": f"We've sent your message and contact details to {item.user.first_name}."})
+
+
+@app.route('/api/lost-found/<int:id>/close', methods=['POST'])
+@json_write
+@api_member
+def api_lost_found_close(id):
+    item = db.session.get(LostItem, id)
+    if not item:
+        return jsonify({"error": "Post not found."}), 404
+    if item.user_id != current_user().id and not session.get('admin'):
+        return jsonify({"error": "Only the poster can close this."}), 403
+    item.status = 'closed'
+    db.session.commit()
+    return jsonify(item_json(item, current_user()))
+
+
+@app.route('/api/updates')
+def api_updates():
+    items = Announcement.query.filter_by(active=True).order_by(Announcement.created_at.desc()).all()
+    return jsonify([{"id": a.id, "title": a.title, "body": a.body, "priority": a.priority,
+                     "zip": a.zip, "author": a.author, "created_at": iso(a.created_at)} for a in items])
 
 
 if __name__ == '__main__':

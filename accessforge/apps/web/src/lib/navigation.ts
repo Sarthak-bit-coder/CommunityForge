@@ -1,4 +1,10 @@
-export const NAV_GROUPS = ["Start", "Community", "Review and plan", "About the pilot"] as const;
+export const NAV_GROUPS = [
+  "Start",
+  "Community",
+  "Neighborhood",
+  "Review and plan",
+  "About the pilot",
+] as const;
 export type NavGroup = (typeof NAV_GROUPS)[number];
 
 export type NavItem = {
@@ -36,6 +42,39 @@ export const NAV_ITEMS: readonly NavItem[] = [
     label: "Community Trips",
     description:
       "Nominate a trip between public Fremont landmarks and explore trips saved by the community.",
+  },
+  {
+    href: "/incidents",
+    group: "Neighborhood",
+    label: "Incidents",
+    description:
+      "Crashes, fires, hazards and break-ins reported by neighbors and local news, on a map.",
+    heading: "What's happening nearby",
+  },
+  {
+    href: "/lost-found",
+    group: "Neighborhood",
+    label: "Lost and found",
+    description: "Post a lost or found item. Neighbors in the ZIP code get an alert.",
+  },
+  {
+    href: "/updates",
+    group: "Neighborhood",
+    label: "Updates",
+    description: "Announcements from neighborhood admins.",
+  },
+  {
+    href: "/notifications",
+    group: "Neighborhood",
+    label: "Alerts",
+    description: "Every alert sent to you, also delivered by email, SMS, WhatsApp or Telegram.",
+    heading: "Your alerts",
+  },
+  {
+    href: "/account",
+    group: "Neighborhood",
+    label: "Account",
+    description: "Sign in, set your ZIP code, and choose how you get alerts.",
   },
   {
     href: "/verify",
