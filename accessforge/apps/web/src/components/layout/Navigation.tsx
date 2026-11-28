@@ -136,7 +136,7 @@ function SectionSwitch({
   return (
     <ul
       aria-label="Sections"
-      className="mb-4 grid grid-cols-2 gap-1 rounded-xl bg-sidebar-raised/60 p-1"
+      className="mb-4 grid grid-cols-2 gap-1 rounded-xl border border-sidebar-muted/25 p-1"
     >
       {NAV_SECTIONS.map((section) => {
         const isCurrent = section.id === current;
@@ -146,10 +146,11 @@ function SectionSwitch({
               href={section.href}
               aria-current={pathname === section.href ? "page" : isCurrent ? "true" : undefined}
               onClick={onNavigate}
+              // Same look as a current sidebar link: raised navy with the yellow marker.
               className={`flex min-h-11 items-center justify-center rounded-lg px-2 font-semibold transition-colors duration-150 ${
                 isCurrent
-                  ? "bg-sidebar-ink text-sidebar"
-                  : "text-sidebar-muted hover:bg-sidebar-raised hover:text-sidebar-ink"
+                  ? "bg-sidebar-raised text-sidebar-ink shadow-[inset_0_-3px_0_var(--color-sidebar-accent)]"
+                  : "text-sidebar-muted hover:bg-sidebar-raised/60 hover:text-sidebar-ink"
               }`}
             >
               {section.label}
