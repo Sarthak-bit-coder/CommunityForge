@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Post a lost or found item" };
 export default function Page() {
   return (
     <>
-      <PageHeader title="Post a lost or found item" eyebrow="Neighborhood">
+      <PageHeader title="Post a lost or found item" eyebrow="Community">
         Neighbors in the ZIP code get an alert, and owners of matching lost items hear about found
         ones.
       </PageHeader>

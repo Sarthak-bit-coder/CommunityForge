@@ -18,6 +18,8 @@ export type Session = {
   readonly user: Member | null;
   readonly unread: number;
   readonly channels: Readonly<Record<"email" | "sms" | "whatsapp" | "telegram", boolean>>;
+  /** The WhatsApp bot's number, or null when the bot isn't set up. */
+  readonly whatsapp_bot: string | null;
   readonly google_enabled: boolean;
   /** Incident category key -> label. */
   readonly categories: Readonly<Record<string, string>>;

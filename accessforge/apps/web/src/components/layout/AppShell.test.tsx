@@ -42,6 +42,23 @@ describe("AppShell", () => {
     expect(within(nav).getByRole("link", { name: "Overview" })).not.toHaveAttribute("aria-current");
   });
 
+  it("shows only the Community side's pages on a community page", () => {
+    pathname.current = "/incidents";
+    render(<AppShell>content</AppShell>);
+
+    const nav = screen.getByRole("navigation", { name: "Main" });
+    const sections = within(nav).getByRole("list", { name: "Sections" });
+    expect(within(sections).getByRole("link", { name: "Community" })).toHaveAttribute(
+      "aria-current",
+      "true",
+    );
+    expect(within(nav).getByRole("link", { name: "Incidents" })).toHaveAttribute(
+      "aria-current",
+      "page",
+    );
+    expect(within(nav).queryByRole("link", { name: "Barriers" })).toBeNull();
+  });
+
   it("toggles the mobile menu and closes it with Escape", async () => {
     const user = userEvent.setup();
     render(<AppShell>content</AppShell>);

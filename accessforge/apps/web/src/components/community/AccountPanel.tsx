@@ -261,6 +261,29 @@ export function AccountPanel() {
           Save settings
         </button>
       </form>
+      <section aria-label="WhatsApp bot" className="af-panel space-y-3 p-5">
+        <h2 className="text-lg font-semibold text-ink">WhatsApp bot</h2>
+        {session.whatsapp_bot ? (
+          <>
+            <p className="text-muted">
+              Message {session.whatsapp_bot} to post an incident or a lost or found item, or forward
+              messages from your neighborhood group. Messages from the phone number on your account
+              are posted as you.
+            </p>
+            <a
+              href={`https://wa.me/${session.whatsapp_bot.replace(/\D/g, "")}`}
+              className="af-button-secondary inline-flex"
+            >
+              Message the bot on WhatsApp
+            </a>
+          </>
+        ) : (
+          <p className="text-muted">
+            The WhatsApp bot isn&apos;t set up on this server yet. It turns on once an admin adds
+            the Twilio WhatsApp settings.
+          </p>
+        )}
+      </section>
       <section aria-label="Telegram" className="af-panel space-y-3 p-5">
         <h2 className="text-lg font-semibold text-ink">Telegram (free alerts)</h2>
         {user.telegram_connected ? (
