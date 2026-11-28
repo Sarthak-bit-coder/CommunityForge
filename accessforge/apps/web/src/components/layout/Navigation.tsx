@@ -25,6 +25,11 @@ const NAV_ICONS: Record<string, readonly string[]> = {
     "M6 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
     "M8 19h7.5a3.5 3.5 0 0 0 0-7h-7a3.5 3.5 0 0 1 0-7H16",
   ],
+  "/incidents": ["M12 3 2 20h20z", "M12 10v4M12 17.5v.5"],
+  "/lost-found": ["M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14z", "M16 16l5 5"],
+  "/updates": ["M4 10v4h3l6 4V6L7 10z", "M17 9a4 4 0 0 1 0 6"],
+  "/notifications": ["M6 16V11a6 6 0 0 1 12 0v5l2 2H4z", "M10 20a2 2 0 0 0 4 0"],
+  "/account": ["M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z", "M4 21a8 8 0 0 1 16 0"],
   "/pilot": ["M3 21h18", "M6 17v-6M11 17V5M16 17v-9M21 17v-3"],
   "/accessibility": [
     "M12 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z",
