@@ -60,6 +60,8 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  // The dev-only "N" badge sat on top of the sidebar links.
+  devIndicators: false,
   cacheComponents: true,
   partialPrefetching: true,
   turbopack: {

@@ -1,11 +1,39 @@
+/** The site is two apps in one: neighborhood issues, and accessible-route issues. */
+export const NAV_SECTIONS = [
+  {
+    id: "community",
+    label: "Community",
+    href: "/community",
+    description: "Incidents, lost and found, updates and alerts for your neighborhood.",
+  },
+  {
+    id: "routes",
+    label: "Routes",
+    href: "/routes",
+    description: "Sidewalk barriers, repair planning and route analysis for the Fremont pilot.",
+  },
+] as const;
+export type NavSectionId = (typeof NAV_SECTIONS)[number]["id"];
+
 export const NAV_GROUPS = [
   "Start",
-  "Community",
   "Neighborhood",
+  "You",
+  "Barriers",
   "Review and plan",
   "About the pilot",
 ] as const;
 export type NavGroup = (typeof NAV_GROUPS)[number];
+
+/** Which section's sidebar shows each group. */
+export const GROUP_SECTION: Record<NavGroup, NavSectionId> = {
+  Start: "routes",
+  Neighborhood: "community",
+  You: "community",
+  Barriers: "routes",
+  "Review and plan": "routes",
+  "About the pilot": "routes",
+};
 
 export type NavItem = {
   readonly href: string;
@@ -26,19 +54,19 @@ export const NAV_ITEMS: readonly NavItem[] = [
   },
   {
     href: "/barriers",
-    group: "Community",
+    group: "Barriers",
     label: "Barriers",
     description: "Known sidewalk barriers in the pilot area, as a list and a map.",
   },
   {
     href: "/report",
-    group: "Community",
+    group: "Barriers",
     label: "Report a barrier",
     description: "Tell us about a barrier you found.",
   },
   {
     href: "/trips",
-    group: "Community",
+    group: "Barriers",
     label: "Community Trips",
     description:
       "Nominate a trip between public Fremont landmarks and explore trips saved by the community.",
@@ -65,14 +93,14 @@ export const NAV_ITEMS: readonly NavItem[] = [
   },
   {
     href: "/notifications",
-    group: "Neighborhood",
+    group: "You",
     label: "Alerts",
     description: "Every alert sent to you, also delivered by email, SMS, WhatsApp or Telegram.",
     heading: "Your alerts",
   },
   {
     href: "/account",
-    group: "Neighborhood",
+    group: "You",
     label: "Account",
     description: "Sign in, set your ZIP code, and choose how you get alerts.",
   },
@@ -89,7 +117,7 @@ export const NAV_ITEMS: readonly NavItem[] = [
     description: "Compare which repairs to fund first within a budget.",
   },
   {
-    href: "/routes",
+    href: "/routes/analysis",
     group: "Review and plan",
     label: "Route analysis",
     description: "Check a modeled route for a traveler, and what recommended repairs change.",
@@ -112,6 +140,13 @@ export function findNavItem(href: string): NavItem {
   const item = NAV_ITEMS.find((candidate) => candidate.href === href);
   if (!item) throw new Error(`No navigation item for ${href}`);
   return item;
+}
+
+/** The section a page belongs to; pages outside the list (and section homes) fall back sensibly. */
+export function sectionFor(pathname: string): NavSectionId {
+  if (isCurrentPath(pathname, "/community")) return "community";
+  const item = NAV_ITEMS.find((candidate) => isCurrentPath(pathname, candidate.href));
+  return item ? GROUP_SECTION[item.group] : "routes";
 }
 
 export function isCurrentPath(pathname: string, href: string): boolean {

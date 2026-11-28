@@ -13,7 +13,7 @@ export default function Page({
 }) {
   return (
     <>
-      <PageHeader title="Lost and found post" eyebrow="Neighborhood" />
+      <PageHeader title="Lost and found post" eyebrow="Community" />
       <Suspense fallback={<p role="status">Loading post…</p>}>
         {searchParams.then(({ id }) =>
           typeof id === "string" && /^\d+$/.test(id) ? (

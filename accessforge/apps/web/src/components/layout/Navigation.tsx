@@ -6,7 +6,15 @@ import { AnimatePresence, domMax, m } from "motion/react";
 import { useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { MotionRoot } from "@/components/motion/MotionRoot";
 import { MOTION_EXIT_TRANSITION, MOTION_SPRING } from "@/components/motion/motion-tokens";
-import { NAV_GROUPS, NAV_ITEMS, isCurrentPath, type NavGroup } from "@/lib/navigation";
+import {
+  GROUP_SECTION,
+  NAV_GROUPS,
+  NAV_ITEMS,
+  NAV_SECTIONS,
+  isCurrentPath,
+  sectionFor,
+  type NavGroup,
+} from "@/lib/navigation";
 
 const NAV_LIST_ID = "primary-nav-list";
 
@@ -21,7 +29,7 @@ const NAV_ICONS: Record<string, readonly string[]> = {
   "/trips": ["M5 7h12l-3-3m3 3-3 3M19 17H7l3-3m-3 3 3 3"],
   "/verify": ["M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z", "M9 12l2 2 4-4"],
   "/planner": ["M9 3h6v3H9z", "M7 4.5H5v16.5h14V4.5h-2", "M9 13l2 2 4-4"],
-  "/routes": [
+  "/routes/analysis": [
     "M6 21a2 2 0 1 0 0-4 2 2 0 0 0 0 4zM18 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4z",
     "M8 19h7.5a3.5 3.5 0 0 0 0-7h-7a3.5 3.5 0 0 1 0-7H16",
   ],
@@ -76,6 +84,7 @@ export function Navigation({ brand }: { readonly brand: ReactNode }) {
         </button>
       </div>
       <nav aria-label="Main" className="px-3 pb-3 lg:pt-2">
+        <SectionSwitch pathname={pathname} onNavigate={() => setIsOpen(false)} />
         <MotionRoot features={domMax}>
           {/* Wide screens: always rendered (server-rendered links). display:none hides it on phones. */}
           <div className="hidden lg:block">
@@ -115,22 +124,63 @@ type NavListProps = {
   readonly onNavigate: () => void;
 };
 
+// Two apps in one site: the switch picks Community or Routes, and the sidebar lists only that side.
+function SectionSwitch({
+  pathname,
+  onNavigate,
+}: {
+  readonly pathname: string;
+  readonly onNavigate: () => void;
+}) {
+  const current = sectionFor(pathname);
+  return (
+    <ul
+      aria-label="Sections"
+      className="mb-4 grid grid-cols-2 gap-1 rounded-xl bg-sidebar-raised/60 p-1"
+    >
+      {NAV_SECTIONS.map((section) => {
+        const isCurrent = section.id === current;
+        return (
+          <li key={section.id}>
+            <Link
+              href={section.href}
+              aria-current={pathname === section.href ? "page" : isCurrent ? "true" : undefined}
+              onClick={onNavigate}
+              className={`flex min-h-11 items-center justify-center rounded-lg px-2 font-semibold transition-colors duration-150 ${
+                isCurrent
+                  ? "bg-sidebar-ink text-sidebar"
+                  : "text-sidebar-muted hover:bg-sidebar-raised hover:text-sidebar-ink"
+              }`}
+            >
+              {section.label}
+            </Link>
+          </li>
+        );
+      })}
+    </ul>
+  );
+}
+
 function NavGroups(props: NavListProps) {
-  return NAV_GROUPS.map((group) => <NavSection key={group} group={group} {...props} />);
+  const section = sectionFor(props.pathname);
+  return NAV_GROUPS.filter((group) => GROUP_SECTION[group] === section).map((group, index) => (
+    <NavSection key={group} group={group} isFirst={index === 0} {...props} />
+  ));
 }
 
 function NavSection({
   group,
+  isFirst,
   idPrefix,
   pathname,
   onNavigate,
-}: NavListProps & { readonly group: NavGroup }) {
+}: NavListProps & { readonly group: NavGroup; readonly isFirst: boolean }) {
   const items = NAV_ITEMS.filter((item) => item.group === group);
   const headingId = `${idPrefix}-group-${group.toLowerCase().replaceAll(" ", "-")}`;
-  // The first group is the overview alone; a visible label there would be noise.
-  const isStart = group === NAV_GROUPS[0];
+  // The Start group is the overview alone; a visible label there would be noise.
+  const isStart = group === "Start";
   return (
-    <div className={isStart ? "" : "mt-5"}>
+    <div className={isFirst ? "" : "mt-5"}>
       <p
         id={headingId}
         className={

@@ -34,6 +34,7 @@ const session = (user: Member | null): Session => ({
   unread: 0,
   channels: { email: true, sms: false, whatsapp: false, telegram: true },
   google_enabled: false,
+  whatsapp_bot: null,
   categories: { fire: "Fire", other: "Other" },
   item_categories: ["Pet", "Keys"],
 });
@@ -434,6 +435,18 @@ describe("AccountPanel", () => {
     expect(sent(fetch, "/login")?.[1].body).toBe(
       '{"email":"ana@example.com","password":"longpass1"}',
     );
+  });
+
+  it("links members to the WhatsApp bot once it is set up", async () => {
+    serve({ path: "/me", body: session(MEMBER) });
+    const { unmount } = render(<AccountPanel />);
+    expect(await screen.findByText(/WhatsApp bot isn't set up/)).toBeVisible();
+    unmount();
+    serve({ path: "/me", body: { ...session(MEMBER), whatsapp_bot: "+1 415 523 8886" } });
+    render(<AccountPanel />);
+    expect(
+      await screen.findByRole("link", { name: "Message the bot on WhatsApp" }),
+    ).toHaveAttribute("href", "https://wa.me/14155238886");
   });
 
   it("creates an account with alert choices", async () => {

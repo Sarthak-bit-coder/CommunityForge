@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: item.label };
 export default function Page() {
   return (
     <>
-      <PageHeader title={item.heading ?? item.label} eyebrow="Neighborhood">
+      <PageHeader title={item.heading ?? item.label} eyebrow="Community">
         {item.description}
       </PageHeader>
       <NotificationsList />

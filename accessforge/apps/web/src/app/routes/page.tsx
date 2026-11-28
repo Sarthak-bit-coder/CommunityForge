@@ -1,20 +1,8 @@
 import type { Metadata } from "next";
-import { RouteAnalysis } from "@/components/routing/RouteAnalysis";
-import { PageHeader } from "@/components/ui/PageHeader";
-import { findNavItem } from "@/lib/navigation";
+import { SectionHome } from "@/components/layout/SectionHome";
 
-const item = findNavItem("/routes");
-
-export const metadata: Metadata = { title: item.label };
+export const metadata: Metadata = { title: "Route issues" };
 
 export default function Page() {
-  return (
-    <>
-      <PageHeader title={item.label}>
-        Pick a start, an end and a traveler profile. See whether a modeled route exists, which
-        recorded barriers affect it, and what the recommended repairs would change.
-      </PageHeader>
-      <RouteAnalysis />
-    </>
-  );
+  return <SectionHome id="routes" />;
 }

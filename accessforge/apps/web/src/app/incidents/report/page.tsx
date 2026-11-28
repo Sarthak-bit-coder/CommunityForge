@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: "Report an incident" };
 export default function Page() {
   return (
     <>
-      <PageHeader title="Report an incident" eyebrow="Neighborhood">
+      <PageHeader title="Report an incident" eyebrow="Community">
         Crashes, fires, break-ins, hazards: neighbors in the ZIP code get an alert.
       </PageHeader>
       <IncidentForm />

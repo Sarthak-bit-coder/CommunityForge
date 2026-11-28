@@ -1541,6 +1541,9 @@ def api_me():
     unread = Notification.query.filter_by(user_id=user.id, read=False).count() if user else 0
     return jsonify({"user": user_json(user) if user else None, "unread": unread,
                     "channels": notifications.channel_status(app),
+                    # The bot's number, so members can message it; None until Twilio WhatsApp is set up.
+                    "whatsapp_bot": (os.environ.get('TWILIO_WHATSAPP_FROM')
+                                     if notifications.twilio_configured("whatsapp") else None),
                     "google_enabled": google_configured(),
                     "categories": CATEGORY_LABELS, "item_categories": ITEM_CATEGORIES})
 
