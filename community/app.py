@@ -13,8 +13,7 @@ import uuid
 from markupsafe import escape
 
 from flask import (Flask, render_template, request, jsonify, session, redirect,
-                   current_app, url_for, flash, abort, has_request_context)
-from flask_cors import CORS
+                   current_app, url_for, flash, abort)
 from flask_session import Session
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail
@@ -24,6 +23,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 import pyotp
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 import requests
+from sqlalchemy.exc import IntegrityError
 
 try:  # optional: load settings from a .env file if python-dotenv is installed
     from dotenv import load_dotenv
@@ -48,21 +48,28 @@ app.config.update(
 )
 mail = Mail(app)
 
-app.secret_key = os.environ.get('SECRET_KEY', 'supersecretkey')
+# No default: a known key would let anyone sign password-reset links.
+app.secret_key = os.environ.get('SECRET_KEY', '')
+if len(app.secret_key) < 16 or app.secret_key.startswith('change-me'):
+    raise RuntimeError("Set SECRET_KEY in .env to a long random string, e.g. "
+                       "python -c \"import secrets; print(secrets.token_hex(32))\"")
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('COMMUNITY_DATABASE_URL', 'sqlite:///reports.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024   # photos up to 10 MB
+# Lax keeps the cookie off cross-site form posts, so the HTML forms can't be forged from other sites.
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 
 UPLOAD_FOLDER = 'static/uploads'
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp'}
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Behind ngrok (or another proxy) trust its X-Forwarded-Proto/Host so links use the public https address.
-app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
+# Trust only X-Forwarded-Proto (https behind ngrok). Host and client-IP headers pass through the web
+# app's proxy unchanged, so clients could forge them; links in alerts come from PUBLIC_BASE_URL instead.
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=0, x_proto=1, x_host=0)
 
 Session(app)
-CORS(app)
 db = SQLAlchemy(app)
 
 EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
@@ -212,6 +219,8 @@ def ensure_schema():
     The project has no migrations, so new columns are added with ALTER TABLE.
     """
     db.create_all()
+    if db.engine.dialect.name != 'sqlite':
+        return   # the ALTER TABLE upgrades below are for older SQLite files only
     added = {
         "user": [("phone", "VARCHAR(20)"), ("notify_email", "BOOLEAN DEFAULT 1"),
                  ("notify_sms", "BOOLEAN DEFAULT 0"), ("notify_whatsapp", "BOOLEAN DEFAULT 0"),
@@ -242,7 +251,7 @@ with app.app_context():
 def notify(users, title, body, link=None, kind='info'):
     """Save an in-app notification for each user and send it on their chosen channels."""
     jobs = []
-    base = request.host_url if has_request_context() else os.environ.get('PUBLIC_BASE_URL', '')
+    base = os.environ.get('PUBLIC_BASE_URL', '')
     full_link = (base.rstrip("/") + link) if (link and base) else None
     for user in {u.id: u for u in users if u}.values():
         db.session.add(Notification(user_id=user.id, kind=kind, title=title, body=body, link=link))
@@ -361,7 +370,6 @@ def log_in(user):
     if admin:
         session['admin'] = admin
     session['user_email'] = user.email
-    session['email'] = user.email
 
 
 def google_configured():
@@ -397,6 +405,13 @@ class AttemptLimiter:
                     return max(1, int((hits[0] + self.window - now) // 60) + 1)
         return 0
 
+    def allow(self, key):
+        """Count one use of key; False once it is over the limit."""
+        if self.blocked(key):
+            return False
+        self.hit(key)
+        return True
+
     def hit(self, *keys):
         now = time.time()
         with self.lock:
@@ -413,10 +428,17 @@ login_limiter = AttemptLimiter(limit=5, window_minutes=15)       # wrong passwor
 ip_limiter = AttemptLimiter(limit=20, window_minutes=15)         # wrong passwords per IP (any email)
 admin_limiter = AttemptLimiter(limit=5, window_minutes=15)       # wrong admin codes per username / IP
 reset_limiter = AttemptLimiter(limit=3, window_minutes=60)       # reset emails per address
+report_limiter = AttemptLimiter(limit=10, window_minutes=60)     # alert-sending reports per member
+zip_limiter = AttemptLimiter(limit=30, window_minutes=10)        # new ZIP lookups per caller
 
 
 def client_ip():
     return request.remote_addr or 'unknown'
+
+
+def caller_key():
+    user = current_user()
+    return f"user:{user.id}" if user else f"ip:{client_ip()}"
 
 
 def too_many(minutes):
@@ -534,7 +556,6 @@ def reset_page(token):
 @app.route('/logout')
 def logout():
     session.pop('user_email', None)
-    session.pop('email', None)
     return redirect(url_for('home'))
 
 
@@ -563,6 +584,9 @@ def read_prefs(form):
     return phone, prefs, None
 
 
+EMAIL_TAKEN = "An account with that email already exists. Try logging in."
+
+
 def create_user(form):
     """Validate a signup form (HTML form or JSON) and save the member. Returns (user, error)."""
     name = str(form.get('name') or '').strip()
@@ -576,7 +600,7 @@ def create_user(form):
     elif not error and not EMAIL_REGEX.match(email):
         error = "That email doesn't look right."
     elif not error and User.query.filter(db.func.lower(User.email) == email).first():
-        error = "An account with that email already exists. Try logging in."
+        error = EMAIL_TAKEN
     if not error:
         error = password_error(password, str(form.get('confirm') or ''))
     if error:
@@ -584,7 +608,11 @@ def create_user(form):
     user = User(name=name, email=email, zip=zip_code, phone=phone, **prefs)
     user.set_password(password)
     db.session.add(user)
-    db.session.commit()
+    try:
+        db.session.commit()
+    except IntegrityError:   # a second submit of the same signup got there first
+        db.session.rollback()
+        return None, EMAIL_TAKEN
     return user, None
 
 
@@ -1054,24 +1082,24 @@ def resolve(report, note=None, announce=True):
 
 @app.route('/api/reports', methods=['POST'])
 def post_report():
-    if (request.content_type or '').startswith('multipart/form-data'):
-        data = request.form.to_dict()
-    else:
-        return jsonify({"error": "Content-Type must be multipart/form-data"}), 400
-
-    required_fields = ['type', 'description', 'zip', 'email', 'phone']
-    if not all(data.get(k) for k in required_fields):
+    # Members only (json_write/api_member are defined below, so they are applied by hand): every
+    # report alerts the whole ZIP, and admins reach the reporter through their account details.
+    if request.headers.get('X-Requested-With') != 'fetch':
+        return jsonify({"error": "Missing X-Requested-With header."}), 400
+    user = current_user()
+    if not user:
+        return jsonify({"error": "Please sign in first."}), 401
+    data = request.form
+    if not all((data.get(k) or '').strip() for k in ('type', 'description', 'zip')):
         return jsonify({"error": "Missing required fields"}), 400
-    if not EMAIL_REGEX.match(data['email']):
-        return jsonify({"error": "Invalid email"}), 400
-
-    session['email'] = data['email']
+    if not report_limiter.allow(f"report:{user.id}"):
+        return jsonify({"error": "You've sent a lot of reports. Please wait an hour and try again."}), 429
     category = data['type'] if data['type'] in CATEGORY_LABELS else 'other'
-    report = create_report(category, data['description'], data['zip'],
+    report = create_report(category, data['description'].strip(), data['zip'].strip(),
                            lat=to_float(data.get('lat')), lng=to_float(data.get('lng')),
-                           email=data['email'], phone=data['phone'],
+                           email=user.email, phone=user.phone or '',
                            image_url=save_upload(request.files.get('image')),
-                           exclude_email=data['email'])
+                           exclude_email=user.email)
     return jsonify({"message": "Report submitted", "id": report.id}), 201
 
 
@@ -1080,7 +1108,8 @@ def resolve_report(id):
     report = db.session.get(Report, id)
     if not report:
         return jsonify({"error": "Not found"}), 404
-    if session.get('admin') or (report.email and session.get('email') == report.email):
+    # user_email is set only at login, so this is the signed-in member who filed the report.
+    if session.get('admin') or (report.email and session.get('user_email') == report.email):
         resolve(report, f"{report.type} in ZIP {report.zip} was marked resolved.")
         return jsonify({"message": "Report resolved"}), 200
     return jsonify({"error": "Forbidden"}), 403
@@ -1093,6 +1122,9 @@ def zip_lookup(zip_code):
     """Center and bounds of a US ZIP so maps can zoom to it (cached, rate-limited lookups)."""
     if not re.fullmatch(r"\d{5}", zip_code):
         return jsonify({"error": "Enter a 5-digit ZIP code"}), 400
+    # New ZIPs wait on the geocoder's 1-per-second limit, which every post shares.
+    if zip_code not in geo._zip_cache and not zip_limiter.allow(caller_key()):
+        return jsonify({"error": "Too many ZIP lookups. Please wait a few minutes."}), 429
     info = geo.zip_info(zip_code)
     if not info:
         return jsonify({"error": "ZIP code not found"}), 404
@@ -1146,10 +1178,8 @@ def bot_user():
 
 def user_by_phone(raw):
     phone = notifications.normalize_phone(raw)
-    if not phone:
-        return None
-    return next((u for u in User.query.filter(User.phone.isnot(None)).all()
-                 if notifications.normalize_phone(u.phone) == phone), None)
+    # Signup and account forms store phones normalized (read_prefs), so an exact match is enough.
+    return User.query.filter_by(phone=phone).first() if phone else None
 
 
 WHATSAPP_HINT = " Sign up on the website with this phone number to get notified when someone responds."
@@ -1371,10 +1401,11 @@ def poll_news():
             db.session.add(art)
             db.session.commit()
     # News incidents nobody followed up on are cleared automatically.
-    cutoff = datetime.utcnow() - timedelta(hours=float(os.environ.get('NEWS_EXPIRE_HOURS', 48)))
+    hours = float(os.environ.get('NEWS_EXPIRE_HOURS', 48))
+    cutoff = datetime.utcnow() - timedelta(hours=hours)
     for r in Report.query.filter(Report.source == 'news', Report.created_at < cutoff,
                                  db.or_(Report.resolved.is_(False), Report.resolved.is_(None))).all():
-        resolve(r, "Cleared automatically: no news updates for 48 hours.", announce=False)
+        resolve(r, f"Cleared automatically: no news updates for {hours:g} hours.", announce=False)
     return stats
 
 
@@ -1462,7 +1493,7 @@ def admin_logout():
 # ---------------------------------------------------------------- JSON API for the web app
 # accessforge/apps/web proxies /api/community/* to /api/*, so the session cookie stays same-origin.
 # Every write needs "X-Requested-With: fetch". Browsers only send a custom header cross-site after a
-# CORS preflight, and CORS(app) never allows credentials, so other sites can't use a member's cookie.
+# CORS preflight, and this app answers no preflights, so other sites can't use a member's cookie.
 
 def json_write(view):
     @wraps(view)
@@ -1539,7 +1570,6 @@ def api_login():
 @json_write
 def api_logout():
     session.pop('user_email', None)
-    session.pop('email', None)
     return jsonify({"message": "Signed out."})
 
 
@@ -1667,7 +1697,7 @@ def api_updates():
 if __name__ == '__main__':
     # Set APP_DEBUG=0 when the app is reachable from the internet (e.g. through ngrok):
     # debug mode shows code and an interactive console on error pages.
-    debug = os.environ.get('APP_DEBUG', '1') != '0'
+    debug = os.environ.get('APP_DEBUG', '0') == '1'
     # With the debug reloader, only the child process (WERKZEUG_RUN_MAIN=true) serves requests.
     if not debug or os.environ.get('WERKZEUG_RUN_MAIN') == 'true':
         start_news_poller()

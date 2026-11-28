@@ -19,7 +19,7 @@ Start all three (needs Node.js, Python with [uv](https://docs.astral.sh/uv/), an
 cd community
 python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env
+cp .env.example .env    # then set SECRET_KEY: python -c "import secrets; print(secrets.token_hex(32))"
 python app.py
 
 # 2. AccessForge API: http://localhost:8000
@@ -30,6 +30,8 @@ cd accessforge/apps/web && npm install && npm run dev
 ```
 
 `API_BASE_URL` and `COMMUNITY_API_BASE_URL` in `accessforge/apps/web/.env` point the web app at the two services; they are read when Next starts or builds.
+
+Set `PUBLIC_BASE_URL` in `community/.env` to the address people open (e.g. `http://localhost:3000`): links in email, SMS and chat alerts are built from it.
 
 Twilio's WhatsApp webhook and Google sign-in talk to the community service directly (port 5000 or its ngrok address), not through the web app. The admin dashboard is still the Flask page at `http://localhost:5000/admin`.
 

@@ -5,6 +5,7 @@ import { useState, type FormEvent, type ReactNode } from "react";
 import { FieldError, INPUT_CLASS } from "@/components/report/ReportField";
 import { communityRequest, type Session } from "@/lib/community-api";
 import { LocationButton, type Spot } from "./LocationButton";
+import { SignInPrompt } from "./SignInPrompt";
 import { useCommunity } from "./useCommunity";
 
 const ZIP_PATTERN = /^\d{5}$/;
@@ -18,7 +19,9 @@ export function IncidentForm() {
 
   if (loadError) return <p role="alert">{loadError}</p>;
   if (!session) return <p role="status">Loading…</p>;
+  // Reports alert the whole ZIP, so only members can send them.
   const user = session.user;
+  if (!user) return <SignInPrompt action="report an incident" />;
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -29,8 +32,6 @@ export function IncidentForm() {
     if (!text("type")) problems.type = "Choose what happened.";
     if (!text("description")) problems.description = "Describe what happened.";
     if (!ZIP_PATTERN.test(text("zip"))) problems.zip = "Enter a 5-digit ZIP code.";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(text("email"))) problems.email = "Enter your email.";
-    if (!text("phone")) problems.phone = "Enter a phone number.";
     setErrors(problems);
     setFailure("");
     if (Object.keys(problems).length) {
@@ -121,42 +122,13 @@ export function IncidentForm() {
           name="zip"
           inputMode="numeric"
           autoComplete="postal-code"
-          defaultValue={user?.zip ?? ""}
+          defaultValue={user.zip ?? ""}
           className={INPUT_CLASS}
           aria-invalid={Boolean(errors.zip)}
           aria-describedby={describedBy("zip")}
         />,
       )}
       <LocationButton spot={spot} onSpot={setSpot} />
-      {field(
-        "email",
-        "Your email",
-        <input
-          id="incident-email"
-          name="email"
-          type="email"
-          autoComplete="email"
-          defaultValue={user?.email ?? ""}
-          className={INPUT_CLASS}
-          aria-invalid={Boolean(errors.email)}
-          aria-describedby={describedBy("email")}
-        />,
-        "Only admins see your email and phone, to follow up.",
-      )}
-      {field(
-        "phone",
-        "Your phone",
-        <input
-          id="incident-phone"
-          name="phone"
-          type="tel"
-          autoComplete="tel"
-          defaultValue={user?.phone ?? ""}
-          className={INPUT_CLASS}
-          aria-invalid={Boolean(errors.phone)}
-          aria-describedby={describedBy("phone")}
-        />,
-      )}
       {field(
         "image",
         "Photo (optional)",
@@ -168,6 +140,9 @@ export function IncidentForm() {
           className={INPUT_CLASS}
         />,
       )}
+      <p className="text-sm text-muted">
+        Only admins see who sent a report, to follow up through your account details.
+      </p>
       <button type="submit" disabled={status === "sending"} className="af-button-primary">
         {status === "sending" ? "Sending…" : "Send report"}
       </button>

@@ -1,15 +1,19 @@
 """JSON API used by the AccessForge web app. Run from community/: python -m pytest tests"""
+import io
 import os
 import sys
 import tempfile
 
 DB_DIR = tempfile.mkdtemp()
+os.environ["SECRET_KEY"] = "test-secret-key-0123456789"
+os.environ["PUBLIC_BASE_URL"] = "https://watch.example"
 os.environ["COMMUNITY_DATABASE_URL"] = "sqlite:///" + os.path.join(DB_DIR, "test.db")
 # Keep alerts on the console: no real email, SMS or Telegram during tests.
 for key in ("MAIL_USERNAME", "MAIL_PASSWORD", "TWILIO_ACCOUNT_SID", "TELEGRAM_BOT_TOKEN"):
     os.environ.pop(key, None)
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import flask_sqlalchemy.query  # noqa: E402
 import pytest  # noqa: E402
 
 import app as community  # noqa: E402
@@ -26,6 +30,7 @@ def client():
         community.ensure_schema()
     community.login_limiter.hits.clear()
     community.ip_limiter.hits.clear()
+    community.report_limiter.hits.clear()
     return community.app.test_client()
 
 
@@ -153,3 +158,63 @@ def test_real_addresses_are_still_limited_per_ip(client):
         guess(client, f"stranger{n}@example.com", ip="203.0.113.7")
     assert guess(client, "ana@example.com", "longpass1", ip="203.0.113.7").status_code == 429
     assert guess(client, "ana@example.com", "longpass1", ip="198.51.100.2").status_code == 200
+
+
+def post_report(client, **extra):
+    data = {"type": "fire", "description": "Smoke on 24th St", "zip": "94110", "lat": "37.75", "lng": "-122.41"}
+    return client.post("/api/reports", data={**data, **extra}, headers=FETCH)
+
+
+def test_only_members_post_reports_and_contact_comes_from_the_account(client):
+    assert post_report(client).status_code == 401
+    sign_up(client, phone="415 555 0123")
+    r = post_report(client, email="someone-else@example.com")
+    assert r.status_code == 201
+    with community.app.app_context():
+        report = community.db.session.get(community.Report, r.get_json()["id"])
+        assert (report.email, report.phone) == ("ana@example.com", "+14155550123")
+
+
+def test_strangers_cannot_resolve_someone_elses_report(client):
+    sign_up(client)
+    report_id = post_report(client).get_json()["id"]
+    client.post("/api/logout", headers=FETCH)
+    sign_up(client, email="mallory@example.com")
+    # The old hole: claiming the victim's email on a report of your own.
+    post_report(client, email="ana@example.com")
+    assert client.post(f"/api/resolve/{report_id}").status_code == 403
+    client.post("/api/logout", headers=FETCH)
+    client.post("/api/login", json={"email": "ana@example.com", "password": "longpass1"}, headers=FETCH)
+    assert client.post(f"/api/resolve/{report_id}").status_code == 200
+
+
+def test_alert_links_ignore_a_forged_host(client, monkeypatch):
+    sign_up(client)
+    client.post("/api/logout", headers=FETCH)
+    sign_up(client, email="ben@example.com")
+    sent = []
+    monkeypatch.setattr(community.notifications, "dispatch", lambda app, mail, jobs: sent.extend(jobs))
+    client.post("/api/reports", data={"type": "fire", "description": "y", "zip": "94110"},
+                headers={**FETCH, "X-Forwarded-Host": "evil.example"})
+    bodies = " ".join(job[3] for job in sent)
+    assert "https://watch.example/reports" in bodies and "evil.example" not in bodies
+
+
+def test_reports_are_rate_limited_and_uploads_capped(client):
+    sign_up(client)
+    for _ in range(10):
+        assert post_report(client).status_code == 201
+    assert post_report(client).status_code == 429
+    big = {"image": (io.BytesIO(b"0" * (11 * 1024 * 1024)), "big.jpg")}
+    r = client.post("/api/lost-found", data={"kind": "lost", **big}, headers=FETCH,
+                    content_type="multipart/form-data")
+    assert r.status_code == 413
+
+
+def test_signup_race_returns_a_message_not_a_crash(client, monkeypatch):
+    sign_up(client)
+    client.post("/api/logout", headers=FETCH)
+    # Simulate the other request winning between the "email taken?" check and the insert.
+    monkeypatch.setattr(flask_sqlalchemy.query.Query, "first", lambda self: None)
+    r = sign_up(client)
+    assert r.status_code == 400 and "already exists" in r.get_json()["error"]

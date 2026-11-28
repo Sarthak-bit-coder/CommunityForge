@@ -167,13 +167,11 @@ describe("IncidentForm", () => {
     const { container } = render(<IncidentForm />);
     await user.click(await screen.findByRole("button", { name: "Send report" }));
     expect(screen.getByText("Choose what happened.")).toBeVisible();
-    expect(screen.getByText("Enter a phone number.")).toBeVisible();
-    expect(screen.getByLabelText("Your email")).toHaveValue("ana@example.com");
+    expect(screen.getByLabelText("ZIP code")).toHaveValue("94110");
     expect(await axeViolations(container)).toEqual([]);
 
     await user.selectOptions(screen.getByLabelText("What happened?"), "fire");
     await user.type(screen.getByLabelText("Details"), "Smoke");
-    await user.type(screen.getByLabelText("Your phone"), "+14155550123");
     await user.click(screen.getByRole("button", { name: "Use my location" }));
     expect(screen.getByText("37.70000, -122.40000")).toBeVisible();
     await user.click(screen.getByRole("button", { name: "Send report" }));
@@ -182,10 +180,17 @@ describe("IncidentForm", () => {
     expect([body.get("type"), body.get("zip"), body.get("lat")]).toEqual(["fire", "94110", "37.7"]);
   });
 
+  it("asks visitors to sign in first", async () => {
+    serve({ path: "/me", body: session(null) });
+    render(<IncidentForm />);
+    expect(await screen.findByRole("link", { name: /Sign in or create an account/ })).toBeVisible();
+    expect(screen.queryByRole("form", { name: "Report an incident" })).toBeNull();
+  });
+
   it("shows the service's refusal", async () => {
     serve(
-      { path: "/me", body: session(null) },
-      { method: "POST", path: "/reports", status: 400, body: { error: "Invalid email" } },
+      { path: "/me", body: session({ ...MEMBER, zip: null }) },
+      { method: "POST", path: "/reports", status: 429, body: { error: "Please wait an hour" } },
     );
     vi.stubGlobal("navigator", {});
     const user = userEvent.setup();
@@ -193,12 +198,10 @@ describe("IncidentForm", () => {
     await user.selectOptions(await screen.findByLabelText("What happened?"), "other");
     await user.type(screen.getByLabelText("Details"), "x");
     await user.type(screen.getByLabelText("ZIP code"), "94110");
-    await user.type(screen.getByLabelText("Your email"), "a@b.co");
-    await user.type(screen.getByLabelText("Your phone"), "1");
     await user.click(screen.getByRole("button", { name: "Use my location" }));
     expect(screen.getByText(/can't share its location/)).toBeVisible();
     await user.click(screen.getByRole("button", { name: "Send report" }));
-    expect(await screen.findByRole("alert")).toHaveTextContent("Invalid email");
+    expect(await screen.findByRole("alert")).toHaveTextContent("Please wait an hour");
   });
 });
 

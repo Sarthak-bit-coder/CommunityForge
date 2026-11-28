@@ -27,11 +27,11 @@ cd Community_App
 python -m venv .venv
 .venv\Scripts\activate          # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
-cp .env.example .env            # optional: fill in email / Twilio settings
+cp .env.example .env            # set SECRET_KEY (required); email / Twilio are optional
 python app.py
 ```
 
-Then open <http://localhost:5000>.
+Then open <http://localhost:5000>. Debug mode is off unless `APP_DEBUG=1`.
 
 The SQLite database (`instance/reports.db`) is created automatically on first run, and new columns are added automatically when you upgrade.
 
@@ -154,9 +154,9 @@ Sending runs on a background thread, so a slow SMS or email provider never slows
 
 ## Admin access
 
-Admins are listed in `ADMINS` in `app.py`, each with a TOTP secret. Run `python authenticator.py` to generate a QR code for each admin. Scan it with Google Authenticator, Authy or a similar app, then sign in at `/admin` with your username and the 6-digit code.
+Admins are listed in `ADMINS` in `app.py`, each with a TOTP secret. Run `pip install qrcode pillow` once, then `python authenticator.py` to generate a QR code for each admin. Scan it with Google Authenticator, Authy or a similar app, then sign in at `/admin` with your username and the 6-digit code.
 
-> ⚠️ The admin secrets and the default `SECRET_KEY` are committed to the repo. Before deploying, generate new secrets and load them from environment variables.
+The app refuses to start without a real `SECRET_KEY` in `.env`: it signs sessions and password-reset links.
 
 ## Project structure
 
